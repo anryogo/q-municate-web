@@ -5,6 +5,8 @@ var SERVER_PORT = 9000;
 // # Globbing
 
 module.exports = function(grunt) {
+    var sass = require('node-sass');
+
     // show elapsed time at the end
     require('time-grunt')(grunt);
     // load all grunt tasks
@@ -24,8 +26,8 @@ module.exports = function(grunt) {
         banner: '/* <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */\n',
 
         clean: {
-            dev: ['.sass-cache', '.tmp', '<%= yeoman.app %>/.css'],
-            dist: ['.sass-cache', '.tmp', '<%= yeoman.app %>/.css',
+            dev: ['.css', '.tmp', '<%= yeoman.app %>/.css'],
+            dist: ['.css', '.tmp', '<%= yeoman.app %>/.css',
                 '<%= yeoman.dist %>/scripts', '<%= yeoman.dist %>/styles', '<%= yeoman.dist %>/vendor', '<%= yeoman.dist %>/workers'
             ],
             tmpBuild: ['<%= yeoman.app %>/scripts/.build.js'],
@@ -33,6 +35,10 @@ module.exports = function(grunt) {
         },
 
         sass: {
+            options: {
+                implementation: sass,
+                sourceMap: true
+            },
             dist: {
                 files: {
                     '<%= yeoman.app %>/.css/main.css': '<%= yeoman.app %>/styles/main.scss'
