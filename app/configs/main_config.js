@@ -23,7 +23,7 @@ define(function() {
             messagingSenderId: '265299067289'
         },
 
-        debug: Number('0'),
+        debug: 1,
 
         notification: {
             timeout: 7
@@ -81,7 +81,7 @@ define(function() {
                 active: 2
             },
             debug: {
-                mode: Number('0'),
+                mode: 1,
                 file: null
             },
             webrtc: {
