@@ -4,23 +4,23 @@ define(function() {
     var QMCONFIG = {
 
         qbAccount: {
-            appId: 36125,
-            authKey: 'gOGVNO4L9cBwkPE',
-            authSecret: 'JdqsMHCjHVYkVxV'
+            appId: 76743,
+            authKey: 'exCV7U-V4BY-t4X',
+            authSecret: '6zYUFGZFQFWmL3v'
         },
 
         fbAccount: {
-            appId: '605405446247805',
+            appId: '870667166610487',
             scope: 'email,user_friends'
         },
 
         firebase: {
-            apiKey: 'AIzaSyBngIcgrzjJVOLXaDzFf7HVfieh7TZTLr8',
-            authDomain: 'teak-perigee-572.firebaseapp.com',
-            databaseURL: 'https://teak-perigee-572.firebaseio.com',
-            projectId: 'teak-perigee-572',
-            storageBucket: 'teak-perigee-572.appspot.com',
-            messagingSenderId: '265299067289'
+            apiKey: 'AIzaSyBJyZil_RbU1UB6meICn-32JsN1RNeo0Ec',
+            authDomain: 'q-municate-web.firebaseapp.com',
+            databaseURL: 'https://q-municate-web.firebaseio.com',
+            projectId: 'q-municate-web',
+            storageBucket: 'q-municate-web.appspot.com',
+            messagingSenderId: '661916700459'
         },
 
         debug: 1,

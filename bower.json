@@ -14,12 +14,12 @@
     "underscore": "^1.8.3",
     "googlemaps-amd": "^1.0.2",
     "balloon-css": "*",
-    "crypto-js-lib": "^3.1.2",
     "perfect-scrollbar": "^0.6.15",
     "firebase": "^4.3.1",
     "media-recorder-js": "^2.1.0",
     "fetch": "^2.0.3",
-    "quickblox": "^2.12.0"
+    "quickblox": "^2.12.0",
+    "crypto-js": "^3.1.9"
   },
   "devDependencies": {}
 }
