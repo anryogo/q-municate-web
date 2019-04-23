@@ -10,7 +10,7 @@ define(function() {
         },
 
         fbAccount: {
-            appId: '605405446247805',
+            appId: '870667166610487',
             scope: 'email,user_friends'
         },
 
