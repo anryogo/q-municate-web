@@ -7,31 +7,31 @@ var SERVER_PORT = 9000;
 module.exports = function(grunt) {
     var sass = require('node-sass');
 
-    // show elapsed time at the end
-    require('time-grunt')(grunt);
-    // load all grunt tasks
-    require('load-grunt-tasks')(grunt);
-
     // configurable paths
-    var yeomanConfig = {
+    var settings = {
         app: 'app',
         dist: 'dist',
         originalScriptTag: '<script src="scripts/main.js"></script>',
         tmpScriptTag: '<script src="scripts/.build.js"></script>'
     };
 
+    // show elapsed time at the end
+    require('time-grunt')(grunt);
+    // load all grunt tasks
+    require('load-grunt-tasks')(grunt);
+
     grunt.initConfig({
-        yeoman: yeomanConfig,
+        settings: settings,
         pkg: grunt.file.readJSON('bower.json'),
         banner: '/* <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */\n',
 
         clean: {
-            dev: ['.css', '.tmp', '<%= yeoman.app %>/.css'],
-            dist: ['.css', '.tmp', '<%= yeoman.app %>/.css',
-                '<%= yeoman.dist %>/scripts', '<%= yeoman.dist %>/styles', '<%= yeoman.dist %>/vendor', '<%= yeoman.dist %>/workers'
+            dev: ['.css', '.tmp', '<%= settings.app %>/.css'],
+            dist: ['.css', '.tmp', '<%= settings.app %>/.css',
+                '<%= settings.dist %>/scripts', '<%= settings.dist %>/styles', '<%= settings.dist %>/vendor', '<%= settings.dist %>/workers'
             ],
-            tmpBuild: ['<%= yeoman.app %>/scripts/.build.js'],
-            tails: ['<%= yeoman.dist %>/_index.html']
+            tmpBuild: ['<%= settings.app %>/scripts/.build.js'],
+            tails: ['<%= settings.dist %>/_index.html']
         },
 
         sass: {
@@ -41,7 +41,7 @@ module.exports = function(grunt) {
             },
             dist: {
                 files: {
-                    '<%= yeoman.app %>/.css/main.css': '<%= yeoman.app %>/styles/main.scss'
+                    '<%= settings.app %>/.css/main.css': '<%= settings.app %>/styles/main.scss'
                 }
             }
         },
@@ -53,14 +53,14 @@ module.exports = function(grunt) {
                     amd: true
                 },
                 files: {
-                    '.tmp/scripts/templates.js': ['<%= yeoman.app %>/scripts/templates/*.hbs']
+                    '.tmp/scripts/templates.js': ['<%= settings.app %>/scripts/templates/*.hbs']
                 }
             }
         },
 
         bower: {
             all: {
-                rjsConfig: '<%= yeoman.app %>/scripts/main.js',
+                rjsConfig: '<%= settings.app %>/scripts/main.js',
                 options: {
                     exclude: ['jquery', 'modernizr', 'requirejs']
                 }
@@ -70,11 +70,11 @@ module.exports = function(grunt) {
         requirejs: {
             dist: {
                 options: {
-                    baseUrl: '<%= yeoman.app %>/scripts',
-                    mainConfigFile: "<%= yeoman.app %>/scripts/main.js",
+                    baseUrl: '<%= settings.app %>/scripts',
+                    mainConfigFile: "<%= settings.app %>/scripts/main.js",
                     name: 'main',
                     optimize: 'none',
-                    out: "<%= yeoman.app %>/scripts/.build.js",
+                    out: "<%= settings.app %>/scripts/.build.js",
 
                     paths: {
                         'templates': '.tmp/scripts/templates'
@@ -91,21 +91,21 @@ module.exports = function(grunt) {
                 spawn: false
             },
             css: {
-                files: ['<%= yeoman.app %>/styles/{,*/}*.scss'],
+                files: ['<%= settings.app %>/styles/{,*/}*.scss'],
                 tasks: ['sass']
             },
             handlebars: {
                 files: [
-                    '<%= yeoman.app %>/scripts/templates/*.hbs'
+                    '<%= settings.app %>/scripts/templates/*.hbs'
                 ],
                 tasks: ['handlebars']
             }
         },
 
         useminPrepare: {
-            html: '<%= yeoman.app %>/index.html',
+            html: '<%= settings.app %>/index.html',
             options: {
-                dest: '<%= yeoman.dist %>'
+                dest: '<%= settings.dist %>'
             }
         },
 
@@ -125,9 +125,9 @@ module.exports = function(grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%= yeoman.app %>/images',
+                    cwd: '<%= settings.app %>/images',
                     src: '{,*/}*.{png,jpg,jpeg,svg,gif}',
-                    dest: '<%= yeoman.dist %>/images'
+                    dest: '<%= settings.dist %>/images'
                 }]
             }
         },
@@ -135,7 +135,7 @@ module.exports = function(grunt) {
         htmlmin: {
             dist: {
                 files: {
-                    '<%= yeoman.dist %>/_index.html': '<%= yeoman.app %>/index.html'
+                    '<%= settings.dist %>/_index.html': '<%= settings.app %>/index.html'
                 }
             },
             min: {
@@ -145,8 +145,8 @@ module.exports = function(grunt) {
                     minifyJS: true
                 },
                 files: {
-                    '<%= yeoman.dist %>/index.html': '<%= yeoman.dist %>/_index.html',
-                    '<%= yeoman.dist %>/404.html': '<%= yeoman.app %>/404.html'
+                    '<%= settings.dist %>/index.html': '<%= settings.dist %>/_index.html',
+                    '<%= settings.dist %>/404.html': '<%= settings.app %>/404.html'
                 }
             }
         },
@@ -155,18 +155,18 @@ module.exports = function(grunt) {
             dist: {
                 files: {
                     src: [
-                        '<%= yeoman.dist %>/scripts/{,*/}*.js',
-                        '<%= yeoman.dist %>/styles/{,*/}*.css',
-                        '<%= yeoman.dist %>/vendor/{,*/}*.js',
+                        '<%= settings.dist %>/scripts/{,*/}*.js',
+                        '<%= settings.dist %>/styles/{,*/}*.css',
+                        '<%= settings.dist %>/vendor/{,*/}*.js',
                     ]
                 }
             }
         },
 
         usemin: {
-            html: ['<%= yeoman.dist %>/{,*/}*.html'],
+            html: ['<%= settings.dist %>/{,*/}*.html'],
             options: {
-                dirs: ['<%= yeoman.dist %>']
+                dirs: ['<%= settings.dist %>']
             }
         },
 
@@ -174,21 +174,21 @@ module.exports = function(grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%= yeoman.app %>',
+                    cwd: '<%= settings.app %>',
                     src: [
                         '*.{ico,png}',
                         'audio/{,*/}*.*',
                         'workers/{,*/}*.js'
                     ],
-                    dest: '<%= yeoman.dist %>'
+                    dest: '<%= settings.dist %>'
                 }, {
                     expand: true,
-                    cwd: '<%= yeoman.app %>',
+                    cwd: '<%= settings.app %>',
                     src: [
                         'bower_components/quickblox/quickblox.min.js',
                         'bower_components/firebase/firebase.js'
                     ],
-                    dest: '<%= yeoman.dist %>'
+                    dest: '<%= settings.dist %>'
                 }]
             }
         },
@@ -205,14 +205,14 @@ module.exports = function(grunt) {
                 options: {
                     base: [
                         '.tmp',
-                        '<%= yeoman.app %>'
+                        '<%= settings.app %>'
                     ]
                 }
             },
             dist: {
                 options: {
                     protocol: 'https',
-                    base: '<%= yeoman.dist %>'
+                    base: '<%= settings.dist %>'
                 }
             }
         },
@@ -224,8 +224,8 @@ module.exports = function(grunt) {
             },
             all: [
                 'Gruntfile.js',
-                '<%= yeoman.app %>/scripts/{,*/}*.js',
-                '!<%= yeoman.app %>/vendor/*'
+                '<%= settings.app %>/scripts/{,*/}*.js',
+                '!<%= settings.app %>/vendor/*'
             ]
         },
 
@@ -240,8 +240,8 @@ module.exports = function(grunt) {
                         debugQB: '0'
                     }
                 },
-                src: '<%= yeoman.app %>/configs/environment.js',
-                dest: '<%= yeoman.app %>/configs/main_config.js'
+                src: '<%= settings.app %>/configs/environment.js',
+                dest: '<%= settings.app %>/configs/main_config.js'
             },
             dev: {
                 options: {
@@ -253,12 +253,12 @@ module.exports = function(grunt) {
                         debugQB: '1'
                     }
                 },
-                src: '<%= yeoman.app %>/configs/environment.js',
-                dest: '<%= yeoman.app %>/configs/main_config.js'
+                src: '<%= settings.app %>/configs/environment.js',
+                dest: '<%= settings.app %>/configs/main_config.js'
             },
             local: {
-                src: '<%= yeoman.app %>/config.js',
-                dest: '<%= yeoman.app %>/configs/main_config.js'
+                src: '<%= settings.app %>/config.js',
+                dest: '<%= settings.app %>/configs/main_config.js'
             }
         }
     });
@@ -270,12 +270,12 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('createTmpScriptTag', function(rollBack) {
-        var path = yeomanConfig.app + '/index.html';
+        var path = settings.app + '/index.html';
         var indexFile = grunt.file.read(path);
         if (typeof rollBack === 'undefined') {
-            grunt.file.write(path, indexFile.replace(yeomanConfig.originalScriptTag, yeomanConfig.tmpScriptTag));
+            grunt.file.write(path, indexFile.replace(settings.originalScriptTag, settings.tmpScriptTag));
         } else {
-            grunt.file.write(path, indexFile.replace(yeomanConfig.tmpScriptTag, yeomanConfig.originalScriptTag));
+            grunt.file.write(path, indexFile.replace(settings.tmpScriptTag, settings.originalScriptTag));
             grunt.task.run(['clean:tmpBuild']);
         }
     });
