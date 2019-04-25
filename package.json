@@ -1,6 +1,6 @@
 {
   "name": "q-municate",
-  "version": "1.15.0",
+  "version": "2.0.0-alpha",
   "repository": {
     "type": "git",
     "url": "git@github.com:QuickBlox/q-municate-web.git"
@@ -38,7 +38,8 @@
   },
   "scripts": {},
   "engines": {
-    "node": ">=4.4.5"
+    "node": "^10.5.3",
+    "npm": "^6.4.1"
   },
   "config": {
     "ghooks": {
