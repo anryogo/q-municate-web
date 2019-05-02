@@ -3,6 +3,7 @@
     mainConfigFile: '../app/scripts/main.js',
     name: 'main',
     optimize: 'none',
-    out: '../app/.tmp/bundle.js',
+    out: '../app/.tmp/build.js',
+    generateSourceMaps: true,
     preserveLicenseComments: false
 })

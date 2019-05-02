@@ -1,11 +1,11 @@
-var fs = require('fs');
 var path = require('path');
+var fse = require('fs-extra');
 var settings = require('./env/' + process.env.NODE_ENV);
 
-var filePath = path.resolve('app/configs/', 'main_config.js');
+var filePath = path.resolve('app/.tmp/', 'config.js');
 var content = 'define(' + JSON.stringify(settings) + ');';
 
-fs.writeFile(filePath, content, function(err) {
+fse.outputFile(filePath, content, function(err) {
     if (err) {
         throw err;
     }

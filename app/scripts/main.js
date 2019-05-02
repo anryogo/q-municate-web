@@ -48,7 +48,7 @@ requirejs.config({
         QBNotification: '../bower_components/web-notifications/qbNotification',
         QBMediaRecorder: '../bower_components/media-recorder-js/qbMediaRecorder',
         // Q-municate application
-        config: '../configs/main_config',
+        config: '../.tmp/config',
         MainModule: 'app',
         // models
         UserModule: 'models/user',
