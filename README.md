@@ -74,22 +74,18 @@ Click on the app title in the list to reveal the app details. You are going to n
 
 If you want to build your own app using Q-municate as a base, please do the following:
 
-1. Install [nodeJS](https://nodejs.org/en/download/) and [Ruby](https://www.ruby-lang.org/en/downloads) before start.
+1. Install [NodeJS](https://nodejs.org/en/download/) before start.
 2. Download the project from [GitHub](https://github.com/QuickBlox/q-municate-web/archive/master.zip).
-3. Run `npm install -g bower` in your terminal as an administrator.
-4. Run `gem install sass` in your terminal as an administrator.
-5. Run `npm install -g grunt-cli` in your terminal as an administrator.		
-6. Run `bower install` to install all additional packages in your terminal.		
-7. Run `npm install` to install all additional packages in your terminal as an administrator.		
-8. Copy the credentials (App ID, Authorization key, Authorization secret) and your Facebook App ID ([How to generate and save Facebook application ID](https://quickblox.com/developers/How_to_generate_and_save_Facebook_application_ID)) into your Q-municate project code in `config.js`.
+3. Run `npm install` to install all additional packages in your terminal as an administrator.		
+4. Copy the credentials (App ID, Authorization key, Authorization secret) and your Facebook App ID ([How to generate and save Facebook application ID](https://quickblox.com/developers/How_to_generate_and_save_Facebook_application_ID)) into your Q-municate project code in `settings/env/(development|production).js`.
 
 ![](https://quickblox.com/developers/images/9/95/Js_qm_project.png)
 ![](https://quickblox.com/developers/images/0/05/Endpoints.png)
 
 ### 6\. Build and run
 
-1. Run `grunt build` or `grunt` (build with jshint verification) in your terminal to build Q-municate (q-municate-web/dist).
-2. Run `grunt serve` in your terminal to open Q-municate in a browser window (<https://localhost:9000>).
+1. Run `npm start` in your terminal to open Q-municate in a browser window (<https://localhost:9000>).
+2. Run `npm run build` (build with jshint verification) in your terminal to build Q-municate (q-municate-web/dist).
 
 ![](https://quickblox.com/developers/images/7/7b/Gruntserve.jpg)
 
