@@ -46,7 +46,6 @@
     "imagemin:smiles": "imagemin app/images/smiles-group/* --out-dir=dist/images/smiles-group",
     "copy:html": "cpy *.html \"../dist\" --cwd=app",
     "copy:assets": "cpy audio/ workers/ \"../dist\" --cwd=app --parents",
-    "copy:libs": "cpy bower_components/quickblox/quickblox.min.js bower_components/firebase/firebase.js \"../dist\" --cwd=app --parents",
     "test": "npm run lint",
     "lint": "jshint app/scripts --reporter=node_modules/jshint-stylish"
   },
