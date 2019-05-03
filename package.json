@@ -67,7 +67,6 @@
   },
   "devDependencies": {
     "@songkick/injectassets": "^1.1.0",
-    "bower": "^1.8.4",
     "clean-css-cli": "^4.3.0",
     "concat": "^1.0.3",
     "cpy-cli": "^2.0.0",

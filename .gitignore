@@ -2,8 +2,7 @@
 app/index.html
 dist
 
-# bower & npm packages
-app/bower_components
+# npm packages
 node_modules
 npm-debug.log
 
