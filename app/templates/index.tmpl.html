@@ -21,15 +21,9 @@
     <meta name="twitter:image:src" content="https://qm.quickblox.com/images/qm-logo.svg" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
-    <!-- build:css styles/build.css -->
-    <link rel="stylesheet" href="bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
-    <link rel="stylesheet" href="bower_components/perfect-scrollbar/css/perfect-scrollbar.min.css">
-    <link rel="stylesheet" href="bower_components/progressbar.js/css/lib/control/progressbar.css">
-    <link rel="stylesheet" href="bower_components/balloon-css/balloon.min.css">
-    <link rel="stylesheet" href="vendor/emoji/css/minEmoji.css">
-    <link rel="stylesheet" href="vendor/intl-tel-input/css/intlTelInput.css">
-    <link rel="stylesheet" href=".css/main.css">
-    <!-- endbuild -->
+    {{#css}}
+    <link rel="stylesheet" href="{{{.}}}">
+    {{/css}}
 </head>
 
 <body class="is-welcome">
@@ -556,14 +550,10 @@
 
 <div id="fb-root"></div>
 
-<script src="bower_components/quickblox/quickblox.min.js"></script>
-<script src="bower_components/firebase/firebase.js"></script>
 <script src="https://connect.facebook.net/en_US/sdk.js"></script>
-<!-- build:js scripts/build.js -->
-<script src="bower_components/requirejs/require.js"></script>
-<script src="scripts/main.js"></script>
-
-<!-- endbuild -->
+{{#js}}
+<script src="{{{.}}}"></script>
+{{/js}}
 
 <script id="templateProfile" type="text/template">
     <section id="popupProfile" class="popup popup_profile">

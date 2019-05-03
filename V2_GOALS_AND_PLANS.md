@@ -13,11 +13,11 @@
 **PHASE 1 (Native web app)**
 
 1. ~~Upgrade Node version~~ (current: node - **v10.15.3**, npm - **v6.4.1**)
-2. Remove yeoman configuration
-3. Rewrite grunt tasks to npm scripts
-4. Remove grunt
-5. Migrate bower components to vendor libs
-6. Remove bower support
+2. ~~Remove yeoman configuration~~
+3. ~~Rewrite grunt tasks to npm scripts~~
+4. ~~Remove grunt~~
+5. ~~Migrate bower components to vendor libs~~
+6. ~~Remove bower support~~
 7. Add babel and eslint
 8. Update application code to ES2015+ syntax
 9. Rewrite RequireJS modules to ES modules

@@ -1,49 +1,89 @@
 {
-  "name": "q-municate",
+  "name": "q-municate-web",
   "version": "2.0.0-alpha",
+  "description": "Q-municate Web chat application",
+  "homepage": "http://q-municate.com",
   "repository": {
     "type": "git",
     "url": "git@github.com:QuickBlox/q-municate-web.git"
   },
   "license": "(Apache-2.0)",
-  "devDependencies": {
-    "bower": "^1.8.4",
-    "connect-livereload": "^0.5.4",
-    "ghooks": "^1.3.2",
-    "grunt": "^1.0.2",
-    "grunt-bower-requirejs": "^2.0.0",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "^1.0.0",
-    "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-connect": "^1.0.2",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-cssmin": "^1.0.1",
-    "grunt-contrib-handlebars": "^1.0.0",
-    "grunt-contrib-htmlmin": "^1.5.0",
-    "grunt-contrib-imagemin": "^2.0.1",
-    "grunt-contrib-jshint": "^1.0.0",
-    "grunt-contrib-uglify": "^1.0.2",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-include-replace": "^4.0.1",
-    "grunt-newer": "^1.1.1",
-    "grunt-open": "^0.2.3",
-    "grunt-requirejs": "^0.4.2",
-    "grunt-rev": "^0.1.0",
-    "grunt-sass": "^3.0.2",
-    "grunt-usemin": "^3.1.1",
-    "jshint-stylish": "^2.1.0",
-    "load-grunt-tasks": "^3.3.0",
-    "node-sass": "^4.11.0",
-    "time-grunt": "^1.2.2"
+  "private": true,
+  "scripts": {
+    "start": "npm run start:dev",
+    "start:dev": "npm-run-all clean:tmp env:dev start:app",
+    "start:prod": "npm-run-all clean:tmp env:prod start:app",
+    "start:app": "npm-run-all --parallel compile:* && npm-run-all preparehtml:app server",
+    "clean:tmp": "rimraf app/.tmp app/index.html",
+    "clean:dist": "rimraf app/.tmp app/index.html dist",
+    "env:dev": "cross-env NODE_ENV=development node settings/env.js",
+    "env:prod": "cross-env NODE_ENV=production node settings/env.js",
+    "compile:css": "npm-run-all sass concat:css",
+    "compile:js": "npm-run-all bundle concat:js",
+    "sass": "node-sass app/styles/main.scss app/.tmp/build.css --source-map true",
+    "bundle": "cross-os requirejs",
+    "concat:css": "node scripts/concat-css.js",
+    "concat:js": "node scripts/concat-js.js",
+    "server": "live-server app --host=localhost --port=9000 --open",
+    "watch": "npm run sass -- -w",
+    "prebuild": "npm run lint",
+    "build": "npm-run-all clean:dist env:prod && npm-run-all --parallel build:* && npm run preparehtml:dist",
+    "build:css": "npm-run-all compile:css cssmin:* banner:css rev:css",
+    "build:js": "npm-run-all compile:js minify:* banner:js rev:js",
+    "build:img": "npm-run-all --parallel imagemin:*",
+    "build:copy": "npm-run-all --parallel copy:*",
+    "cssmin:build": "cleancss app/.tmp/build.css -o app/.tmp/build.min.css -O2",
+    "cssmin:vendor": "cleancss app/.tmp/vendor.css -o app/.tmp/vendor.min.css -O2",
+    "minify:build": "uglifyjs app/.tmp/build.js -o app/.tmp/build.min.js -m",
+    "minify:vendor": "uglifyjs app/.tmp/vendor.js -o app/.tmp/vendor.min.js -m",
+    "banner:css": "headr app/.tmp/build.min.css -o=app/.tmp/build.min.css --version --homepage --license",
+    "banner:js": "headr app/.tmp/build.min.js -o=app/.tmp/build.min.js --version --homepage --license",
+    "rev:css": "hashmark -s -l 8 app/.tmp/*.min.css dist/styles/{hash}-{base}",
+    "rev:js": "hashmark -s -l 8 app/.tmp/*.min.js dist/scripts/{hash}-{base}",
+    "preparehtml:app": "injectassets -s app/templates/index.tmpl.html -o app/index.html -d app/ -g .tmp/vendor.{css,js};.tmp/build.{css,js}",
+    "preparehtml:dist": "injectassets -s app/templates/index.tmpl.html -o dist/index.html -d dist/ -g **/*vendor.min*;**/*build.min*",
+    "imagemin:parent": "imagemin app/images/* --out-dir=dist/images",
+    "imagemin:smiles": "imagemin app/images/smiles-group/* --out-dir=dist/images/smiles-group",
+    "copy:html": "cpy *.html \"../dist\" --cwd=app",
+    "copy:assets": "cpy audio/ workers/ \"../dist\" --cwd=app --parents",
+    "test": "npm run lint",
+    "lint": "jshint app/scripts --reporter=node_modules/jshint-stylish"
   },
-  "scripts": {},
-  "engines": {
-    "node": "^10.5.3",
-    "npm": "^6.4.1"
+  "cross-os": {
+    "requirejs": {
+      "darwin": "r.js -o scripts/requirejs.js",
+      "linux": "r.js -o scripts/requirejs.js",
+      "win32": "r.js.cmd -o scripts/requirejs.js"
+    }
   },
   "config": {
     "ghooks": {
-      "pre-push": "grunt test"
+      "pre-push": "npm test"
     }
+  },
+  "engines": {
+    "node": "^10.15.3",
+    "npm": "^6.4.1"
+  },
+  "devDependencies": {
+    "@songkick/injectassets": "^1.1.0",
+    "clean-css-cli": "^4.3.0",
+    "concat": "^1.0.3",
+    "cpy-cli": "^2.0.0",
+    "cross-env": "^5.2.0",
+    "cross-os": "^1.3.0",
+    "fs-extra": "^7.0.1",
+    "ghooks": "^1.3.2",
+    "hashmark": "^5.0.0",
+    "headr": "0.0.4",
+    "imagemin-cli": "^4.0.1",
+    "jshint": "^2.10.2",
+    "jshint-stylish": "^2.1.0",
+    "live-server": "^1.2.1",
+    "node-sass": "^4.11.0",
+    "npm-run-all": "^4.1.5",
+    "requirejs": "^2.3.6",
+    "rimraf": "^2.6.3",
+    "uglify-js": "^3.5.9"
   }
 }

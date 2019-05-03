@@ -1,19 +1,10 @@
-.sass-cache
-app/.css
 .tmp
+app/index.html
+dist
 
-# bower & npm packages
-app/bower_components
+# npm packages
 node_modules
 npm-debug.log
-debug.log
 
-# builded QM
-dist/*
-
-# *Storm
-.idea/*
-.idea/workspace.xml
-
-# *Sublime
-*.sublime-*
+# IDE
+.idea

@@ -12,8 +12,7 @@ define([
     'LocationView',
     'minEmoji',
     'perfectscrollbar',
-    'mCustomScrollbar',
-    'mousewheel'
+    'mCustomScrollbar'
 ], function(
     $,
     QMCONFIG,
@@ -964,7 +963,7 @@ define([
 
                 return false;
             });
-            
+
             $workspace.on('click', '.j-toBottom', function() {
                 $('.j-scrollbar_message').mCustomScrollbar('scrollTo', 'bottom');
                 $(this).hide();
@@ -974,7 +973,7 @@ define([
                 var video = e.target;
 
                 if (!video.dataset.source) return true;
-                
+
                 video.src = video.dataset.source;
                 video.preload = 'auto';
                 video.poster = 'images/video_loader.gif';

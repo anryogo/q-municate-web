@@ -11,8 +11,7 @@ define([
     'Helpers',
     'QMHtml',
     'underscore',
-    'mCustomScrollbar',
-    'mousewheel'
+    'mCustomScrollbar'
 ], function(
     $,
     QMCONFIG,
@@ -21,7 +20,7 @@ define([
     QMHtml,
     _
 ) {
-    
+
     var self;
 
     var Dialog,

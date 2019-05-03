@@ -1,4 +1,3 @@
-
 /*global require*/
 'use strict';
 
@@ -27,28 +26,27 @@ requirejs.config({
     },
     paths: {
         // libs
-        googlemaps: '../bower_components/googlemaps-amd/src/googlemaps',
-        async: '../bower_components/requirejs-plugins/src/async',
+        googlemaps: '../vendor/googlemaps-amd/googlemaps',
+        async: '../vendor/requirejs-plugins/async',
         gmaps: 'https://cdnjs.cloudflare.com/ajax/libs/gmaps.js/0.4.24/gmaps.min',
-        cryptojs: '../bower_components/crypto-js/crypto-js',
-        jquery: '../bower_components/jquery/dist/jquery',
-        underscore: '../bower_components/underscore/underscore',
-        backbone: '../bower_components/backbone/backbone',
-        fetch: '../bower_components/fetch/fetch',
-        progressbar: '../bower_components/progressbar.js/lib/control/progressbar',
-        loadImage: '../bower_components/blueimp-load-image/js/load-image',
-        mCustomScrollbar: '../bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar',
-        mousewheel: '../bower_components/jquery-mousewheel/jquery.mousewheel',
-        timeago: '../bower_components/jquery-timeago/jquery.timeago',
+        cryptojs: '../vendor/crypto-js/crypto-js',
+        jquery: '../vendor/jquery/jquery.min',
+        underscore: '../vendor/underscore/underscore-min',
+        backbone: '../vendor/backbone/backbone-min',
+        fetch: '../vendor/fetch/fetch',
+        progressbar: '../vendor/progressbar/progressbar.min',
+        loadImage: '../vendor/blueimp-load-image/load-image',
+        mCustomScrollbar: '../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar',
+        timeago: '../vendor/jquery-timeago/jquery.timeago',
         minEmoji: '../vendor/emoji/js/minEmoji',
         initTelInput: '../vendor/intl-tel-input/js/intlTelInput.min',
         intlTelInputUtils: '../vendor/intl-tel-input/js/utils',
-        nicescroll: '../bower_components/jquery.nicescroll/jquery.nicescroll.min',
-        perfectscrollbar: '../bower_components/perfect-scrollbar/js/perfect-scrollbar.min',
-        QBNotification: '../bower_components/web-notifications/qbNotification',
-        QBMediaRecorder: '../bower_components/media-recorder-js/qbMediaRecorder',
+        nicescroll: '../vendor/jquery-nicescroll/jquery.nicescroll.min',
+        perfectscrollbar: '../vendor/perfect-scrollbar/perfect-scrollbar.min',
+        QBNotification: '../vendor/web-notifications/qbNotification',
+        QBMediaRecorder: '../vendor/media-recorder-js/qbMediaRecorder',
         // Q-municate application
-        config: '../configs/main_config',
+        config: '../.tmp/config',
         MainModule: 'app',
         // models
         UserModule: 'models/user',

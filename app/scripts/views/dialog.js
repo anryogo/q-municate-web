@@ -14,8 +14,7 @@ define([
     'minEmoji',
     'perfectscrollbar',
     'mCustomScrollbar',
-    'nicescroll',
-    'mousewheel'
+    'nicescroll'
 ], function(
     $,
     _,
@@ -26,7 +25,7 @@ define([
     minEmoji,
     Ps
 ) {
-    
+
     var self;
 
     var User,
@@ -944,7 +943,7 @@ define([
             $label.remove();
         }
     }
-    
+
     function isNeedToStopTheVideo() {
         $('.j-videoPlayer').each(function(index, element) {
             var $element = $(element);
