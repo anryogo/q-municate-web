@@ -273,7 +273,7 @@ define([
     FirebaseWidget.prototype._recaptchaBuilder = function(target, size) {
         widget.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(target, {
             'size': size,
-            'callback': function(response) {
+            'callback': function() {
                 widget.verified = true;
             },
             'expired-callback': function() {

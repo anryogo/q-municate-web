@@ -1,7 +1,6 @@
-/*global require*/
 'use strict';
 
-requirejs.config({
+require.config({
     googlemaps: {
         params: {
             key: 'AIzaSyAhduIkJbVdtRm0Hz6XpkihGt8h_R8cZds',
@@ -89,7 +88,7 @@ requirejs.config({
     }
 });
 
-requirejs([
+require([
     'jquery',
     'config',
     'Helpers',

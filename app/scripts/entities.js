@@ -150,8 +150,6 @@ define([
 
         accumulateInDialogModel: function() {
             var dialogId = this.get('dialogId'),
-                messageId = this.get('messageId'),
-                userId = this.get('userId'),
                 dialog = entities.Collections.dialogs.get(dialogId),
                 unreadCount = dialog.get('unread_count'),
                 unreadMessages = dialog.get('unread_messages');

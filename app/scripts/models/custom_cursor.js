@@ -6,7 +6,7 @@
 define([], function() {
     'use strict';
 
-    function Cursor(app) {
+    function Cursor() {
         var self = this;
 
         this.setCursorAfterElement = function(el) {

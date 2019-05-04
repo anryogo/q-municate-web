@@ -42,8 +42,6 @@ define([
             if (!attrs.full_name) {
                 return 'Name is required';
             }
-            console.log(attrs.full_name);
-            console.log(attrs.full_name === 'Unknown user');
             if (attrs.full_name === 'Unknown user') {
                 return QMCONFIG.errors.unknownUserName;
             }
@@ -57,7 +55,7 @@ define([
             // Field: password
             // mustn’t contain non-Latin characters and spaces; 8-40 characters
             if (attrs.password) {
-                if (!/^[A-Za-z0-9`~!@#%&=_<>;:,'\"\.\$\^\*\-\+\\\/\|\(\)\[\]\{\}\?]+$/.test(attrs.password)) {
+                if (!/^[A-Za-z0-9`~!@#%&=_<>;:,'".$^*\-+\\/|()[\]{}?]+$/.test(attrs.password)) {
                     return QMCONFIG.errors.invalidPass;
                 }
                 if (attrs.password.length < 8) {

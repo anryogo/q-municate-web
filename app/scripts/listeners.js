@@ -143,7 +143,7 @@ define([
             _switchToOnlineMode();
         },
 
-        onReconnectFailed: function(error) {
+        onReconnectFailed: function() {
             self.app.service.disconnectChat();
 
             self.app.models.User.autologin(function() {

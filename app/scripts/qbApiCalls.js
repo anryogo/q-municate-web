@@ -23,7 +23,6 @@ define([
         DialogView,
         ContactListView,
         ContactList,
-        User,
         Listeners;
 
     var timer;
@@ -39,7 +38,6 @@ define([
         DialogView = this.app.views.Dialog;
         ContactListView = this.app.views.ContactList;
         ContactList = this.app.models.ContactList;
-        User = this.app.models.User;
         Listeners = this.app.listeners;
     }
 
@@ -204,7 +202,7 @@ define([
 
         forgotPassword: function(email, callback) {
             this.checkSession(function() {
-                QB.users.resetPassword(email, function(error, response) {
+                QB.users.resetPassword(email, function(error) {
                     if (error && error.code === 404) {
                         Helpers.log(error.message);
 
@@ -503,7 +501,7 @@ define([
     function setRecoverySessionInterval() {
         // update QB session every one hour
         timer = setTimeout(function() {
-            QB.getSession(function(err, session) {
+            QB.getSession(function(err) {
                 if (err) {
                     return Helpers.log('recovery session error', err);
                 } else {

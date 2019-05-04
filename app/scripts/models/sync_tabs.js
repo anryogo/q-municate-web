@@ -70,7 +70,6 @@ define(['jquery'], function($) {
 
         function _sync(e) {
             var key    = e.originalEvent.key,
-                oldVal = e.originalEvent.oldValue,
                 newVal = e.originalEvent.newValue;
 
             // fire if has closed tab

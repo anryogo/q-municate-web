@@ -286,7 +286,6 @@ define([
                 dialogs = Entities.Collections.dialogs,
                 copyDialogItem,
                 dialogItem,
-                message,
                 dialogId,
                 dialog,
                 li;
@@ -324,7 +323,7 @@ define([
                         notification_type: '5'
                     });
 
-                    message = Message.create({
+                    Message.create({
                         'chat_dialog_id': hiddenDialogs[id],
                         'notification_type': '5',
                         'date_sent': time,
@@ -365,7 +364,8 @@ define([
         },
 
         sendReject: function(jid, isClick) {
-            var id = QB.chat.helpers.getIdFromNode(jid),
+            var DialogView = this.app.views.Dialog,
+                id = QB.chat.helpers.getIdFromNode(jid),
                 $objDom = $('.j-incomingContactRequest[data-jid="' + jid + '"]'),
                 roster = ContactList.roster,
                 notConfirmed = localStorage['QM.notConfirmed'] ? JSON.parse(localStorage['QM.notConfirmed']) : {},
@@ -410,7 +410,6 @@ define([
                 dialogs = Entities.Collections.dialogs,
                 jid = QB.chat.helpers.getUserJid(id, QMCONFIG.qbAccount.appId),
                 li = $('.dialog-item[data-id="' + id + '"]'),
-                list = li.parents('ul.j-list'),
                 hiddenDialogs = JSON.parse(sessionStorage['QM.hiddenDialogs']),
                 dialogId = li.data('dialog') || hiddenDialogs[id] || null,
                 roster = ContactList.roster,

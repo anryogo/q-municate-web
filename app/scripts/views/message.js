@@ -445,7 +445,6 @@ define([
 
         sendMessage: function(form) {
             var jid = form.parents('.l-chat').data('jid'),
-                id = form.parents('.l-chat').data('id'),
                 dialog_id = form.parents('.l-chat').data('dialog'),
                 $textarea = form.find('.textarea'),
                 $smiles = form.find('.textarea > img'),
@@ -641,10 +640,7 @@ define([
                 // add new people
                 if (new_ids) {
                     ContactList.add(dialog.get('occupants_ids'), null, function() {
-                        var dataIds = $chat.find('.addToGroupChat').data('ids'),
-                            ids = dataIds ? dataIds.toString().split(',').map(Number) : [];
-
-                        for (var i = 0, len = new_ids.length; i < len; i++) {
+                        for (var i = 0, len = new_ids.length, new_id; i < len; i++) {
                             new_id = new_ids[i].toString();
 
                             if (new_id !== User.contact.id.toString()) {
@@ -846,12 +842,12 @@ define([
             }
         },
 
-        onDeliveredStatus: function(messageId, dialogId, userId) {
+        onDeliveredStatus: function(messageId, dialogId) {
             self.addStatusMessages(messageId, dialogId, 'delivered', true);
             updatedMessageModel(messageId, dialogId, 'delivered');
         },
 
-        onReadStatus: function(messageId, dialogId, userId) {
+        onReadStatus: function(messageId, dialogId) {
             self.addStatusMessages(messageId, dialogId, 'displayed', true);
             updatedMessageModel(messageId, dialogId, 'displayed');
         },

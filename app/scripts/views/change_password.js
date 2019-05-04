@@ -56,8 +56,7 @@ define([
         },
 
         cancelChange: function(event) {
-            var obj = $(event.target),
-                params;
+            var obj = $(event.target);
 
             if (obj.is('.' + this.className)) {
                 this.remove();
@@ -106,7 +105,7 @@ define([
                 });
                 Helpers.log(this.model);
                 if (!this.model.validationError) {
-                    this.model.changeQBPass(params, function(err, res) {
+                    this.model.changeQBPass(params, function(err) {
                         if (err) {
                             self.validateError(self.model, QMCONFIG.errors.oldPass);
                         } else {

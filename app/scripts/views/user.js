@@ -22,13 +22,11 @@ define([
     
     var User,
         ContactList,
-        Contact,
         FBCallback = null;
 
     function UserView(app) {
         this.app = app;
         User = this.app.models.User;
-        Contact = this.app.models.Contact;
         ContactList = this.app.models.ContactList;
     }
 
@@ -227,7 +225,7 @@ define([
                 roster = ContactList.roster,
                 chatStatus = roster[userId] ? roster[userId] : null;
 
-            if (!!navigator.userAgent.match(/Firefox/)) {
+            if (navigator.userAgent.match(/Firefox/)) {
                 popup.find('.userDetails-controls button').css('padding', '0 12px');
             }
 

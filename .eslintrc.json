@@ -1,0 +1,16 @@
+{
+    "extends": "eslint:recommended",
+    "env": {
+        "browser": true,
+        "amd": true,
+        "jquery": true
+    },
+    "globals": {
+        "FB": "readonly",
+        "QB": "readonly",
+        "firebase": "readonly"
+    },
+    "rules": {
+        "no-console": "warn"
+    }
+}

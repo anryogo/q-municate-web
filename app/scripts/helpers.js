@@ -185,7 +185,7 @@ define([
 
         parser: function(str) {
             var url, url_text;
-            var URL_REGEXP = /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi;
+            var URL_REGEXP = /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()[\]{};:'".,<>?«»“”‘’]))/gi;
 
             str = escapeHTML(str);
 
@@ -212,7 +212,7 @@ define([
             var dialogItem = $('.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="' + dialogId + '"]');
 
             if (dialogItem.length > 0) {
-                copyDialogItem = dialogItem.clone();
+                var copyDialogItem = dialogItem.clone();
                 dialogItem.remove();
                 $('.j-recentList').prepend(copyDialogItem);
                 if (!$('#searchList').is(':visible')) {
@@ -250,6 +250,7 @@ define([
     };
 
     // smart console
+    /* eslint-disable no-console */
     Helpers.log = function() {
         if (QMCONFIG.debug) {
             if (arguments.length <= 1) {
@@ -270,6 +271,7 @@ define([
             }
         }
     };
+    /* eslint-enable no-console */
 
     Helpers.isBeginOfChat = function() {
         if (!document.querySelector('.j-chatItem')) {
@@ -321,8 +323,8 @@ define([
     Helpers.scaleAvatar = function($pic) {
         var $chat = $pic.parents('.l-chat'),
             name = $pic.data('name'),
-            url = $pic.css('background-image').replace(/.*\s?url\([\'\"]?/, '')
-                .replace(/[\'\"]?\).*/, ''), // take URL from css background source
+            url = $pic.css('background-image').replace(/.*\s?url\(['"]?/, '')
+                .replace(/['"]?\).*/, ''), // take URL from css background source
             $popup = $('.j-popupAvatar'),
             dialog_id;
 
@@ -345,7 +347,7 @@ define([
             error: function(jqHXR, status, error) {
                 callback(error, null);
             },
-            success: function(data, status, jqHXR) {
+            success: function(data) {
                 callback(null, data);
             }
         };
@@ -354,7 +356,7 @@ define([
     };
 
     Helpers.isValidUrl = function(url) {
-        var validator = /^(?:([a-z]+):(?:([a-z]*):)?\/\/)?(?:([^:@]*)(?::([^:@]*))?@)?((?:[a-z0-9_-]+\.)+[a-z]{2,}|localhost|(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])\.){3}(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])))(?::(\d+))?(?:([^:\?\#]+))?(?:\?([^\#]+))?(?:\#([^\s]+))?$/i;
+        var validator = /^(?:([a-z]+):(?:([a-z]*):)?\/\/)?(?:([^:@]*)(?::([^:@]*))?@)?((?:[a-z0-9_-]+\.)+[a-z]{2,}|localhost|(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])\.){3}(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])))(?::(\d+))?(?:([^:?#]+))?(?:\?([^#]+))?(?:#([^\s]+))?$/i;
         return validator.test(url);
     };
 

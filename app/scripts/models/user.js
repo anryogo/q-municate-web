@@ -224,7 +224,7 @@ define([
             custom_data = JSON.stringify(custom_data);
             QBApiCalls.updateUser(user.id, {
                 custom_data: custom_data
-            }, function(res) {
+            }, function() {
 
             });
         },
@@ -304,7 +304,7 @@ define([
                     QBApiCalls.updateUser(self.contact.id, {
                         blob_id: blob.id,
                         custom_data: custom_data
-                    }, function(res) {
+                    }, function() {
 
                     });
                 });

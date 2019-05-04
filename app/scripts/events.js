@@ -147,8 +147,7 @@ define([
             });
 
             $body.on('click', '.btn_popup_changepass', function(event) {
-                var profileView = App.views.Profile,
-                    changePassView = App.views.ChangePass;
+                var changePassView = App.views.ChangePass;
 
                 event.preventDefault();
                 changePassView.submitForm();
@@ -562,7 +561,7 @@ define([
                 UserView.profilePopover($(this));
             });
 
-            $('.list_contextmenu').on('contextmenu', '.contact', function(event) {
+            $('.list_contextmenu').on('contextmenu', '.contact', function() {
                 removePopover();
                 UserView.contactPopover($(this));
 
@@ -772,7 +771,7 @@ define([
                 return false;
             });
 
-            $('.j-clean-button').on('click', function(event) {
+            $('.j-clean-button').on('click', function() {
                 var $self = $(this),
                     $form = $self.parent('form.formSearch');
 
@@ -1099,7 +1098,7 @@ define([
     };
 
     Events.intiAuthorizationInputs = function(el) {
-        $input = el ? el : $('.form-input');
+        var $input = el ? el : $('.form-input');
 
         $input.on('focus', function() {
             var $this = $(this);

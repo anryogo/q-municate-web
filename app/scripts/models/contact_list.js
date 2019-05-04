@@ -80,8 +80,7 @@ define([
         },
 
         cleanUp: function (requestIds, responseIds) {
-            var ContactListView = this.app.views.ContactList,
-                ids = _.difference(requestIds, responseIds);
+            var ids = _.difference(requestIds, responseIds);
 
             ids.forEach(function(id) {
                 localStorage.removeItem('QM.contact-' + id);

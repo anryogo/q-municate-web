@@ -6,7 +6,7 @@
 define([], function() {
     'use strict';
 
-    function Settings(app) {
+    function Settings() {
         var userId,
             options,
             self = this;

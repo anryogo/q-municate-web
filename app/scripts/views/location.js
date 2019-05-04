@@ -118,7 +118,7 @@ define([
             $('#map img').addClass('gooImg');
 
             if (!isCoords) {
-                this.getGeoCoordinates(false, function(res, err) {
+                this.getGeoCoordinates(false, function(res) {
                     if (res) {
                         map.setZoom(15);
                         map.setCenter(res.latitude, res.longitude);

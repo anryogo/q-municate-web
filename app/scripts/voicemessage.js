@@ -101,7 +101,7 @@ define([
             }).catch(function(err) {
                 self.resetRecord();
                 self.blockRecorder('(microphone wasn\'t found)');
-                console.error(err);
+                throw err;
             });
         },
 

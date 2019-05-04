@@ -107,7 +107,7 @@ define([
         addFBAccount: function(fbId) {
             var self = this;
 
-            this.model.connectFB(fbId, function(err, res) {
+            this.model.connectFB(fbId, function(err) {
                 if (err) {
                     self.validateError(self.model, QMCONFIG.errors.FBAccountExists);
                     self.$el.find('.btn_userProfile_connect').prop('disabled', false);

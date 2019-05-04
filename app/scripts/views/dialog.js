@@ -347,7 +347,7 @@ define([
                 name = (private_id && contacts[private_id]) ? contacts[private_id].full_name : room_name;
                 status = roster[private_id] ? roster[private_id] : null;
             } catch (error) {
-                console.error(error);
+                throw error;
             }
 
             html  = '<li class="list-item dialog-item j-dialogItem presence-listener" data-dialog="' + dialog_id + '" data-id="' + private_id + '">';
@@ -551,8 +551,7 @@ define([
                 occupants_ids = $('#popupContacts').data('existing_ids') || [],
                 groupName = occupants_ids.length > 0 ? [User.contact.full_name, contacts[occupants_ids[0]].full_name] : [User.contact.full_name],
                 occupants_names = !type && occupants_ids.length > 0 ? [contacts[occupants_ids[0]].full_name] : [],
-                new_ids = [],
-                chat = $('.l-chat[data-dialog="' + dialog_id + '"]');
+                new_ids = [];
 
             for (var i = 0, len = new_members.length, name; i < len; i++) {
                 name = $(new_members[i]).find('.name').text();
@@ -576,7 +575,7 @@ define([
                     self.removeDataSpinner();
                     var dialogItem = $('.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="' + dialog.get('id') + '"]');
                     if (dialogItem.length > 0) {
-                        copyDialogItem = dialogItem.clone();
+                        var copyDialogItem = dialogItem.clone();
                         dialogItem.remove();
                         $('#recentList ul.j-list').prepend(copyDialogItem);
                         if (!$('#searchList').is(':visible')) {
