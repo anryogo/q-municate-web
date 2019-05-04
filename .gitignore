@@ -8,3 +8,7 @@ npm-debug.log
 
 # IDE
 .idea
+.vscode
+
+# others
+.DS_Store

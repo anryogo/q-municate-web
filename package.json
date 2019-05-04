@@ -62,8 +62,8 @@
     }
   },
   "engines": {
-    "node": "^10.15.3",
-    "npm": "^6.4.1"
+    "node": ">=8.11.4",
+    "npm": ">=5.6.0"
   },
   "devDependencies": {
     "@songkick/injectassets": "^1.1.0",
