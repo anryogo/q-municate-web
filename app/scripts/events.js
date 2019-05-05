@@ -13,7 +13,7 @@ define([
     'minEmoji',
     'perfectscrollbar',
     'mCustomScrollbar'
-], function(
+], function (
     $,
     QMCONFIG,
     Helpers,
@@ -22,30 +22,29 @@ define([
     minEmoji,
     Ps
 ) {
+    var User;
+    var Dialog;
+    var Cursor;
+    var UserView;
+    var ContactList;
+    var ContactListView;
+    var DialogView;
+    var MessageView;
+    var AttachView;
+    var VideoChatView;
+    var SettingsView;
+    var VoiceMessage;
 
-    var User,
-        Dialog,
-        Cursor,
-        UserView,
-        ContactList,
-        ContactListView,
-        DialogView,
-        MessageView,
-        AttachView,
-        VideoChatView,
-        SettingsView,
-        VoiceMessage;
-
-    var chatName,
-        editedChatName,
-        stopTyping,
-        retryTyping,
-        keyupSearch;
+    var chatName;
+    var editedChatName;
+    var stopTyping;
+    var retryTyping;
+    var keyupSearch;
 
     var App;
 
-    var $workspace = $('.l-workspace-wrap'),
-        $body = $('body');
+    var $workspace = $('.l-workspace-wrap');
+    var $body = $('body');
 
     function Events(app) {
         App = app;
@@ -67,24 +66,27 @@ define([
 
     Events.prototype = {
 
-        init: function() {
+        init: function () {
             window.isQMAppActive = true;
 
-            $(window).focus(function() {
+            $(window).focus(function () {
+                var dialogItem;
+                var dialogId;
+
                 window.isQMAppActive = true;
 
-                var dialogItem = $('.l-list-wrap section:not(#searchList) .is-selected'),
-                    dialog_id = dialogItem[0] && dialogItem.data('dialog');
+                dialogItem = $('.l-list-wrap section:not(#searchList) .is-selected');
+                dialogId = dialogItem[0] && dialogItem.data('dialog');
 
-                if (dialog_id) {
+                if (dialogId) {
                     dialogItem.find('.unread').text('');
-                    DialogView.decUnreadCounter(dialog_id);
+                    DialogView.decUnreadCounter(dialogId);
                 }
             });
 
-            $(window).blur(function() {
-                var $chat = $('.l-chat:visible'),
-                    $label = $('.l-chat:visible').find('.j-newMessages');
+            $(window).blur(function () {
+                var $chat = $('.l-chat:visible');
+                var $label = $('.l-chat:visible').find('.j-newMessages');
 
                 if ($chat.length && $label.length) {
                     $label.remove();
@@ -93,11 +95,11 @@ define([
                 window.isQMAppActive = false;
             });
 
-            $(document).on('click', function(event) {
+            $(document).on('click', function (event) {
                 clickBehaviour(event);
             });
 
-            $('.popups').on('click', function(event) {
+            $('.popups').on('click', function (event) {
                 var objDom = $(event.target);
 
                 if (objDom.is('.popups') && !objDom.find('.popup.is-overlay').is('.is-open')) {
@@ -105,17 +107,20 @@ define([
                 }
             });
 
-            $('#signup-avatar:file').on('change', function() {
+            $('#signup-avatar:file').on('change', function () {
                 changeInputFile($(this));
             });
 
             /* User Profile
             ----------------------------------------------------- */
-            $body.on('click', '.userDetails, .j-userMenu', function(event) {
+            $body.on('click', '.userDetails, .j-userMenu', function (event) {
+                var id;
+                var roster;
+
                 removePopover();
 
-                var id = $(this).data('id'),
-                    roster = ContactList.roster[id];
+                id = $(this).data('id');
+                roster = ContactList.roster[id];
 
                 if (roster) {
                     QMHtml.User.getControlButtonsForPopupDetails(roster);
@@ -129,7 +134,7 @@ define([
                 return false;
             });
 
-            $body.on('click', '#userProfile', function(event) {
+            $body.on('click', '#userProfile', function (event) {
                 var profileView = App.views.Profile;
 
                 event.preventDefault();
@@ -137,30 +142,30 @@ define([
                 profileView.render().openPopup();
             });
 
-            $body.on('click', '.btn_changePassword', function(event) {
-                var changePassView = App.views.ChangePass,
-                    profileView = App.views.Profile;
+            $body.on('click', '.btn_changePassword', function (event) {
+                var changePassView = App.views.ChangePass;
+                var profileView = App.views.Profile;
 
                 event.preventDefault();
                 profileView.$el.hide();
                 changePassView.render().openPopup();
             });
 
-            $body.on('click', '.btn_popup_changepass', function(event) {
+            $body.on('click', '.btn_popup_changepass', function (event) {
                 var changePassView = App.views.ChangePass;
 
                 event.preventDefault();
                 changePassView.submitForm();
             });
 
-            $body.on('click', '.btn_userProfile_connect', function() {
-                var profileView = App.views.Profile,
-                    btn = $(this);
+            $body.on('click', '.btn_userProfile_connect', function () {
+                var profileView = App.views.Profile;
+                var btn = $(this);
 
                 btn.prop('disabled', true);
 
                 FB.login(
-                    function(response) {
+                    function (response) {
                         Helpers.log('FB authResponse', response);
                         if (response.status === 'connected') {
                             profileView.addFBAccount(response.authResponse.userID);
@@ -175,10 +180,10 @@ define([
 
             /* smiles
             ----------------------------------------------------- */
-            $('.smiles-tab').on('click', function() {
-                var $self = $(this),
-                    smile = document.querySelector('.smiles-wrap'),
-                    group = $self.data('group');
+            $('.smiles-tab').on('click', function () {
+                var $self = $(this);
+                var smile = document.querySelector('.smiles-wrap');
+                var group = $self.data('group');
 
                 $self.addClass('is-actived')
                     .siblings().removeClass('is-actived');
@@ -198,16 +203,16 @@ define([
                 minScrollbarLength: 20
             });
 
-            $workspace.on('click', '.j-em', function() {
+            $workspace.on('click', '.j-em', function () {
                 Cursor.setCursorAfterElement($(this)[0]);
 
                 return false;
             });
 
 
-            $('.j-em_wrap').on('click', function(event) {
-                var target = $(this).children()[0],
-                    textarea = $('.l-chat:visible .textarea')[0];
+            $('.j-em_wrap').on('click', function (event) {
+                var target = $(this).children()[0];
+                var textarea = $('.l-chat:visible .textarea')[0];
 
                 if (target === event.target) {
                     textarea.focus();
@@ -221,26 +226,26 @@ define([
 
             /* attachments
             ----------------------------------------------------- */
-            $workspace.on('click', '.j-btn_input_attach', function() {
+            $workspace.on('click', '.j-btn_input_attach', function () {
                 $(this).parents('.l-chat-footer')
                     .find('.attachment')
                     .click();
             });
 
-            $workspace.on('change', '.attachment', function() {
+            $workspace.on('change', '.attachment', function () {
                 AttachView.changeInput($(this));
             });
 
-            $workspace.on('click', '.attach-cancel', function(event) {
+            $workspace.on('click', '.attach-cancel', function (event) {
                 event.preventDefault();
                 AttachView.cancel($(this));
             });
 
-            $workspace.on('click', '.preview', function() {
-                var $self = $(this),
-                    name = $self.data('name'),
-                    url = $self.data('url'),
-                    attachType;
+            $workspace.on('click', '.preview', function () {
+                var $self = $(this);
+                var name = $self.data('name');
+                var url = $self.data('url');
+                var attachType;
 
                 if ($self.is('.preview-photo')) {
                     attachType = 'photo';
@@ -255,22 +260,22 @@ define([
 
             /* location
             ----------------------------------------------------- */
-            $workspace.on('click', '.j-send_location', function() {
+            $workspace.on('click', '.j-send_location', function () {
                 if (localStorage['QM.latitude'] && localStorage['QM.longitude']) {
-                    Location.toggleGeoCoordinatesToLocalStorage(false, function(res, err) {
-                        Helpers.log(err ? err : res);
+                    Location.toggleGeoCoordinatesToLocalStorage(false, function (res, err) {
+                        Helpers.log(err || res);
                     });
                 } else {
-                    Location.toggleGeoCoordinatesToLocalStorage(true, function(res, err) {
-                        Helpers.log(err ? err : res);
+                    Location.toggleGeoCoordinatesToLocalStorage(true, function (res, err) {
+                        Helpers.log(err || res);
                     });
                 }
             });
 
-            $workspace.on('click', '.j-btn_input_location', function() {
-                var $self = $(this),
-                    $gmap = $('.j-popover_gmap'),
-                    bool = $self.is('.is-active');
+            $workspace.on('click', '.j-btn_input_location', function () {
+                var $self = $(this);
+                var $gmap = $('.j-popover_gmap');
+                var bool = $self.is('.is-active');
 
                 removePopover();
 
@@ -280,10 +285,9 @@ define([
 
                     Location.addMap($gmap);
                 }
-
             });
 
-            $workspace.on('click', '.j-send_map', function() {
+            $workspace.on('click', '.j-send_map', function () {
                 var localData = localStorage['QM.locationAttach'];
 
                 if (localData) {
@@ -293,7 +297,7 @@ define([
                 }
             });
 
-            $body.on('keypress', function(e) {
+            $body.on('keypress', function (e) {
                 if ((e.keyCode === 13) && $('.j-open_map').length) {
                     $('.j-send_map').click();
                 }
@@ -301,7 +305,7 @@ define([
 
             /* user settings
             ----------------------------------------------------- */
-            $body.on('click', '#userSettings', function() {
+            $body.on('click', '#userSettings', function () {
                 removePopover();
                 $('.j-settings').addClass('is-overlay')
                     .parent('.j-overlay').addClass('is-overlay');
@@ -309,17 +313,17 @@ define([
                 return false;
             });
 
-            $body.on('click', '.j-close_settings', function() {
+            $body.on('click', '.j-close_settings', function () {
                 closePopup();
 
                 return false;
             });
 
-            $('.j-toogle_settings').click(function() {
-                var $target = $(this).find('.j-setings_notify')[0],
-                    obj = {};
+            $('.j-toogle_settings').click(function () {
+                var $target = $(this).find('.j-setings_notify')[0];
+                var obj = {};
 
-                $target.checked = $target.checked === true ? false : true;
+                $target.checked = $target.checked !== true;
                 obj[$target.id] = $target.checked;
 
                 SettingsView.update(obj);
@@ -329,37 +333,38 @@ define([
 
             /* group chats
             ----------------------------------------------------- */
-            $workspace.on('click', '.j-triangle', function() {
-                var $chat = $('.l-chat:visible'),
-                    $scroll = $chat.find('.j-scrollbar_message');
+            $workspace.on('click', '.j-triangle', function () {
+                var $chat = $('.l-chat:visible');
+                var $scroll = $chat.find('.j-scrollbar_message');
 
                 if ($chat.find('.triangle_up').is('.is-hidden')) {
-                    $scroll.mCustomScrollbar('scrollTo','-=94');
+                    $scroll.mCustomScrollbar('scrollTo', '-=94');
                     setTriagle('up');
                 } else {
-                    $scroll.mCustomScrollbar('scrollTo','+=94');
+                    $scroll.mCustomScrollbar('scrollTo', '+=94');
                     setTriagle('down');
                 }
 
                 return false;
             });
 
-            $workspace.on('click', '.groupTitle .addToGroupChat', function(event) {
+            $workspace.on('click', '.groupTitle .addToGroupChat', function (event) {
+                var $self = $(this);
+                var dialogId = $self.data('dialog');
+
                 event.stopPropagation();
-                var $self = $(this),
-                    dialog_id = $self.data('dialog');
 
                 Helpers.log('add people to groupchat');
-                ContactListView.addContactsToChat($self, 'add', dialog_id);
+                ContactListView.addContactsToChat($self, 'add', dialogId);
             });
 
-            $workspace.on('click', '.groupTitle .leaveChat, .groupTitle .avatar', function(event) {
+            $workspace.on('click', '.groupTitle .leaveChat, .groupTitle .avatar', function (event) {
                 event.stopPropagation();
             });
 
             /* change the chat name
             ----------------------------------------------------- */
-            $workspace.on('mouseenter focus', '.groupTitle .name_chat', function() {
+            $workspace.on('mouseenter focus', '.groupTitle .name_chat', function () {
                 var $chat = $('.l-chat:visible');
                 $chat.find('.triangle:visible').addClass('is-hover')
                     .siblings('.pencil').removeClass('is-hidden');
@@ -367,7 +372,7 @@ define([
                 return false;
             });
 
-            $workspace.on('mouseleave', '.groupTitle .name_chat', function() {
+            $workspace.on('mouseleave', '.groupTitle .name_chat', function () {
                 var $chat = $('.l-chat:visible');
 
                 if (!$(this).is('.is-focus')) {
@@ -378,7 +383,7 @@ define([
                 return false;
             });
 
-            $(document.body).on('click', function() {
+            $(document.body).on('click', function () {
                 var $chat = $('.l-chat:visible');
 
                 if ($chat.find('.groupTitle .name_chat').is('.is-focus')) {
@@ -389,7 +394,9 @@ define([
 
                     if (editedChatName && !editedChatName.name) {
                         $chat.find('.name_chat').text(chatName.name);
-                    } else if (editedChatName && (editedChatName.name !== chatName.name) && (editedChatName.created_at > chatName.created_at)) {
+                    } else if (editedChatName
+                        && (editedChatName.name !== chatName.name)
+                        && (editedChatName.created_at > chatName.created_at)) {
                         $chat.find('.name_chat').text(editedChatName.name).attr('title', editedChatName.name);
                         Dialog.changeName($chat.data('dialog'), editedChatName.name);
                     } else {
@@ -398,9 +405,10 @@ define([
                 }
             });
 
-            $body.on('click', '.groupTitle .name_chat', function(event) {
-                event.stopPropagation();
+            $body.on('click', '.groupTitle .name_chat', function (event) {
                 var $self = $(this);
+
+                event.stopPropagation();
 
                 $self.addClass('is-focus');
                 chatName = {
@@ -410,9 +418,9 @@ define([
                 removePopover();
             });
 
-            $body.on('keypress', '.groupTitle .name_chat', function(event) {
-                var $self = $(this),
-                    code = event.keyCode;
+            $body.on('keypress', '.groupTitle .name_chat', function (event) {
+                var $self = $(this);
+                var code = event.keyCode;
 
                 editedChatName = {
                     name: $self.text().trim(),
@@ -431,18 +439,18 @@ define([
 
             /* change the chat avatar
             ----------------------------------------------------- */
-            $body.on('click', '.j-changePic', function() {
-                var dialog_id = $(this).data('dialog');
+            $body.on('click', '.j-changePic', function () {
+                var dialogId = $(this).data('dialog');
 
-                $('input:file[data-dialog="' + dialog_id + '"]').click();
+                $('input:file[data-dialog="' + dialogId + '"]').click();
             });
 
-            $workspace.on('change', '.groupTitle .avatar_file', function() {
+            $workspace.on('change', '.groupTitle .avatar_file', function () {
                 var $chat = $('.l-chat:visible');
 
-                Dialog.changeAvatar($chat.data('dialog'), $(this), function(avatar) {
+                Dialog.changeAvatar($chat.data('dialog'), $(this), function (avatar) {
                     if (!avatar) {
-                        return false;
+                        return;
                     }
 
                     $chat.find('.avatar_chat').css('background-image', 'url(' + avatar + ')');
@@ -450,7 +458,7 @@ define([
                 });
             });
 
-            $workspace.on('click', '.j-scaleAvatar', function() {
+            $workspace.on('click', '.j-scaleAvatar', function () {
                 Helpers.scaleAvatar($(this));
             });
 
@@ -462,7 +470,7 @@ define([
             ----------------------------------------------------- */
             Events.intiAuthorizationInputs();
 
-            $('.j-btn_login_fb').on('click', function() {
+            $('.j-btn_login_fb').on('click', function () {
                 if ($(this).hasClass('j-reloadPage')) {
                     window.location.reload();
                 }
@@ -477,7 +485,7 @@ define([
                 return false;
             });
 
-            $('.j-firebasePhone').on('click', function() {
+            $('.j-firebasePhone').on('click', function () {
                 if ($(this).hasClass('j-reloadPage')) {
                     window.location.reload();
                 }
@@ -492,12 +500,12 @@ define([
                 return false;
             });
 
-            $('#signupQB').on('click', function() {
+            $('#signupQB').on('click', function () {
                 Helpers.log('signup with QB');
                 UserView.signupQB();
             });
 
-            $('.j-login_QB').on('click', function() {
+            $('.j-login_QB').on('click', function () {
                 Helpers.log('login wih QB');
 
                 // removed class "active" (hotfix for input on qmdev.quickblox.com/qm.quickblox.com)
@@ -509,14 +517,14 @@ define([
 
             /* button "back"
             ----------------------------------------------------- */
-            $('.j-back_to_login_page').on('click', function() {
+            $('.j-back_to_login_page').on('click', function () {
                 UserView.loginQB();
                 $('.j-success_callback').remove();
             });
 
             /* signup page
             ----------------------------------------------------- */
-            $('#signupForm').on('click submit', function(event) {
+            $('#signupForm').on('click submit', function (event) {
                 Helpers.log('create user');
                 event.preventDefault();
                 UserView.signupForm();
@@ -524,13 +532,13 @@ define([
 
             /* login page
             ----------------------------------------------------- */
-            $('#forgot').on('click', function(event) {
+            $('#forgot').on('click', function (event) {
                 Helpers.log('forgot password');
                 event.preventDefault();
                 UserView.forgot();
             });
 
-            $('#loginForm').on('click submit', function(event) {
+            $('#loginForm').on('click submit', function (event) {
                 Helpers.log('authorize user');
                 event.preventDefault();
                 UserView.loginForm();
@@ -538,13 +546,13 @@ define([
 
             /* forgot and reset page
             ----------------------------------------------------- */
-            $('#forgotForm').on('click submit', function(event) {
+            $('#forgotForm').on('click submit', function (event) {
                 Helpers.log('send letter');
                 event.preventDefault();
                 UserView.forgotForm();
             });
 
-            $('#resetForm').on('click submit', function(event) {
+            $('#resetForm').on('click submit', function (event) {
                 Helpers.log('reset password');
                 event.preventDefault();
                 UserView.resetForm();
@@ -552,7 +560,7 @@ define([
 
             /* popovers
             ----------------------------------------------------- */
-            $('#profile').on('click', function(event) {
+            $('#profile').on('click', function (event) {
                 event.preventDefault();
                 removePopover();
                 if ($('.l-chat:visible').find('.triangle_down').is('.is-hidden')) {
@@ -561,23 +569,23 @@ define([
                 UserView.profilePopover($(this));
             });
 
-            $('.list_contextmenu').on('contextmenu', '.contact', function() {
+            $('.list_contextmenu').on('contextmenu', '.contact', function () {
                 removePopover();
                 UserView.contactPopover($(this));
 
                 return false;
             });
 
-            $workspace.on('click', '.occupant', function(event) {
+            $workspace.on('click', '.occupant', function (event) {
                 removePopover();
                 UserView.occupantPopover($(this), event);
 
                 return false;
             });
 
-            $workspace.on('click', '.j-btn_input_smile', function() {
-                var $self = $(this),
-                    bool = $self.is('.is-active');
+            $workspace.on('click', '.j-btn_input_smile', function () {
+                var $self = $(this);
+                var bool = $self.is('.is-active');
 
                 removePopover();
 
@@ -589,9 +597,9 @@ define([
                 Cursor.setCursorToEnd($('.l-chat:visible .textarea')[0]);
             });
 
-            $workspace.on('click', '.j-btn_audio_record', function() {
-                var $self = $(this),
-                    bool = $self.is('.is-active');
+            $workspace.on('click', '.j-btn_audio_record', function () {
+                var $self = $(this);
+                var bool = $self.is('.is-active');
 
                 removePopover();
 
@@ -603,18 +611,21 @@ define([
 
             /* popups
             ----------------------------------------------------- */
-            $body.on('click', '#logout', function(event) {
+            $body.on('click', '#logout', function (event) {
                 event.preventDefault();
                 openPopup($('#popupLogout'));
             });
 
             // delete contact
-            $body.on('click', '.j-deleteContact', function() {
+            $body.on('click', '.j-deleteContact', function () {
+                var $that = $(this);
+                var parents;
+                var id;
+
                 closePopup();
 
-                var $that = $(this),
-                    parents = $that.parents('.presence-listener'),
-                    id = parents.data('id') || $that.data('id');
+                parents = $that.parents('.presence-listener');
+                id = parents.data('id') || $that.data('id');
 
                 if (parents.is('.popup_details')) {
                     openPopup($('.j-popupDeleteContact'), id, null, true);
@@ -625,7 +636,7 @@ define([
                 return false;
             });
 
-            $('.j-deleteContactConfirm').on('click', function() {
+            $('.j-deleteContactConfirm').on('click', function () {
                 var id = $(this).parents('.j-popupDeleteContact').data('id');
 
                 ContactListView.sendDelete(id, true);
@@ -633,33 +644,36 @@ define([
             });
 
             // delete chat
-            $('.list, .l-workspace-wrap').on('click', '.j-deleteChat', function() {
+            $('.list, .l-workspace-wrap').on('click', '.j-deleteChat', function () {
+                var $self = $(this);
+                var parent;
+                var dialogId;
+
                 closePopup();
 
-                var $self = $(this),
-                    parent = $self.parents('.presence-listener')[0] ? $self.parents('.presence-listener') : $self.parents('.is-group'),
-                    dialog_id = parent.data('dialog');
+                parent = $self.parents('.presence-listener')[0] ? $self.parents('.presence-listener') : $self.parents('.is-group');
+                dialogId = parent.data('dialog');
 
-                openPopup($('.j-popupDeleteChat'), null, dialog_id);
+                openPopup($('.j-popupDeleteChat'), null, dialogId);
 
                 return false;
             });
 
-            $('.j-deleteChatConfirm').on('click', function() {
+            $('.j-deleteChatConfirm').on('click', function () {
                 Helpers.log('Delete chat');
                 DialogView.deleteChat($(this));
             });
 
-            $('#logoutConfirm').on('click', function() {
+            $('#logoutConfirm').on('click', function () {
                 localStorage.setItem('QM.' + User.contact.id + '_logOut', true);
                 UserView.logout();
             });
 
-            $('.popup-control-button, .btn_popup_private').on('click', function(event) {
-                event.preventDefault();
+            $('.popup-control-button, .btn_popup_private').on('click', function (event) {
+                var $self = $(this);
+                var isProfile = $self.data('isprofile');
 
-                var $self = $(this),
-                    isProfile = $self.data('isprofile');
+                event.preventDefault();
 
                 if (!$self.is('.returnBackToPopup')) {
                     closePopup();
@@ -670,61 +684,61 @@ define([
                 }
             });
 
-            $('.search').on('click', function() {
+            $('.search').on('click', function () {
                 Helpers.log('global search');
                 closePopup();
                 ContactListView.globalPopup();
             });
 
-            $('.btn_search').on('click', function(event) {
-                event.preventDefault();
+            $('.btn_search').on('click', function (event) {
+                var localSearch = $('#searchContacts input');
+                var globalSearch = $('#globalSearch input');
 
-                var localSearch = $('#searchContacts input'),
-                    globalSearch = $('#globalSearch input');
+                event.preventDefault();
 
                 globalSearch.val(localSearch.val());
                 $('#globalSearch').submit();
             });
 
-            $('#mainPage').on('click', '.createGroupChat', function(event) {
+            $('#mainPage').on('click', '.createGroupChat', function (event) {
+                var $self = $(this);
+                var isPrivate = $self.data('private');
+
                 event.preventDefault();
 
                 Helpers.log('add people to groupchat');
-
-                var $self = $(this),
-                    isPrivate = $self.data('private');
-
                 ContactListView.addContactsToChat($self, null, null, isPrivate);
             });
 
-            $('.l-sidebar').on('click', '.addToGroupChat', function(event) {
+            $('.l-sidebar').on('click', '.addToGroupChat', function (event) {
+                var $self = $(this);
+                var dialogId = $self.data('dialog');
+
                 event.preventDefault();
 
-                var $self = $(this),
-                    dialog_id = $self.data('dialog');
                 Helpers.log('add people to groupchat');
-                ContactListView.addContactsToChat($self, 'add', dialog_id);
+                ContactListView.addContactsToChat($self, 'add', dialogId);
             });
 
             /* search
             ----------------------------------------------------- */
-            $('.j-globalSearch').on('keyup search submit', function(event) {
-                var $self = $(this),
-                    code = event.keyCode,
-                    isText = $self.find('.form-input-search').val().length,
-                    $cleanButton = $self.find('.j-clean-button'),
-                    isNoBtn = $cleanButton.is(':hidden');
+            $('.j-globalSearch').on('keyup search submit', function (event) {
+                var $self = $(this);
+                var code = event.keyCode;
+                var isText = $self.find('.form-input-search').val().length;
+                var $cleanButton = $self.find('.j-clean-button');
+                var isNoBtn = $cleanButton.is(':hidden');
 
                 if (code === 13) {
                     clearTimeout(keyupSearch);
                     startSearch();
                 } else if (keyupSearch === undefined) {
-                    keyupSearch = setTimeout(function() {
+                    keyupSearch = setTimeout(function () {
                         startSearch();
                     }, (code === 8) ? 0 : 1000);
                 } else {
                     clearTimeout(keyupSearch);
-                    keyupSearch = setTimeout(function() {
+                    keyupSearch = setTimeout(function () {
                         startSearch();
                     }, 1000);
                 }
@@ -743,14 +757,14 @@ define([
                 return false;
             });
 
-            $('.localSearch').on('keyup search submit', function(event) {
-                var $self = $(this),
-                    scrollbar = document.querySelector('.j-scrollbar_aside'),
-                    isText = $self.find('.form-input-search').val().length,
-                    $cleanButton = $self.find('.j-clean-button'),
-                    isNoBtn = $cleanButton.is(':hidden'),
-                    type = event.type,
-                    code = event.keyCode; // code=27 (Esc key), code=13 (Enter key)
+            $('.localSearch').on('keyup search submit', function (event) {
+                var $self = $(this);
+                var scrollbar = document.querySelector('.j-scrollbar_aside');
+                var isText = $self.find('.form-input-search').val().length;
+                var $cleanButton = $self.find('.j-clean-button');
+                var isNoBtn = $cleanButton.is(':hidden');
+                var type = event.type;
+                var code = event.keyCode; // code=27 (Esc key), code=13 (Enter key)
 
                 if ((type === 'keyup' && code !== 27 && code !== 13) || (type === 'search')) {
                     if (this.id === 'searchContacts') {
@@ -771,9 +785,9 @@ define([
                 return false;
             });
 
-            $('.j-clean-button').on('click', function() {
-                var $self = $(this),
-                    $form = $self.parent('form.formSearch');
+            $('.j-clean-button').on('click', function () {
+                var $self = $(this);
+                var $form = $self.parent('form.formSearch');
 
                 $self.hide();
                 $form.find('input.form-input-search').val('').focus();
@@ -791,35 +805,35 @@ define([
 
             /* subscriptions
             ----------------------------------------------------- */
-            $('.list_contacts').on('click', '.j-sendRequest', function() {
+            $('.list_contacts').on('click', '.j-sendRequest', function () {
                 var jid = $(this).parents('.j-listItem').data('jid');
 
                 ContactListView.sendSubscribe(jid);
                 Helpers.log('send subscribe');
             });
 
-            $workspace.on('click', '.j-requestAgain', function() {
+            $workspace.on('click', '.j-requestAgain', function () {
                 var jid = $(this).parents('.j-chatItem').data('jid');
 
                 ContactListView.sendSubscribe(jid, true);
                 Helpers.log('send subscribe');
             });
 
-            $body.on('click', '.j-requestAction', function() {
+            $body.on('click', '.j-requestAction', function () {
                 var jid = $(this).parents('.j-listItem').data('jid');
 
                 ContactListView.sendSubscribe(jid);
                 Helpers.log('send subscribe');
             });
 
-            $('.list').on('click', '.j-requestConfirm', function() {
+            $('.list').on('click', '.j-requestConfirm', function () {
                 var jid = $(this).parents('.j-incomingContactRequest').data('jid');
 
                 ContactListView.sendConfirm(jid, true);
                 Helpers.log('send confirm');
             });
 
-            $('.list').on('click', '.j-requestCancel', function() {
+            $('.list').on('click', '.j-requestCancel', function () {
                 var jid = $(this).parents('.j-incomingContactRequest').data('jid');
 
                 ContactListView.sendReject(jid, true);
@@ -828,16 +842,16 @@ define([
 
             /* dialogs
             ----------------------------------------------------- */
-            $('.list').on('click', '.contact', function(event) {
+            $('.list').on('click', '.contact', function (event) {
                 if (event.target.tagName !== 'INPUT') {
                     event.preventDefault();
                 }
             });
 
-            $('#popupContacts').on('click', '.contact', function() {
-                var obj = $(this).parent(),
-                    popup = obj.parents('.popup'),
-                    len;
+            $('#popupContacts').on('click', '.contact', function () {
+                var obj = $(this).parent();
+                var popup = obj.parents('.popup');
+                var len;
 
                 if (obj.is('.is-chosen')) {
                     obj.removeClass('is-chosen').find('input').prop('checked', false);
@@ -851,7 +865,7 @@ define([
                     popup.find('.btn_popup_private').removeClass('is-hidden').siblings().addClass('is-hidden');
 
                     if (obj.is('li:last')) {
-                        popup.find('.list_contacts').mCustomScrollbar("scrollTo", "bottom");
+                        popup.find('.list_contacts').mCustomScrollbar('scrollTo', 'bottom');
                     }
                 } else if (len >= 1) {
                     popup.removeClass('not-selected');
@@ -863,57 +877,57 @@ define([
                     }
 
                     if (obj.is('li:last')) {
-                        popup.find('.list_contacts').mCustomScrollbar("scrollTo", "bottom");
+                        popup.find('.list_contacts').mCustomScrollbar('scrollTo', 'bottom');
                     }
                 } else {
                     popup.addClass('not-selected');
                 }
             });
 
-            $('#popupContacts .btn_popup_private').on('click', function() {
-                var id = $('#popupContacts .is-chosen').data('id'),
-                    dialogItem = $('.j-dialogItem[data-id="' + id + '"]').find('.contact');
+            $('#popupContacts .btn_popup_private').on('click', function () {
+                var id = $('#popupContacts .is-chosen').data('id');
+                var dialogItem = $('.j-dialogItem[data-id="' + id + '"]').find('.contact');
 
                 if (dialogItem.length) {
                     dialogItem.click();
                 } else {
-                    Dialog.restorePrivateDialog(id, function() {
+                    Dialog.restorePrivateDialog(id, function () {
                         dialogItem = $('.j-dialogItem[data-id="' + id + '"]').find('.contact');
                         dialogItem.click();
                     });
                 }
             });
 
-            $body.on('click', '.writeMessage', function(event) {
-                event.preventDefault();
+            $body.on('click', '.writeMessage', function (event) {
+                var id = $(this).data('id');
+                var dialogItem = $('.j-dialogItem[data-id="' + id + '"]').find('.contact');
 
-                var id = $(this).data('id'),
-                    dialogItem = $('.j-dialogItem[data-id="' + id + '"]').find('.contact');
+                event.preventDefault();
 
                 closePopup();
 
                 if (dialogItem.length) {
                     dialogItem.click();
                 } else {
-                    Dialog.restorePrivateDialog(id, function() {
+                    Dialog.restorePrivateDialog(id, function () {
                         dialogItem = $('.j-dialogItem[data-id="' + id + '"]').find('.contact');
                         dialogItem.click();
                     });
                 }
             });
 
-            $('#popupContacts .btn_popup_group').on('click', function() {
+            $('#popupContacts .btn_popup_group').on('click', function () {
                 DialogView.createGroupChat();
             });
 
-            $('#popupContacts .btn_popup_add').on('click', function() {
-                var dialog_id = $(this).parents('.popup').data('dialog');
-                DialogView.createGroupChat('add', dialog_id);
+            $('#popupContacts .btn_popup_add').on('click', function () {
+                var dialogId = $(this).parents('.popup').data('dialog');
+                DialogView.createGroupChat('add', dialogId);
             });
 
-            $workspace.on('click', '.j-btn_input_send', function() {
-                var $msg = $('.j-message:visible'),
-                    isLoading = $('.j-loading').length;
+            $workspace.on('click', '.j-btn_input_send', function () {
+                var $msg = $('.j-message:visible');
+                var isLoading = $('.j-loading').length;
 
                 if (!isLoading) {
                     MessageView.sendMessage($msg);
@@ -928,19 +942,19 @@ define([
             });
 
             // show message status on hover event
-            $body.on('mouseenter', 'article.message.is-own', function() {
-                var $self = $(this),
-                    time = $self.find('.message-time'),
-                    status = $self.find('.message-status');
+            $body.on('mouseenter', 'article.message.is-own', function () {
+                var $self = $(this);
+                var time = $self.find('.message-time');
+                var status = $self.find('.message-status');
 
                 time.addClass('is-hidden');
                 status.removeClass('is-hidden');
             });
 
-            $body.on('mouseleave', 'article.message.is-own', function() {
-                var $self = $(this),
-                    time = $self.find('.message-time'),
-                    status = $self.find('.message-status');
+            $body.on('mouseleave', 'article.message.is-own', function () {
+                var $self = $(this);
+                var time = $self.find('.message-time');
+                var status = $self.find('.message-status');
 
                 status.addClass('is-hidden');
                 time.removeClass('is-hidden');
@@ -948,9 +962,9 @@ define([
 
             /* A button for the scroll to the bottom of chat
             ------------------------------------------------------ */
-            $body.on('click', '.j-refreshButton', function() {
-                var $this = $(this),
-                    dialogId = $this.data('dialog');
+            $body.on('click', '.j-refreshButton', function () {
+                var $this = $(this);
+                var dialogId = $this.data('dialog');
 
                 if (dialogId.length) {
                     DialogView.htmlBuild(dialogId);
@@ -963,15 +977,15 @@ define([
                 return false;
             });
 
-            $workspace.on('click', '.j-toBottom', function() {
+            $workspace.on('click', '.j-toBottom', function () {
                 $('.j-scrollbar_message').mCustomScrollbar('scrollTo', 'bottom');
                 $(this).hide();
             });
 
-            $workspace.on('click', '.j-videoPlayer', function(e) {
+            $workspace.on('click', '.j-videoPlayer', function (e) {
                 var video = e.target;
 
-                if (!video.dataset.source) return true;
+                if (!video.dataset.source) return;
 
                 video.src = video.dataset.source;
                 video.preload = 'auto';
@@ -989,24 +1003,24 @@ define([
             });
 
             // send typing statuses with keyup event
-            $workspace.on('keypress', '.j-message', function(event) {
-                var $self = $(this),
-                    isEnterKey = (event.keyCode === 13),
-                    shiftKey = event.shiftKey,
-                    $chat = $self.parents('.l-chat'),
-                    jid = $chat.data('jid'),
-                    isLoading = $chat.find('.j-loading').length,
-                    isEmpty = !$chat.find('.textarea').html().length;
+            $workspace.on('keypress', '.j-message', function (event) {
+                var $self = $(this);
+                var isEnterKey = (event.keyCode === 13);
+                var shiftKey = event.shiftKey;
+                var $chat = $self.parents('.l-chat');
+                var jid = $chat.data('jid');
+                var isLoading = $chat.find('.j-loading').length;
+                var isEmpty = !$chat.find('.textarea').html().length;
 
                 if (isEnterKey && (isLoading || isEmpty)) {
-                    return false;
-                } else if (isEnterKey && !shiftKey) {
+                    return;
+                } if (isEnterKey && !shiftKey) {
                     isStopTyping();
                     MessageView.sendMessage($self);
                     $self.find('.textarea').empty();
                     removePopover();
-                    return false;
-                } else if (stopTyping === undefined) {
+                    return;
+                } if (stopTyping === undefined) {
                     isStartTyping();
                     stopTyping = setTimeout(isStopTyping, 4000);
                     retryTyping = setInterval(isStartTyping, 4000);
@@ -1030,26 +1044,26 @@ define([
                 }
             });
 
-            $(document).on('keypress', function(event) {
-                if ( event.keyCode === 13 && $('.j-popover_record').hasClass('is-active') ) {
+            $(document).on('keypress', function (event) {
+                if (event.keyCode === 13 && $('.j-popover_record').hasClass('is-active')) {
                     $('.j-record_title').click();
                 }
             });
 
-            $workspace.on('click', '.j-message', function() {
-                if ( $('.j-popover_record').hasClass('is-active') ) {
+            $workspace.on('click', '.j-message', function () {
+                if ($('.j-popover_record').hasClass('is-active')) {
                     removePopover();
                 }
             });
 
-            $workspace.on('submit', '.j-message', function() {
+            $workspace.on('submit', '.j-message', function () {
                 return false;
             });
 
-            $workspace.on('keypress', '.j-message', function() {
-                var $textarea = $('.l-chat:visible .textarea'),
-                    $emj = $textarea.find('.j-em'),
-                    val = $textarea.text().trim();
+            $workspace.on('keypress', '.j-message', function () {
+                var $textarea = $('.l-chat:visible .textarea');
+                var $emj = $textarea.find('.j-em');
+                var val = $textarea.text().trim();
 
                 if (val.length || $emj.length) {
                     $textarea.addClass('contenteditable');
@@ -1059,17 +1073,17 @@ define([
                 }
             });
 
-            $body.on('paste', '.j-message', function(e) {
+            $body.on('paste', '.j-message', function (e) {
                 var text = (e.originalEvent || e).clipboardData.getData('text/plain');
                 document.execCommand('insertText', false, text);
 
                 return false;
             });
 
-            $('.j-home').on('click', function() {
-                var $selected = $('.is-selected'),
-                    dialogId = $selected.data('dialog'),
-                    $label = $('.j-newMessages[data-dialog="' + dialogId + '"]');
+            $('.j-home').on('click', function () {
+                var $selected = $('.is-selected');
+                var dialogId = $selected.data('dialog');
+                var $label = $('.j-newMessages[data-dialog="' + dialogId + '"]');
 
                 VoiceMessage.resetRecord();
 
@@ -1088,7 +1102,7 @@ define([
 
             /* temporary events
             ----------------------------------------------------- */
-            $('#share').on('click', function(event) {
+            $('#share').on('click', function (event) {
                 event.preventDefault();
             });
 
@@ -1097,10 +1111,10 @@ define([
         }
     };
 
-    Events.intiAuthorizationInputs = function(el) {
-        var $input = el ? el : $('.form-input');
+    Events.intiAuthorizationInputs = function (el) {
+        var $input = el || $('.form-input');
 
-        $input.on('focus', function() {
+        $input.on('focus', function () {
             var $this = $(this);
 
             if (!$this.val()) {
@@ -1110,7 +1124,7 @@ define([
             return false;
         });
 
-        $input.on('blur', function() {
+        $input.on('blur', function () {
             var $this = $(this);
 
             if (!$this.val()) {
@@ -1137,30 +1151,30 @@ define([
 
     // Checking if the target is not an object run popover
     function clickBehaviour(e) {
-        var objDom = $(e.target),
-            selectors = '#profile, #profile *, .occupant, .occupant *, ' +
-                '.j-btn_input_smile, .j-btn_input_smile *, .textarea, ' +
-                '.textarea *, .j-popover_smile, .j-popover_smile *, ' +
-                '.j-popover_gmap, .j-popover_gmap *, .j-btn_input_location, ' +
-                '.j-btn_input_location *, ' +
-                '.j-popover_record, .j-popover_record *, .j-btn_audio_record, ' +
-                '.j-btn_audio_record *',
-            googleImage = objDom.context.src && objDom.context.src.indexOf('/maps.gstatic.com/mapfiles/api-3/images/mapcnt6.png') || null;
+        var objDom = $(e.target);
+        var selectors = '#profile, #profile *, .occupant, .occupant *, '
+                + '.j-btn_input_smile, .j-btn_input_smile *, .textarea, '
+                + '.textarea *, .j-popover_smile, .j-popover_smile *, '
+                + '.j-popover_gmap, .j-popover_gmap *, .j-btn_input_location, '
+                + '.j-btn_input_location *, '
+                + '.j-popover_record, .j-popover_record *, .j-btn_audio_record, '
+                + '.j-btn_audio_record *';
+        var googleImage = (objDom.context.src && objDom.context.src.indexOf('/maps.gstatic.com/mapfiles/api-3/images/mapcnt6.png')) || null;
 
         if (objDom.is(selectors) || e.which === 3 || googleImage === 7) {
-            return false;
-        } else {
-            removePopover();
+            return;
         }
+        removePopover();
     }
 
     function changeInputFile(objDom) {
-        var URL = window.URL,
-            file = objDom[0].files[0],
-            src = file ? URL.createObjectURL(file) : QMCONFIG.defAvatar.url,
-            fileName = file ? file.name : QMCONFIG.defAvatar.caption;
+        var URL = window.URL;
+        var file = objDom[0].files[0];
+        var src = file ? URL.createObjectURL(file) : QMCONFIG.defAvatar.url;
+        var fileName = file ? file.name : QMCONFIG.defAvatar.caption;
 
-        objDom.prev().find('.avatar').css('background-image', "url(" + src + ")").siblings('span').text(fileName);
+        objDom.prev().find('.avatar').css('background-image', 'url(' + src + ')').siblings('span')
+            .text(fileName);
     }
 
     function removePopover() {
@@ -1169,9 +1183,9 @@ define([
         $('.is-contextmenu').removeClass('is-contextmenu');
         $('.popover').remove();
 
-        if ( $('.j-start_record').hasClass('is-active') ||
-             $('.j-start_record').hasClass('is-send') ) {
-            return false;
+        if ($('.j-start_record').hasClass('is-active')
+             || $('.j-start_record').hasClass('is-send')) {
+            return;
         }
 
         $('.is-active').removeClass('is-active');
@@ -1181,14 +1195,14 @@ define([
         }
     }
 
-    function openPopup(objDom, id, dialog_id, isProfile) {
-        // if it was the delete action
+    function openPopup(objDom, id, dialogId, isProfile) {
+    // if it was the delete action
         if (id) {
             objDom.data('id', id);
             objDom.find('.j-deleteContactConfirm').data('id', id);
         }
-        if (dialog_id) {
-            objDom.find('.j-deleteChatConfirm').data('dialog', dialog_id);
+        if (dialogId) {
+            objDom.find('.j-deleteChatConfirm').data('dialog', dialogId);
         }
         if (isProfile) {
             objDom.find('.popup-control-button_cancel').attr('data-isprofile', true);
@@ -1231,8 +1245,8 @@ define([
     }
 
     function setTriagle(UpOrDown) {
-        var $chat = $('.l-chat:visible'),
-            $triangle = $chat.find('.triangle_' + UpOrDown);
+        var $chat = $('.l-chat:visible');
+        var $triangle = $chat.find('.triangle_' + UpOrDown);
 
         $triangle.removeClass('is-hidden')
             .siblings('.triangle').addClass('is-hidden');
@@ -1242,5 +1256,4 @@ define([
     }
 
     return Events;
-
 });

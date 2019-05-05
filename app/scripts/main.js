@@ -11,7 +11,7 @@ require.config({
     shim: {
         gmaps: {
             deps: ['googlemaps'],
-            exports: "GMaps"
+            exports: 'GMaps'
         },
         cryptojs: {
             exports: 'CryptoJS'
@@ -24,7 +24,7 @@ require.config({
         }
     },
     paths: {
-        // libs
+    // libs
         googlemaps: '../vendor/googlemaps-amd/googlemaps',
         async: '../vendor/requirejs-plugins/async',
         gmaps: 'https://cdnjs.cloudflare.com/ajax/libs/gmaps.js/0.4.24/gmaps.min',
@@ -97,7 +97,7 @@ require([
     'backbone',
     'QBNotification',
     'fetch' // the fetch polifil for IE 10+
-], function(
+], function (
     $,
     QMCONFIG,
     Helpers,
@@ -109,8 +109,8 @@ require([
     var APP;
 
     // Application initialization
-    $(function() {
-        // set Q-MUNICATE version
+    $(function () {
+    // set Q-MUNICATE version
         $('.j-appVersion').html('v. 1.15.0');
 
         // Set the chat protocol BOSH for IE(11+)/Edge(14+) browsers
@@ -118,10 +118,10 @@ require([
             QMCONFIG.QBconf.chatProtocol.active = 1;
         }
 
-        $.ajaxSetup({cache: true});
+        $.ajaxSetup({ cache: true });
 
         // initialize facebook sdk
-        if (window.hasOwnProperty('FB')) {
+        if (FB) {
             FB.init({
                 appId: QMCONFIG.fbAccount.appId,
                 version: 'v3.0'
@@ -129,7 +129,7 @@ require([
         }
 
         // emoji smiles run
-        $('.smiles-group').each(function() {
+        $('.smiles-group').each(function () {
             var obj = $(this);
             obj.html(minEmoji(obj.text(), true));
         });
@@ -141,5 +141,4 @@ require([
         APP = new QM();
         APP.init();
     });
-
 });

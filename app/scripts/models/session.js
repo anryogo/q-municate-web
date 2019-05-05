@@ -7,24 +7,23 @@
 define([
     'config',
     'cryptojs'
-], function(
+], function (
     QMCONFIG,
     CryptoJS
 ) {
-
     function Session(app) {
         this.app = app;
     }
 
     Session.prototype = {
 
-        create: function(params) {
+        create: function (params) {
             this.token = params.token;
             this.expirationTime = params.expirationTime || null;
             this.authParams = params.authParams;
         },
 
-        update: function(params) {
+        update: function (params) {
             var date;
 
             if (params.token) {
@@ -49,7 +48,7 @@ define([
             }
         },
 
-        destroy: function() {
+        destroy: function () {
             localStorage.removeItem('QM.session');
             this.token = null;
             this.expirationTime = null;
@@ -57,16 +56,20 @@ define([
         },
 
         // crypto methods for password
-        encrypt: function(params) {
+        encrypt: function (params) {
             if (params && params.password) {
-                params.password = CryptoJS.AES.encrypt(params.password, QMCONFIG.qbAccount.authSecret).toString();
+                params.password = CryptoJS.AES
+                    .encrypt(params.password, QMCONFIG.qbAccount.authSecret)
+                    .toString();
             }
             return params;
         },
 
-        decrypt: function(params) {
+        decrypt: function (params) {
             if (params && params.password) {
-                params.password = CryptoJS.AES.decrypt(params.password, QMCONFIG.qbAccount.authSecret).toString(CryptoJS.enc.Utf8);
+                params.password = CryptoJS.AES
+                    .decrypt(params.password, QMCONFIG.qbAccount.authSecret)
+                    .toString(CryptoJS.enc.Utf8);
             }
             return params;
         }
@@ -74,5 +77,4 @@ define([
     };
 
     return Session;
-
 });

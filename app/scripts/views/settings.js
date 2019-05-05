@@ -3,7 +3,7 @@
  * Q-MUNICATE settings views Module
  *
  */
-define(['jquery'], function($) {
+define(['jquery'], function ($) {
     'use strict';
 
     var Settings;
@@ -16,21 +16,26 @@ define(['jquery'], function($) {
     SettingsView.prototype = {
 
         // set users settings from localStorage or create default (default - all is ON)
-        setUp: function(userId) {
+        setUp: function (userId) {
+            var storageSettings;
+
             Settings.init(userId);
 
-            var storageSettings = JSON.parse(localStorage['QM.settings-' + userId]);
+            storageSettings = JSON.parse(localStorage['QM.settings-' + userId]);
+
             // set checkbox position
-            for (var key in storageSettings) {
-                $('#' + key)[0].checked = storageSettings[key];
-            }
+            Object.keys(storageSettings).forEach(function (key) {
+                var $elem = $('#' + key);
+
+                $elem[0].checked = storageSettings[key];
+            });
         },
 
         // update user's settings
-        update: function(newStatus) {
+        update: function (newStatus) {
             Settings.set(newStatus);
             Settings.save();
-        },
+        }
 
     };
 

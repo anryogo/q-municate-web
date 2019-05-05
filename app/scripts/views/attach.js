@@ -12,7 +12,7 @@ define([
     'LocationView',
     'underscore',
     'progressbar'
-], function(
+], function (
     $,
     QMCONFIG,
     Helpers,
@@ -21,12 +21,11 @@ define([
     _,
     ProgressBar
 ) {
-    
     var self;
 
-    var User,
-        Message,
-        Attach;
+    var User;
+    var Message;
+    var Attach;
 
     function AttachView(app) {
         this.app = app;
@@ -39,16 +38,17 @@ define([
 
     AttachView.prototype = {
 
-        changeInput: function(objDom, recordedAudioFile) {
-            var file = recordedAudioFile ? recordedAudioFile : objDom[0].files[0],
-                chat = $('.l-chat:visible .l-chat-content .mCSB_container'),
-                id = _.uniqueId(),
-                fileSize = file.size,
-                fileSizeCrop = fileSize > (1024 * 1024) ? (fileSize / (1024 * 1024)).toFixed(1) : (fileSize / 1024).toFixed(1),
-                fileSizeUnit = fileSize > (1024 * 1024) ? 'MB' : 'KB',
-                metadata = readMetadata(file),
-                errMsg,
-                html;
+        changeInput: function (objDom, recordedAudioFile) {
+            var file = recordedAudioFile || objDom[0].files[0];
+            var chat = $('.l-chat:visible .l-chat-content .mCSB_container');
+            var id = _.uniqueId();
+            var fileSize = file.size;
+            // eslint-disable-next-line max-len
+            var fileSizeCrop = fileSize > (1024 * 1024) ? (fileSize / (1024 * 1024)).toFixed(1) : (fileSize / 1024).toFixed(1);
+            var fileSizeUnit = fileSize > (1024 * 1024) ? 'MB' : 'KB';
+            var metadata = readMetadata(file);
+            var errMsg;
+            var html;
 
             if (file) {
                 errMsg = self.validateFile(file);
@@ -57,10 +57,10 @@ define([
                     self.pastErrorMessage(errMsg, objDom, chat);
                 } else {
                     html = QMHtml.Attach.attach({
-                        'fileName': file.name,
-                        'fileSizeCrop': fileSizeCrop,
-                        'fileSizeUnit': fileSizeUnit,
-                        'id': id
+                        fileName: file.name,
+                        fileSizeCrop: fileSizeCrop,
+                        fileSizeUnit: fileSizeUnit,
+                        id: id
                     });
                 }
 
@@ -76,7 +76,7 @@ define([
                     Attach.crop(file, {
                         w: 1000,
                         h: 1000
-                    }, function(blob) {
+                    }, function (blob) {
                         self.createProgressBar(id, fileSizeCrop, metadata, blob);
                     });
                 } else {
@@ -85,9 +85,9 @@ define([
             }
         },
 
-        pastErrorMessage: function(errMsg, objDom, chat) {
+        pastErrorMessage: function (errMsg, objDom, chat) {
             var html = QMHtml.Attach.error({
-                'errMsg': errMsg
+                errMsg: errMsg
             });
 
             chat.append(html);
@@ -101,15 +101,15 @@ define([
             return false;
         },
 
-        createProgressBar: function(id, fileSizeCrop, metadata, file) {
-            var progressBar = new ProgressBar('progress_' + id),
-                dialogId = self.app.entities.active,
-                $chatItem = $('.j-chatItem[data-dialog="' + dialogId + '"]'),
-                fileSize = file.size || metadata.size,
-                percent = 5,
-                isUpload = false,
-                part,
-                time;
+        createProgressBar: function (id, fileSizeCrop, metadata, file) {
+            var progressBar = new ProgressBar('progress_' + id);
+            var dialogId = self.app.entities.active;
+            var $chatItem = $('.j-chatItem[data-dialog="' + dialogId + '"]');
+            var fileSize = file.size || metadata.size;
+            var percent = 5;
+            var isUpload = false;
+            var part;
+            var time;
 
             if (fileSize <= 5 * 1024 * 1024) {
                 time = 50;
@@ -127,7 +127,7 @@ define([
 
             setPercent();
 
-            Attach.upload(file, function(blob) {
+            Attach.upload(file, function (blob) {
                 Helpers.log('Blob:', blob);
 
                 if (!blob.size) {
@@ -149,61 +149,62 @@ define([
                     part = fileSizeCrop;
                     $('.attach-part_' + id).text(part);
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $('.attach-part_' + id).parents('article').remove();
                     }, 50);
-
                 } else {
                     progressBar.setPercent(percent);
                     part = (fileSizeCrop * percent / 100).toFixed(1);
                     $('.attach-part_' + id).text(part);
                     percent += 5;
-                    if (percent > 95) return false;
+
+                    if (percent > 95) return;
+
                     setTimeout(setPercent, time);
                 }
             }
         },
 
-        cancel: function(objDom) {
+        cancel: function (objDom) {
             objDom.parents('article').remove();
         },
 
-        sendMessage: function(chat, blob, metadata, mapCoords) {
-            var MessageView = this.app.views.Message,
-                jid = chat.data('jid'),
-                id = chat.data('id'),
-                dialog_id = chat.data('dialog'),
-                type = chat.is('.is-group') ? 'groupchat' : 'chat',
-                time = Math.floor(Date.now() / 1000),
-                dialogItem = type === 'groupchat' ? $('.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="' + dialog_id + '"]') : $('.l-list-wrap section:not(#searchList) .dialog-item[data-id="' + id + '"]'),
-                locationIsActive = $('.j-send_location').hasClass('btn_active'),
-                copyDialogItem,
-                lastMessage,
-                message,
-                attach,
-                msg;
+        sendMessage: function (chat, blob, metadata, mapCoords) {
+            var MessageView = this.app.views.Message;
+            var jid = chat.data('jid');
+            var id = chat.data('id');
+            var dialogId = chat.data('dialog');
+            var type = chat.is('.is-group') ? 'groupchat' : 'chat';
+            var time = Math.floor(Date.now() / 1000);
+            var dialogItem = type === 'groupchat' ? $('.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="' + dialogId + '"]') : $('.l-list-wrap section:not(#searchList) .dialog-item[data-id="' + id + '"]');
+            var locationIsActive = $('.j-send_location').hasClass('btn_active');
+            var copyDialogItem;
+            var lastMessage;
+            var message;
+            var attach;
+            var msg;
 
             if (mapCoords) {
                 attach = {
-                    'type': 'location',
-                    'data': mapCoords
+                    type: 'location',
+                    data: mapCoords
                 };
             } else {
                 attach = Attach.create(blob, metadata);
             }
 
             msg = {
-                'type': type,
-                'body': getAttachmentText(),
-                'extension': {
-                    'save_to_history': 1,
-                    'dialog_id': dialog_id,
-                    'date_sent': time,
-                    'attachments': [
+                type: type,
+                body: getAttachmentText(),
+                extension: {
+                    save_to_history: 1,
+                    dialog_id: dialogId,
+                    date_sent: time,
+                    attachments: [
                         attach
                     ]
                 },
-                'markable': 1
+                markable: 1
             };
 
             if (locationIsActive) {
@@ -214,15 +215,15 @@ define([
             msg.id = QB.chat.send(jid, msg);
 
             message = Message.create({
-                'body': msg.body,
-                'chat_dialog_id': dialog_id,
-                'date_sent': time,
-                'attachment': attach,
-                'sender_id': User.contact.id,
-                'latitude': localStorage['QM.latitude'] || null,
-                'longitude': localStorage['QM.longitude'] || null,
-                '_id': msg.id,
-                'online': true
+                body: msg.body,
+                chat_dialog_id: dialogId,
+                date_sent: time,
+                attachment: attach,
+                sender_id: User.contact.id,
+                latitude: localStorage['QM.latitude'] || null,
+                longitude: localStorage['QM.longitude'] || null,
+                _id: msg.id,
+                online: true
             });
 
             Helpers.log(message);
@@ -247,41 +248,48 @@ define([
                 var text;
 
                 switch (attach.type) {
-                    case 'location':
-                        text = 'Location';
-                        break;
+                case 'location':
+                    text = 'Location';
+                    break;
 
-                    case 'image':
-                        text = 'Image attachment';
-                        break;
+                case 'image':
+                    text = 'Image attachment';
+                    break;
 
-                    case 'audio':
-                        text = 'Audio attachment';
-                        break;
+                case 'audio':
+                    text = 'Audio attachment';
+                    break;
 
-                    case 'video':
-                        text = 'Video attachment';
-                        break;
+                case 'video':
+                    text = 'Video attachment';
+                    break;
 
-                    default:
-                        text = 'Attachment';
-                        break;
+                default:
+                    text = 'Attachment';
+                    break;
                 }
 
                 return text;
             }
         },
 
-        validateFile: function(file) {
-            var errMsg,
-                maxSize,
-                fullType,
-                type;
+        validateFile: function (file) {
+            var errMsg;
+            var maxSize;
+            var fullType;
+            var type;
 
             fullType = file.type;
-            type = file.type.indexOf('image/') === 0 ? 'image' :
-                   file.type.indexOf('audio/') === 0 ? 'audio' :
-                   file.type.indexOf('video/') === 0 ? 'video' : 'file';
+
+            if (file.type.indexOf('image/') === 0) {
+                type = 'image';
+            } else if (file.type.indexOf('audio/') === 0) {
+                type = 'audio';
+            } else if (file.type.indexOf('video/') === 0) {
+                type = 'video';
+            } else {
+                type = 'file';
+            }
 
             if (type === 'video' || type === 'audio') {
                 maxSize = QMCONFIG.maxLimitMediaFile * 1024 * 1024;
@@ -321,50 +329,60 @@ define([
     }
 
     function readMetadata(file) {
-        var _URL = window.URL || window.webkitURL,
-            metadata = { 'size': file.size },
-            type = file.type.indexOf('image/') === 0 ? 'image' :
-                   file.type.indexOf('audio/') === 0 ? 'audio' :
-                   file.type.indexOf('video/') === 0 ? 'video' : 'file';
+        var WINDOW_URL = window.URL || window.webkitURL;
+        var metadata = { size: file.size };
+        var image;
+        var audio;
+        var video;
+        var type;
+
+        if (file.type.indexOf('image/') === 0) {
+            type = 'image';
+        } else if (file.type.indexOf('audio/') === 0) {
+            type = 'audio';
+        } else if (file.type.indexOf('video/') === 0) {
+            type = 'video';
+        } else {
+            type = 'file';
+        }
 
         switch (type) {
-            case 'image':
-                var image = new Image();
+        case 'image':
+            image = new Image();
 
-                image.src = _URL.createObjectURL(file);
-                image.onload = function() {
-                    metadata.width = this.width;
-                    metadata.height = this.height;
-                };
-                break;
+            image.src = WINDOW_URL.createObjectURL(file);
+            image.onload = function () {
+                metadata.width = this.width;
+                metadata.height = this.height;
+            };
+            break;
 
-            case 'audio':
-                var audio = new Audio();
+        case 'audio':
+            audio = new Audio();
 
-                audio.src = _URL.createObjectURL(file);
-                audio.onloadedmetadata = function() {
-                    metadata.duration = Math.floor(this.duration);
-                };
-                break;
+            audio.src = WINDOW_URL.createObjectURL(file);
+            audio.onloadedmetadata = function () {
+                metadata.duration = Math.floor(this.duration);
+            };
+            break;
 
-            case 'video':
-                var video = document.createElement('video');
+        case 'video':
+            video = document.createElement('video');
 
-                video.src = _URL.createObjectURL(file);
-                video.onloadedmetadata = function() {
-                    metadata.width = this.videoWidth;
-                    metadata.height = this.videoHeight;
-                    metadata.duration = Math.floor(this.duration);
-                };
-                break;
+            video.src = WINDOW_URL.createObjectURL(file);
+            video.onloadedmetadata = function () {
+                metadata.width = this.videoWidth;
+                metadata.height = this.videoHeight;
+                metadata.duration = Math.floor(this.duration);
+            };
+            break;
 
-            default:
-                break;
+        default:
+            break;
         }
 
         return metadata;
     }
 
     return AttachView;
-
 });

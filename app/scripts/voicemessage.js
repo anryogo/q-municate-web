@@ -5,7 +5,7 @@ define([
     'config',
     'Helpers',
     'QBMediaRecorder'
-], function(
+], function (
     QMCONFIG,
     Helpers,
     QBMediaRecorder
@@ -36,24 +36,24 @@ define([
     }
 
     VoiceMessage.prototype = {
-        init: function() {
+        init: function () {
             self.supported = false;
 
-            if (Helpers.isIE11orEdge()) return true;
+            if (Helpers.isIE11orEdge()) return;
 
             if (QBMediaRecorder.isAvailable() || QBMediaRecorder.isAudioContext()) {
                 self.supported = true;
-                self._initRecorder();
+                self.initRecorder();
             }
         },
 
-        _initRecorder: function() {
+        initRecorder: function () {
             var options = {
-                onstart: function onStart() {
-                    self._startTimer();
+                onstart: function () {
+                    self.startTimer();
                 },
-                onstop: function onStop(blob) {
-                    self._stopTimer();
+                onstop: function (blob) {
+                    self.stopTimer();
                     self.blob = blob;
                 },
                 mimeType: 'audio/mp3',
@@ -65,21 +65,23 @@ define([
             self.ui.control = document.getElementById('startRecord');
             self.ui.cancel = document.getElementById('cancelRecord');
             self.ui.progress = document.getElementById('recordProgress');
-            
-            self._initHandler();
+
+            self.initHandler();
 
             self.recorder = new QBMediaRecorder(options);
 
             Helpers.log('Recorder is ready to use');
         },
 
-        blockRecorder: function(message) {
-            var recorders = document.getElementsByClassName('j-btn_audio_record'),
-                error = message ? message : ' (unsupported)';
+        blockRecorder: function (message) {
+            var recorders = document.getElementsByClassName('j-btn_audio_record');
+            var error = message || ' (unsupported)';
+            var recorder;
+            var i;
 
             if (recorders.length) {
-                for (var i=0; i<recorders.length; i++) {
-                    var recorder = recorders[i];
+                for (i = 0; i < recorders.length; i++) {
+                    recorder = recorders[i];
 
                     recorder.disabled = true;
                     recorder.classList.remove('is-active');
@@ -92,39 +94,39 @@ define([
             Helpers.log('Recorder unavailable' + error);
         },
 
-        _startStream: function (callback) {
+        startStream: function (callback) {
             navigator.mediaDevices.getUserMedia({
                 audio: true
-            }).then(function(stream) {
+            }).then(function (stream) {
                 self.stream = stream;
                 callback();
-            }).catch(function(err) {
+            }).catch(function (err) {
                 self.resetRecord();
                 self.blockRecorder('(microphone wasn\'t found)');
                 throw err;
             });
         },
 
-        _stopStream: function () {
+        stopStream: function () {
             if (!self.stream) {
                 return;
             }
 
-            self.stream.getTracks().forEach(function(track) {
+            self.stream.getTracks().forEach(function (track) {
                 track.stop();
             });
         },
 
-        _startTimer: function() {
-            var step = 0,
-                time = 0,
-                min,
-                sec;
+        startTimer: function () {
+            var step = 0;
+            var time = 0;
+            var min;
+            var sec;
 
             self.ui.progress.classList.add('is-active');
 
-            self.timerID = setInterval(function() {
-                ++step;
+            self.timerID = setInterval(function () {
+                step += 1;
 
                 self.ui.title.innerHTML = timerValue();
 
@@ -134,7 +136,7 @@ define([
             }, 1000);
 
             function timerValue() {
-                ++time;
+                time += 1;
 
                 min = Math.floor(time / 60);
                 min = min >= 10 ? min : '0' + min;
@@ -145,26 +147,26 @@ define([
             }
         },
 
-        _stopTimer: function() {
+        stopTimer: function () {
             clearInterval(self.timerID);
             self.timerID = undefined;
         },
 
-        _initHandler: function () {
-            self.ui.chat.addEventListener('click', function(event) {
-                var target = event.target,
-                    controlElClassList = self.ui.control.classList,
-                    progressElClassList = self.ui.progress.classList,
-                    cancelElClassList = self.ui.cancel.classList;
+        initHandler: function () {
+            self.ui.chat.addEventListener('click', function (event) {
+                var target = event.target;
+                var controlElClassList = self.ui.control.classList;
+                var progressElClassList = self.ui.progress.classList;
+                var cancelElClassList = self.ui.cancel.classList;
 
                 // recorder's controls
-                if ( target === self.ui.control || target === self.ui.title ) {
+                if (target === self.ui.control || target === self.ui.title) {
                     // send recorded voicemessage as attachment
-                    if ( controlElClassList.contains('is-send') && self.blob ) {
+                    if (controlElClassList.contains('is-send') && self.blob) {
                         self.sendRecord();
                         self.resetRecord();
-                    // stop recorder and prepare to sending
-                    } else if ( controlElClassList.contains('is-active') ) {
+                        // stop recorder and prepare to sending
+                    } else if (controlElClassList.contains('is-active')) {
                         self.stopRecord();
 
                         progressElClassList.remove('is-active');
@@ -173,7 +175,7 @@ define([
                         self.ui.title.innerHTML = 'SEND';
 
                         self.ui.send = self.ui.title;
-                    // start recorder
+                        // start recorder
                     } else {
                         self.startRecord();
 
@@ -186,7 +188,7 @@ define([
                 }
 
                 // cancel recording
-                if ( target === self.ui.cancel ) {
+                if (target === self.ui.cancel) {
                     self.cancelRecord();
 
                     controlElClassList.remove('is-active');
@@ -201,33 +203,38 @@ define([
             });
         },
 
-        _toggleActiveState: function(bool) {
-            var buttons = document.querySelectorAll('.j-footer_btn'),
-                textarea = document.querySelector('.j-textarea'),
-                contenteditable = !bool,
-                opacityLevel = bool ? 0.4 : 1;
+        toggleActiveState: function (bool) {
+            var buttons = document.querySelectorAll('.j-footer_btn');
+            var textarea = document.querySelector('.j-textarea');
+            var contenteditable = !bool;
+            var opacityLevel = bool ? 0.4 : 1;
 
             // send recording state
             self.active = bool;
             // disable footer buttons
             textarea.setAttribute('contenteditable', contenteditable);
-            buttons.forEach(function(elem) {
+
+            buttons.forEach(function (elem) {
                 elem.disabled = bool;
                 elem.style.opacity = opacityLevel;
             });
         },
 
-        resetRecord: function(dialogId) {
+        resetRecord: function (dialogId) {
+            var popover;
+            var button;
+            var activeDialogId;
+
             if (!self.supported) {
-                return false;
+                return;
             }
-            
-            var popover = document.getElementById('popoverRecord'),
-                button = document.querySelector('.j-btn_audio_record'),
-                activeDialogId = self.app.entities.active;
+
+            popover = document.getElementById('popoverRecord');
+            button = document.querySelector('.j-btn_audio_record');
+            activeDialogId = self.app.entities.active;
 
             if ((dialogId && (dialogId !== activeDialogId)) || !button) {
-                return false;
+                return;
             }
 
             // close recorder's popover
@@ -246,38 +253,40 @@ define([
 
             // cancel recording and change state
             self.cancelRecord();
-            self._toggleActiveState(false);
+            self.toggleActiveState(false);
         },
 
-        startRecord: function() {
+        startRecord: function () {
             self.blob = null;
-            self._startStream(function() {
+            self.startStream(function () {
                 self.recorder.start(self.stream);
-                self._toggleActiveState(true);
+                self.toggleActiveState(true);
             });
         },
 
-        stopRecord: function() {
+        stopRecord: function () {
             self.recorder.stop();
-            self._stopStream();
+            self.stopStream();
             self.stream = null;
         },
 
-        cancelRecord: function() {
+        cancelRecord: function () {
             if (self.stream) {
                 self.stopRecord();
             }
             self.blob = null;
-            self._toggleActiveState(false);
+            self.toggleActiveState(false);
         },
 
-        sendRecord: function() {
+        sendRecord: function () {
+            var recordedAudioFile;
+
             if (!self.blob) {
                 return;
             }
 
             // prepare file from blob object
-            var recordedAudioFile = new File([self.blob], 'Voice message', {
+            recordedAudioFile = new File([self.blob], 'Voice message', {
                 type: self.blob.type,
                 lastModified: Date.now()
             });
@@ -286,7 +295,7 @@ define([
             self.app.views.Attach.changeInput(null, recordedAudioFile);
 
             self.blob = null;
-            self._toggleActiveState(false);
+            self.toggleActiveState(false);
         }
     };
 

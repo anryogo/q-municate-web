@@ -8,61 +8,62 @@ define([
     'config',
     'underscore',
     'Helpers'
-], function(
+], function (
     QMCONFIG,
     _,
     Helpers
 ) {
-    var contact_ids,
-        isExistingRequest;
+    var contactIds;
+    var isExistingRequest;
 
     function ContactList(app) {
         this.app = app;
         this.roster = {};
         this.contacts = getContacts();
-        contact_ids = Object.keys(this.contacts).map(Number);
+        contactIds = Object.keys(this.contacts).map(Number);
     }
 
     ContactList.prototype = {
 
-        saveRoster: function(roster) {
+        saveRoster: function (roster) {
             this.roster = roster;
         },
 
-        saveNotConfirmed: function(notConfirmed) {
+        saveNotConfirmed: function (notConfirmed) {
             localStorage.setItem('QM.notConfirmed', JSON.stringify(notConfirmed));
         },
 
-        saveHiddenDialogs: function(hiddenDialogs) {
+        saveHiddenDialogs: function (hiddenDialogs) {
             sessionStorage.setItem('QM.hiddenDialogs', JSON.stringify(hiddenDialogs));
         },
 
-        add: function(occupants_ids, dialog, callback, subscribe) {
-            var QBApiCalls = this.app.service,
-                Contact = this.app.models.Contact,
-                self = this,
-                new_ids,
-                params;
+        add: function (occupantsIds, dialog, callback, subscribe) {
+            var QBApiCalls = this.app.service;
+            var Contact = this.app.models.Contact;
+            var self = this;
+            var newIds;
+            var params;
 
             // TODO: need to make optimization here
-            // (for new device the user will be waiting very long time if he has a lot of private dialogs)
-            new_ids = [].concat(_.difference(occupants_ids, contact_ids));
-            contact_ids = contact_ids.concat(new_ids);
-            localStorage.setItem('QM.contacts', contact_ids.join());
-            if (subscribe) new_ids = occupants_ids;
+            // (for new device the user will be waiting very long
+            // time if he has a lot of private dialogs)
+            newIds = [].concat(_.difference(occupantsIds, contactIds));
+            contactIds = contactIds.concat(newIds);
+            localStorage.setItem('QM.contacts', contactIds.join());
+            if (subscribe) newIds = occupantsIds;
 
-            if (new_ids.length > 0) {
+            if (newIds.length > 0) {
                 params = {
                     filter: {
                         field: 'id',
                         param: 'in',
-                        value: new_ids
+                        value: newIds
                     },
                     per_page: 100
                 };
 
-                QBApiCalls.listUsers(params, function(users) {
-                    users.items.forEach(function(qbUser) {
+                QBApiCalls.listUsers(params, function (users) {
+                    users.items.forEach(function (qbUser) {
                         var user = qbUser.user;
                         var contact = Contact.create(user);
 
@@ -73,7 +74,6 @@ define([
                     Helpers.log('Contact List is updated', self);
                     callback(dialog);
                 });
-
             } else {
                 callback(dialog);
             }
@@ -82,24 +82,27 @@ define([
         cleanUp: function (requestIds, responseIds) {
             var ids = _.difference(requestIds, responseIds);
 
-            ids.forEach(function(id) {
+            ids.forEach(function (id) {
                 localStorage.removeItem('QM.contact-' + id);
             });
 
-            contact_ids = _.difference(contact_ids, ids);
-            localStorage.setItem('QM.contacts', contact_ids.join());
+            contactIds = _.difference(contactIds, ids);
+            localStorage.setItem('QM.contacts', contactIds.join());
         },
 
-        globalSearch: function(callback) {
+        globalSearch: function (callback) {
+            var self = this;
+            var QBApiCalls = this.app.service;
+            var val;
+            var page;
+            var contacts;
+
             if (isExistingRequest) {
-                return false;
+                return;
             }
 
-            var QBApiCalls = this.app.service,
-                val = sessionStorage['QM.search.value'],
-                page = sessionStorage['QM.search.page'],
-                self = this,
-                contacts;
+            val = sessionStorage['QM.search.value'];
+            page = sessionStorage['QM.search.page'];
 
             isExistingRequest = true;
 
@@ -107,23 +110,34 @@ define([
                 full_name: val,
                 page: page,
                 per_page: 20
-            }, function(data) {
+            }, function (data) {
                 isExistingRequest = false;
 
-                if(data.items.length) {
+                if (data.items.length) {
                     contacts = self.getResults(data.items);
                 } else {
                     contacts = data.items;
                 }
 
+                page += 1;
+
                 sessionStorage.setItem('QM.search.allPages', Math.ceil(data.total_entries / data.per_page));
-                sessionStorage.setItem('QM.search.page', ++page);
+                sessionStorage.setItem('QM.search.page', page);
 
-                contacts.sort(function(first, second) {
-                    var a = first.full_name.toLowerCase(),
-                        b = second.full_name.toLowerCase();
+                contacts.sort(function (first, second) {
+                    var a = first.full_name.toLowerCase();
+                    var b = second.full_name.toLowerCase();
+                    var res;
 
-                    return (a < b) ? -1 : (a > b) ? 1 : 0;
+                    if (a < b) {
+                        res = -1;
+                    } else if (a > b) {
+                        res = 1;
+                    } else {
+                        res = 0;
+                    }
+
+                    return res;
                 });
 
                 Helpers.log('Search results', contacts);
@@ -132,13 +146,13 @@ define([
             });
         },
 
-        getResults: function(data) {
-            var Contact = this.app.models.Contact,
-                User = this.app.models.User,
-                contacts = [],
-                contact;
+        getResults: function (data) {
+            var Contact = this.app.models.Contact;
+            var User = this.app.models.User;
+            var contacts = [];
+            var contact;
 
-            data.forEach(function(item) {
+            data.forEach(function (item) {
                 if (item.user.id !== User.contact.id) {
                     contact = Contact.create(item.user);
                     contacts.push(contact);
@@ -148,12 +162,12 @@ define([
             return contacts;
         },
 
-        getFBFriends: function(ids, callback) {
-            var QBApiCalls = this.app.service,
-                Contact = this.app.models.Contact,
-                self = this,
-                new_ids = [],
-                params;
+        getFBFriends: function (ids, callback) {
+            var QBApiCalls = this.app.service;
+            var Contact = this.app.models.Contact;
+            var self = this;
+            var newIds = [];
+            var params;
 
             // TODO: duplicate of add() function
             params = {
@@ -164,20 +178,20 @@ define([
                 }
             };
 
-            QBApiCalls.listUsers(params, function(users) {
-                users.items.forEach(function(qbUser) {
+            QBApiCalls.listUsers(params, function (users) {
+                users.items.forEach(function (qbUser) {
                     var user = qbUser.user;
                     var contact = Contact.create(user);
-                    new_ids.push(user.id);
+                    newIds.push(user.id);
                     self.contacts[user.id] = contact;
                     localStorage.setItem('QM.contact-' + user.id, JSON.stringify(contact));
                 });
 
-                contact_ids = contact_ids.concat(new_ids);
-                localStorage.setItem('QM.contacts', contact_ids.join());
+                contactIds = contactIds.concat(newIds);
+                localStorage.setItem('QM.contacts', contactIds.join());
 
                 Helpers.log('Contact List is updated', self);
-                callback(new_ids);
+                callback(newIds);
             });
         }
 
@@ -187,22 +201,24 @@ define([
     ---------------------------------------------------------------------- */
     // Creation of Contact List from cache
     function getContacts() {
-        var contacts = {},
-            ids = localStorage['QM.contacts'] ? localStorage['QM.contacts'].split(',') : [];
+        var contacts = {};
+        var ids = localStorage['QM.contacts'] ? localStorage['QM.contacts'].split(',') : [];
+        var len;
+        var i;
 
         if (ids.length > 0) {
             try {
-                for (var i = 0, len = ids.length; i < len; i++) {
-                    contacts[ids[i]] = typeof localStorage['QM.contact-' + ids[i]] !== 'undefined' ?
-                        JSON.parse(localStorage['QM.contact-' + ids[i]]) :
-                        true;
+                for (i = 0, len = ids.length; i < len; i++) {
+                    contacts[ids[i]] = typeof localStorage['QM.contact-' + ids[i]] !== 'undefined'
+                        ? JSON.parse(localStorage['QM.contact-' + ids[i]])
+                        : true;
 
                     if (contacts[ids[i]] === true) {
                         delete contacts[ids[i]];
                     }
                 }
             } catch (e) {
-                Helpers.log("Error getting contacts from cache. Clearing...");
+                Helpers.log('Error getting contacts from cache. Clearing...');
                 localStorage.clear();
                 contacts = {};
             }
@@ -212,5 +228,4 @@ define([
     }
 
     return ContactList;
-
 });

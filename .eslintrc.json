@@ -1,5 +1,7 @@
 {
-    "extends": "eslint:recommended",
+    "extends": [
+        "airbnb-base/legacy"
+    ],
     "env": {
         "browser": true,
         "amd": true,
@@ -10,7 +12,16 @@
         "QB": "readonly",
         "firebase": "readonly"
     },
+    "plugins": [
+        "optimize-regex"
+    ],
     "rules": {
-        "no-console": "warn"
+        "optimize-regex/optimize-regex": "warn",
+
+        "indent": ["error", 4],
+        "func-names": ["error", "never"],
+        "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+        "no-use-before-define": ["error", { "functions": false }],
+        "no-param-reassign": ["error", { "props": false }]
     }
 }

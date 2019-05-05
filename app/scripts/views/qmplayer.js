@@ -4,7 +4,7 @@
 define([
     'underscore',
     'backbone'
-], function(
+], function (
     _,
     Backbone
 ) {
@@ -20,12 +20,12 @@ define([
             duration: ''
         },
 
-        initialize: function() {
+        initialize: function () {
             this.buildView();
         },
 
-        buildView: function() {
-            new QMPlayer.View({model: this});
+        buildView: function () {
+            new QMPlayer.View({ model: this }); // eslint-disable-line no-new
         }
     });
 
@@ -34,39 +34,40 @@ define([
         className: 'qm_audio_player',
         template: _.template(document.querySelector('#QMPlayer').innerHTML),
 
-        initialize: function() {
+        initialize: function () {
             var id = this.model.get('id');
 
             this.render(id);
             this.start(id);
         },
 
-        render: function(id) {
-            var qmplayerTpl = this.template(this.model.toJSON()),
-                qmplayerEl = this.el.innerHTML = qmplayerTpl;
+        render: function (id) {
+            var qmplayerTpl = this.template(this.model.toJSON());
 
-            document.querySelector('#audio_player_' + id).innerHTML = qmplayerEl;
+            this.el.innerHTML = qmplayerTpl;
+
+            document.querySelector('#audio_player_' + id).innerHTML = qmplayerTpl;
         },
 
-        start: function(id) {
-            new QMPlayer.init(id);
+        start: function (id) {
+            QMPlayer.init(id);
         }
     });
 
-    QMPlayer.init = function(id) {
-        var audioEl = document.querySelector('#audio_' + id),
-            controlEl = document.querySelector('#qm_player_control_' + id),
-            setterEl = document.querySelector('#qm_player_setter_' + id),
-            progressEl = document.querySelector('#qm_player_progress_' + id),
-            timeEl = document.querySelector('#qm_player_time_' + id),
-            fullLength = document.querySelector('#qm_player_wrap_' + id).offsetWidth,
-            durationTime;
+    QMPlayer.init = function (id) {
+        var audioEl = document.querySelector('#audio_' + id);
+        var controlEl = document.querySelector('#qm_player_control_' + id);
+        var setterEl = document.querySelector('#qm_player_setter_' + id);
+        var progressEl = document.querySelector('#qm_player_progress_' + id);
+        var timeEl = document.querySelector('#qm_player_time_' + id);
+        var fullLength = document.querySelector('#qm_player_wrap_' + id).offsetWidth;
+        var durationTime;
 
-        setterEl.onclick = function(e) {
+        setterEl.onclick = function (e) {
             audioEl.currentTime = audioEl.duration * (e.offsetX / fullLength);
         };
 
-        controlEl.onclick = function() {
+        controlEl.onclick = function () {
             if (this.classList.contains('is-paused')) {
                 audioEl.play();
                 controlEl.classList.add('is-playing');
@@ -76,23 +77,23 @@ define([
             }
         };
 
-        audioEl.onended = function() {
+        audioEl.onended = function () {
             audioEl.pause();
         };
 
-        audioEl.onpause = function() {
+        audioEl.onpause = function () {
             controlEl.classList.add('is-paused');
             controlEl.classList.remove('is-playing');
         };
 
-        audioEl.oncanplay = function() {
+        audioEl.oncanplay = function () {
             durationTime = setTime(audioEl.duration);
             timeEl.innerHTML = '00:00 / ' + durationTime;
         };
 
-        audioEl.ontimeupdate = function() {
-            var currentTime = setTime(audioEl.currentTime),
-                length = Math.round(fullLength * (audioEl.currentTime / audioEl.duration));
+        audioEl.ontimeupdate = function () {
+            var currentTime = setTime(audioEl.currentTime);
+            var length = Math.round(fullLength * (audioEl.currentTime / audioEl.duration));
 
             timeEl.innerHTML = currentTime + ' / ' + durationTime;
 
@@ -100,8 +101,8 @@ define([
         };
 
         function setTime(time) {
-            var min,
-                sec;
+            var min;
+            var sec;
 
             min = Math.floor(time / 60);
             min = min >= 10 ? min : '0' + min;
@@ -114,4 +115,3 @@ define([
 
     return QMPlayer;
 });
-

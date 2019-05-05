@@ -10,32 +10,31 @@ define([
     'backbone',
     'config',
     'Helpers'
-], function(
+], function (
     $,
     _,
     Backbone,
     QMCONFIG,
     Helpers
 ) {
-
-    var ProfileView = Backbone.View.extend({
+    return Backbone.View.extend({
         className: 'profileWrap',
 
         template: _.template($('#templateProfile').html()),
 
-        initialize: function() {
+        initialize: function () {
             this.model.on('invalid', this.validateError, this);
         },
 
         events: {
-            'click': 'editProfile',
+            click: 'editProfile',
             'change .btn_userProfile_file': 'chooseAvatar'
         },
 
-        render: function() {
-            var self = this,
-                template,
-                renderObj = self.model.toJSON();
+        render: function () {
+            var self = this;
+            var template;
+            var renderObj = self.model.toJSON();
 
             if (renderObj.phone && (renderObj.full_name === 'Unknown user')) {
                 renderObj.full_name = renderObj.phone;
@@ -48,18 +47,18 @@ define([
             return self;
         },
 
-        openPopup: function() {
+        openPopup: function () {
             this.$el.find('.popup').add('.popups').addClass('is-overlay');
         },
 
-        closePopup: function() {
+        closePopup: function () {
             $('.is-overlay:not(.chat-occupants-wrap)').removeClass('is-overlay');
         },
 
-        editProfile: function(event) {
-            var obj = $(event.target),
-                isError,
-                params;
+        editProfile: function (event) {
+            var obj = $(event.target);
+            var isError;
+            var params;
 
             if (obj.is('.' + this.className)) {
                 isError = this.$el.find('.userProfile-errors').text().trim();
@@ -86,28 +85,34 @@ define([
                 }
 
                 Helpers.log(this.model);
-            } else {
-                return;
             }
         },
 
-        validateError: function(model, error) {
+        validateError: function (model, error) {
             this.$el.find('.userProfile-errors').text(error);
             this.$el.find('.userProfile-success').text('');
         },
 
-        chooseAvatar: function() {
-            var URL = window.URL,
-                avatar = this.$el.find('.btn_userProfile_file')[0].files[0],
-                src = avatar ? URL.createObjectURL(avatar) : (this.model.get('avatar_url') === QMCONFIG.defAvatar.url) ? QMCONFIG.defAvatar.url : this.model.get('avatar_url');
+        chooseAvatar: function () {
+            var URL = window.URL;
+            var avatar = this.$el.find('.btn_userProfile_file')[0].files[0];
+            var src;
 
-            this.$el.find('.userDetails-avatar').css('background-image', "url(" + src + ")");
+            if (avatar) {
+                src = URL.createObjectURL(avatar);
+            } else if (this.model.get('avatar_url') === QMCONFIG.defAvatar.url) {
+                src = QMCONFIG.defAvatar.url;
+            } else {
+                src = this.model.get('avatar_url');
+            }
+
+            this.$el.find('.userDetails-avatar').css('background-image', 'url(' + src + ')');
         },
 
-        addFBAccount: function(fbId) {
+        addFBAccount: function (fbId) {
             var self = this;
 
-            this.model.connectFB(fbId, function(err) {
+            this.model.connectFB(fbId, function (err) {
                 if (err) {
                     self.validateError(self.model, QMCONFIG.errors.FBAccountExists);
                     self.$el.find('.btn_userProfile_connect').prop('disabled', false);
@@ -120,6 +125,4 @@ define([
             });
         }
     });
-
-    return ProfileView;
 });

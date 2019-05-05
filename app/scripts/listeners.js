@@ -6,19 +6,21 @@ define([
     'config',
     'Helpers',
     'perfectscrollbar'
-], function(
+], function (
     _,
     $,
     QMCONFIG,
     Helpers,
     Ps
 ) {
-
     var QB = window.QB;
-    
+
     var self;
 
     function Listeners(app) {
+        var chatConnection = navigator.onLine;
+        var position = 0;
+
         self = this;
         self.app = app;
         self.blockChatViewPosition = false;
@@ -26,10 +28,7 @@ define([
         self.disconnected = false;
         self.offline = false;
 
-        var chatConnection = navigator.onLine;
-        var position = 0;
-
-        self.setChatState = function(state) {
+        self.setChatState = function (state) {
             if (typeof state === 'boolean') {
                 chatConnection = state;
             } else {
@@ -38,11 +37,11 @@ define([
             }
         };
 
-        self.getChatState = function() {
+        self.getChatState = function () {
             return chatConnection;
         };
 
-        self.setChatViewPosition = function(value) {
+        self.setChatViewPosition = function (value) {
             if (!self.blockChatViewPosition) {
                 position = value;
             }
@@ -50,9 +49,9 @@ define([
             self.blockChatViewPosition = false;
         };
 
-        self.getChatViewPosition = function() {
-            var direction = '',
-                value = 0;
+        self.getChatViewPosition = function () {
+            var direction = '';
+            var value = 0;
 
             if (position < 0) {
                 direction = '-=';
@@ -68,90 +67,91 @@ define([
 
     Listeners.prototype = {
 
-        init: function() {
-            window.addEventListener('online', self._onNetworkStatusListener);
-            window.addEventListener('offline', self._onNetworkStatusListener);
+        init: function () {
+            window.addEventListener('online', self.onNetworkStatusListener);
+            window.addEventListener('offline', self.onNetworkStatusListener);
 
             document.addEventListener('webkitfullscreenchange', self.onFullScreenChange);
             document.addEventListener('mozfullscreenchange', self.onFullScreenChange);
             document.addEventListener('fullscreenchange', self.onFullScreenChange);
         },
 
-        setQBHandlers: function() {
-            var ContactListView = self.app.views.ContactList,
-                MessageView     = self.app.views.Message,
-                VideoChatView   = self.app.views.VideoChat;
+        setQBHandlers: function () {
+            var ContactListView = self.app.views.ContactList;
+            var MessageView = self.app.views.Message;
+            var VideoChatView = self.app.views.VideoChat;
 
-            QB.chat.onMessageListener          = MessageView.onMessage;
-            QB.chat.onMessageTypingListener    = MessageView.onMessageTyping;
-            QB.chat.onSystemMessageListener    = MessageView.onSystemMessage;
-            QB.chat.onDeliveredStatusListener  = MessageView.onDeliveredStatus;
-            QB.chat.onReadStatusListener       = MessageView.onReadStatus;
-            
-            QB.chat.onContactListListener      = ContactListView.onPresence;
-            QB.chat.onSubscribeListener        = ContactListView.onSubscribe;
+            QB.chat.onMessageListener = MessageView.onMessage;
+            QB.chat.onMessageTypingListener = MessageView.onMessageTyping;
+            QB.chat.onSystemMessageListener = MessageView.onSystemMessage;
+            QB.chat.onDeliveredStatusListener = MessageView.onDeliveredStatus;
+            QB.chat.onReadStatusListener = MessageView.onReadStatus;
+
+            QB.chat.onContactListListener = ContactListView.onPresence;
+            QB.chat.onSubscribeListener = ContactListView.onSubscribe;
             QB.chat.onConfirmSubscribeListener = ContactListView.onConfirm;
-            QB.chat.onRejectSubscribeListener  = ContactListView.onReject;
+            QB.chat.onRejectSubscribeListener = ContactListView.onReject;
 
-            QB.chat.onDisconnectedListener     = self.onDisconnected;
-            QB.chat.onReconnectListener        = self.onReconnected;
-            QB.chat.onReconnectFailedListener  = self.onReconnectFailed;
+            QB.chat.onDisconnectedListener = self.onDisconnected;
+            QB.chat.onReconnectListener = self.onReconnected;
+            QB.chat.onReconnectFailedListener = self.onReconnectFailed;
 
             if (QB.webrtc) {
-                QB.webrtc.onCallListener          = VideoChatView.onCall;
-                QB.webrtc.onAcceptCallListener    = VideoChatView.onAccept;
-                QB.webrtc.onRejectCallListener    = VideoChatView.onReject;
+                QB.webrtc.onCallListener = VideoChatView.onCall;
+                QB.webrtc.onAcceptCallListener = VideoChatView.onAccept;
+                QB.webrtc.onRejectCallListener = VideoChatView.onReject;
                 QB.webrtc.onInvalidEventsListener = VideoChatView.onIgnored;
-                QB.webrtc.onStopCallListener      = VideoChatView.onStop;
+                QB.webrtc.onStopCallListener = VideoChatView.onStop;
 
-                QB.webrtc.onUpdateCallListener                    = VideoChatView.onUpdateCall;
-                QB.webrtc.onRemoteStreamListener                  = VideoChatView.onRemoteStream;
+                QB.webrtc.onUpdateCallListener = VideoChatView.onUpdateCall;
+                QB.webrtc.onRemoteStreamListener = VideoChatView.onRemoteStream;
+                // eslint-disable-next-line max-len
                 QB.webrtc.onSessionConnectionStateChangedListener = VideoChatView.onSessionConnectionStateChangedListener;
-                QB.webrtc.onSessionCloseListener                  = VideoChatView.onSessionCloseListener;
-                QB.webrtc.onUserNotAnswerListener                 = VideoChatView.onUserNotAnswerListener;
+                QB.webrtc.onSessionCloseListener = VideoChatView.onSessionCloseListener;
+                QB.webrtc.onUserNotAnswerListener = VideoChatView.onUserNotAnswerListener;
             }
         },
 
-        listenToMediaElement: function(selector) {
-            document.querySelector(selector).onplaying = function(event) {
+        listenToMediaElement: function (selector) {
+            document.querySelector(selector).onplaying = function (event) {
                 // pause all media sources except started one
                 Helpers.pauseAllMedia(event.target);
             };
         },
 
-        listenToPsTotalEnd: function(onOrOff) {
+        listenToPsTotalEnd: function (onOrOff) {
             var scroll = document.querySelector('.j-scrollbar_aside');
 
             if (onOrOff) {
-                scroll.addEventListener('ps-y-reach-end', self._onNextDilogsList);
+                scroll.addEventListener('ps-y-reach-end', self.onNextDilogsList);
             } else {
-                scroll.removeEventListener('ps-y-reach-end', self._onNextDilogsList);
+                scroll.removeEventListener('ps-y-reach-end', self.onNextDilogsList);
             }
         },
 
-        onDisconnected: function() {
+        onDisconnected: function () {
             if (self.stateActive) {
                 self.updateDialogs(false);
                 self.setChatState(false);
-                _switchToOfflineMode();
+                switchToOfflineMode();
             }
         },
 
-        onReconnected: function() {
+        onReconnected: function () {
             self.updateDialogs(true);
             self.setChatState(true);
-            _switchToOnlineMode();
+            switchToOnlineMode();
         },
 
-        onReconnectFailed: function() {
+        onReconnectFailed: function () {
             self.app.service.disconnectChat();
 
-            self.app.models.User.autologin(function() {
-                _switchToOnlineMode();
+            self.app.models.User.autologin(function () {
+                switchToOnlineMode();
             });
         },
 
-        _onNetworkStatusListener: function() {
+        onNetworkStatusListener: function () {
             var condition = navigator.onLine ? 'online' : 'offline';
 
             if (typeof self.onNetworkStatus === 'function' && condition) {
@@ -159,12 +159,12 @@ define([
             }
         },
 
-        _onNextDilogsList: function() {
+        onNextDilogsList: function () {
             if (self.activePsListener) {
                 self.listenToPsTotalEnd(false);
 
-                self.app.views.Dialog.showOldHistory(function(stopListener) {
-                    self._onUpdatePerfectScroll();
+                self.app.views.Dialog.showOldHistory(function (stopListener) {
+                    self.onUpdatePerfectScroll();
 
                     if (!stopListener) {
                         self.listenToPsTotalEnd(true);
@@ -175,50 +175,51 @@ define([
             }
         },
 
-        _onUpdatePerfectScroll: function() {
+        onUpdatePerfectScroll: function () {
             Ps.update(document.querySelector('.j-scrollbar_aside'));
         },
 
-        updateDialogs: function(reconnected) {
-            var DialogView = self.app.views.Dialog,
-                dialogsCollection = self.app.entities.Collections.dialogs;
+        updateDialogs: function (reconnected) {
+            var DialogView = self.app.views.Dialog;
+            var dialogsCollection = self.app.entities.Collections.dialogs;
 
             if (reconnected) {
                 DialogView.downloadDialogs();
             } else {
-                dialogsCollection.forEach(function(dialog) {
+                dialogsCollection.forEach(function (dialog) {
                     if (dialog.get('type') === 2) {
                         dialog.set({
-                            'joined': false,
-                            'opened': false
+                            joined: false,
+                            opened: false
                         });
                     }
                 });
             }
         },
 
-        onNetworkStatus: function(status) {
+        onNetworkStatus: function (status) {
             if (self.getChatState()) {
                 if (status === 'online') {
                     self.updateDialogs(true);
-                    _switchToOnlineMode();
+                    switchToOnlineMode();
                 } else {
-                    _switchToOfflineMode();
+                    switchToOfflineMode();
                 }
             }
         },
 
-        onFullScreenChange: function(event) {
-            var fullscreenElement = document.fullscreenElement ||
-                                    document.mozFullscreenElement ||
-                                    document.webkitFullscreenElement,
-                fullscreenEnabled = document.fullscreenEnabled ||
-                                    document.mozFullscreenEnabled ||
-                                    document.webkitFullscreenEnabled,
-                isVideoElementTag = event.target.tagName === 'VIDEO';
+        onFullScreenChange: function (event) {
+            var fullscreenElement = document.fullscreenElement
+                                    || document.mozFullscreenElement
+                                    || document.webkitFullscreenElement;
+            var fullscreenEnabled = document.fullscreenEnabled
+                                    || document.mozFullscreenEnabled
+                                    || document.webkitFullscreenEnabled;
+            var isVideoElementTag = event.target.tagName === 'VIDEO';
+            var $scroll;
 
             if (fullscreenEnabled && isVideoElementTag) {
-                var $scroll = $('.j-chatItem:visible').find('.j-scrollbar_message');
+                $scroll = $('.j-chatItem:visible').find('.j-scrollbar_message');
 
                 if (fullscreenElement) {
                     self.blockChatViewPosition = true;
@@ -234,7 +235,7 @@ define([
     //
     // Private functions
     //
-    function _switchToOfflineMode() {
+    function switchToOfflineMode() {
         if (!self.disconnected) {
             document.querySelector('.j-overlay').classList.add('is-disconnect');
             document.querySelector('.j-overlay').disabled = true;
@@ -243,7 +244,7 @@ define([
         }
     }
 
-    function _switchToOnlineMode() {
+    function switchToOnlineMode() {
         if (self.disconnected) {
             document.querySelector('.j-overlay').classList.remove('is-disconnect');
             document.querySelector('.j-overlay').disabled = false;

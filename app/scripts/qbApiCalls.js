@@ -10,22 +10,24 @@ define([
     'Entities',
     'Helpers',
     'LocationView'
-], function(
+], function (
     $,
     QMCONFIG,
     Entities,
     Helpers,
     Location
 ) {
-    
-    var Session,
-        UserView,
-        DialogView,
-        ContactListView,
-        ContactList,
-        Listeners;
+    var Session;
+    var UserView;
+    var DialogView;
+    var ContactListView;
+    var ContactList;
+    var Listeners;
 
     var timer;
+    var fail;
+    var failForgot;
+    var failSearch;
 
     var self;
 
@@ -43,8 +45,9 @@ define([
 
     QBApiCalls.prototype = {
 
-        init: function(token) {
+        init: function (token) {
             if (typeof token === 'undefined') {
+                // eslint-disable-next-line max-len
                 QB.init(QMCONFIG.qbAccount.appId, QMCONFIG.qbAccount.authKey, QMCONFIG.qbAccount.authSecret, QMCONFIG.QBconf);
             } else {
                 QB.init(token, QMCONFIG.qbAccount.appId, null, QMCONFIG.QBconf);
@@ -61,23 +64,23 @@ define([
             Entities.Collections.dialogs = new Entities.Collections.Dialogs();
         },
 
-        checkSession: function(callback) {
+        checkSession: function (callback) {
             if ((new Date()).toISOString() > Session.expirationTime) {
                 // recovery session
                 if (Session.authParams.provider === 'facebook') {
-                    UserView.getFBStatus(function(token) {
+                    UserView.getFBStatus(function (token) {
                         Session.authParams.keys.token = token;
 
-                        self.createSession(Session.authParams, function() {
+                        self.createSession(Session.authParams, function () {
                             callback();
                         });
                     });
                 } else if (Session.authParams.provider === 'firebase_phone') {
-                    self.getFirebasePhone(function() {
+                    self.getFirebasePhone(function () {
                         callback();
                     });
                 } else {
-                    self.createSession(Session.decrypt(Session.authParams), function() {
+                    self.createSession(Session.decrypt(Session.authParams), function () {
                         callback();
                     });
 
@@ -88,29 +91,37 @@ define([
             }
         },
 
-        createSession: function(params, callback) {
+        createSession: function (params, callback) {
             // Remove coordinates from localStorage
-            Location.toggleGeoCoordinatesToLocalStorage(false, function(res, err) {
-                Helpers.log(err ? err : res);
+            Location.toggleGeoCoordinatesToLocalStorage(false, function (res, err) {
+                Helpers.log(err || res);
             });
 
-            QB.createSession(params, function(err, res) {
+            QB.createSession(params, function (err, res) {
+                var errMsg;
+                var parseErr;
+
                 if (err) {
                     Helpers.log(err);
 
-                    var errMsg,
-                        parseErr = err.detail;
+                    parseErr = err.detail;
 
                     if (err.code === 401) {
                         errMsg = QMCONFIG.errors.unauthorized;
                         $('section:visible input:not(:checkbox)').addClass('is-error');
                     } else {
-                        errMsg = parseErr.errors.email ? parseErr.errors.email[0] :
-                            parseErr.errors.base ? parseErr.errors.base[0] : parseErr.errors[0];
+                        if (parseErr.errors.email) {
+                            errMsg = parseErr.errors.email[0];
+                        } else if (parseErr.errors.base) {
+                            errMsg = parseErr.errors.base[0];
+                        } else {
+                            errMsg = parseErr.errors[0];
+                        }
 
                         // This checking is needed when your user has exited from Facebook
                         // and you try to relogin on a project via FB without reload the page.
-                        // All you need it is to get the new FB user status and show specific error message
+                        // All you need it is to get the new FB user status
+                        // and show specific error message
                         if (errMsg.indexOf('Authentication') >= 0) {
                             errMsg = QMCONFIG.errors.crashFBToken;
                             UserView.getFBStatus();
@@ -149,9 +160,9 @@ define([
             });
         },
 
-        loginUser: function(params, callback) {
-            this.checkSession(function() {
-                QB.login(params, function(err, res) {
+        loginUser: function (params, callback) {
+            this.checkSession(function () {
+                QB.login(params, function (err, res) {
                     if (res && !err) {
                         Helpers.log('QB SDK: User has logged', res);
 
@@ -172,9 +183,9 @@ define([
             });
         },
 
-        getFirebasePhone: function(callback) {
-            self.createSession({}, function(session) {
-                QB.login(Session.authParams, function(err, user) {
+        getFirebasePhone: function (callback) {
+            self.createSession({}, function (session) {
+                QB.login(Session.authParams, function (err, user) {
                     if (user && !err) {
                         Session.update({
                             date: new Date(),
@@ -183,7 +194,7 @@ define([
 
                         callback(session);
                     } else {
-                        UserView.logInFirebase(function(authParams) {
+                        UserView.logInFirebase(function (authParams) {
                             self.loginUser(authParams);
                         });
                     }
@@ -191,7 +202,7 @@ define([
             });
         },
 
-        logoutUser: function(callback) {
+        logoutUser: function (callback) {
             Helpers.log('QB SDK: User has exited');
             // reset QuickBlox JS SDK after autologin via an existing token
             QB.service.qbInst.config.creds = QMCONFIG.qbAccount;
@@ -200,9 +211,9 @@ define([
             callback();
         },
 
-        forgotPassword: function(email, callback) {
-            this.checkSession(function() {
-                QB.users.resetPassword(email, function(error) {
+        forgotPassword: function (email, callback) {
+            this.checkSession(function () {
+                QB.users.resetPassword(email, function (error) {
                     if (error && error.code === 404) {
                         Helpers.log(error.message);
 
@@ -217,12 +228,14 @@ define([
             });
         },
 
-        listUsers: function(params, callback) {
-            this.checkSession(function() {
-                QB.users.listUsers(params, function(err, res) {
+        listUsers: function (params, callback) {
+            this.checkSession(function () {
+                QB.users.listUsers(params, function (err, res) {
+                    var responseIds = [];
+                    var requestIds;
+
                     if (err) {
                         Helpers.log(err.detail);
-
                     } else {
                         Helpers.log('QB SDK: Users are found', res);
 
@@ -231,13 +244,12 @@ define([
                         });
 
                         if (params.filter && params.filter.value) {
-                            var requestIds = params.filter.value.split(',').map(Number),
-                                responseIds = [];
+                            requestIds = params.filter.value.split(',').map(Number);
 
-                            res.items.forEach(function(item) {
+                            res.items.forEach(function (item) {
                                 responseIds.push(item.user.id);
                             });
-                            
+
 
                             ContactList.cleanUp(requestIds, responseIds);
                         }
@@ -248,9 +260,9 @@ define([
             });
         },
 
-        getUser: function(params, callback) {
-            this.checkSession(function() {
-                QB.users.get(params, function(err, res) {
+        getUser: function (params, callback) {
+            this.checkSession(function () {
+                QB.users.get(params, function (err, res) {
                     if (err && err.code === 404) {
                         Helpers.log(err.message);
 
@@ -273,9 +285,9 @@ define([
             });
         },
 
-        updateUser: function(id, params, callback) {
-            this.checkSession(function() {
-                QB.users.update(id, params, function(err, res) {
+        updateUser: function (id, params, callback) {
+            this.checkSession(function () {
+                QB.users.update(id, params, function (err, res) {
                     if (err) {
                         Helpers.log(err.detail);
 
@@ -293,12 +305,11 @@ define([
             });
         },
 
-        createBlob: function(params, callback) {
-            this.checkSession(function() {
-                QB.content.createAndUpload(params, function(err, res) {
+        createBlob: function (params, callback) {
+            this.checkSession(function () {
+                QB.content.createAndUpload(params, function (err, res) {
                     if (err) {
                         Helpers.log(err.detail);
-
                     } else {
                         Helpers.log('QB SDK: Blob is uploaded', res);
 
@@ -312,17 +323,17 @@ define([
             });
         },
 
-        connectChat: function(jid, callback) {
-            this.checkSession(function() {
+        connectChat: function (jid, callback) {
+            this.checkSession(function () {
                 var password = Session.token;
 
                 QB.chat.connect({
                     jid: jid,
                     password: password
-                }, function(err, roster) {
+                }, function (err, roster) {
                     if (err) {
                         Helpers.log(err);
-                        
+
                         fail(err.detail);
                     } else {
                         Listeners.stateActive = true;
@@ -331,9 +342,9 @@ define([
                         Session.update({
                             date: new Date()
                         });
-                        
+
                         ContactList.saveRoster(roster);
-                        
+
                         setRecoverySessionInterval();
 
                         callback();
@@ -342,8 +353,8 @@ define([
             });
         },
 
-        disconnectChat: function() {
-            this.checkSession(function() {
+        disconnectChat: function () {
+            this.checkSession(function () {
                 Listeners.stateActive = false;
 
                 QB.chat.disconnect();
@@ -356,9 +367,9 @@ define([
             });
         },
 
-        listDialogs: function(params, callback) {
-            this.checkSession(function() {
-                QB.chat.dialog.list(params, function(err, res) {
+        listDialogs: function (params, callback) {
+            this.checkSession(function () {
+                QB.chat.dialog.list(params, function (err, res) {
                     if (err) {
                         Helpers.log(err.detail);
 
@@ -376,12 +387,11 @@ define([
             });
         },
 
-        createDialog: function(params, callback) {
-            this.checkSession(function() {
-                QB.chat.dialog.create(params, function(err, res) {
+        createDialog: function (params, callback) {
+            this.checkSession(function () {
+                QB.chat.dialog.create(params, function (err, res) {
                     if (err) {
                         Helpers.log(err.detail);
-
                     } else {
                         Helpers.log('QB SDK: Dialog is created', res);
 
@@ -395,9 +405,9 @@ define([
             });
         },
 
-        updateDialog: function(id, params, callback) {
-            this.checkSession(function() {
-                QB.chat.dialog.update(id, params, function(err, res) {
+        updateDialog: function (id, params, callback) {
+            this.checkSession(function () {
+                QB.chat.dialog.update(id, params, function (err, res) {
                     if (err) {
                         Helpers.log(err.detail);
                     } else {
@@ -413,9 +423,9 @@ define([
             });
         },
 
-        deleteDialog: function(id, callback) {
-            this.checkSession(function() {
-                QB.chat.dialog.delete(id, function(err, res) {
+        deleteDialog: function (id, callback) {
+            this.checkSession(function () {
+                QB.chat.dialog.delete(id, function (err, res) {
                     if (err) {
                         Helpers.log(err.detail);
                     } else {
@@ -431,9 +441,9 @@ define([
             });
         },
 
-        listMessages: function(params, callback) {
-            this.checkSession(function() {
-                QB.chat.message.list(params, function(err, res) {
+        listMessages: function (params, callback) {
+            this.checkSession(function () {
+                QB.chat.message.list(params, function (err, res) {
                     if (err) {
                         Helpers.log(err.detail);
                         callback(null, err);
@@ -450,12 +460,11 @@ define([
             });
         },
 
-        deleteMessage: function(params, callback) {
-            this.checkSession(function() {
-                QB.chat.message.delete(params, function(response) {
+        deleteMessage: function (params, callback) {
+            this.checkSession(function () {
+                QB.chat.message.delete(params, function (response) {
                     if (response.code === 404) {
                         Helpers.log(response.message);
-
                     } else {
                         Helpers.log('QB SDK: Message is deleted');
 
@@ -469,17 +478,17 @@ define([
             });
         },
 
-        sendPushNotification: function(calleeId, fullName) {
+        sendPushNotification: function (calleeId, fullName) {
             var params = {
-                'notification_type': 'push',
-                'environment': "production",
-                'message': QB.pushnotifications.base64Encode(fullName + ' is calling you.'),
-                'user': { ids: [calleeId] },
-                'ios_badge': '1',
-                'ios_sound': 'default'
+                notification_type: 'push',
+                environment: 'production',
+                message: QB.pushnotifications.base64Encode(fullName + ' is calling you.'),
+                user: { ids: [calleeId] },
+                ios_badge: '1',
+                ios_sound: 'default'
             };
 
-            QB.pushnotifications.events.create(params, function(err, response) {
+            QB.pushnotifications.events.create(params, function (err, response) {
                 if (err) {
                     Helpers.log('Create event error: ', err);
                 } else {
@@ -488,8 +497,8 @@ define([
             });
         },
 
-        getContactList: function(callback) {
-            QB.chat.roster.get(function(roster) {
+        getContactList: function (callback) {
+            QB.chat.roster.get(function (roster) {
                 callback(roster);
             });
         }
@@ -499,39 +508,38 @@ define([
     /* Private
     ---------------------------------------------------------------------- */
     function setRecoverySessionInterval() {
-        // update QB session every one hour
-        timer = setTimeout(function() {
-            QB.getSession(function(err) {
+    // update QB session every one hour
+        timer = setTimeout(function () {
+            QB.getSession(function (err) {
                 if (err) {
-                    return Helpers.log('recovery session error', err);
-                } else {
-                    Session.update({
-                        date: new Date()
-                    });
-
-                    setRecoverySessionInterval();
+                    Helpers.log('recovery session error', err);
+                    return;
                 }
+                Session.update({
+                    date: new Date()
+                });
+
+                setRecoverySessionInterval();
             });
         }, 3600 * 1000);
     }
 
-    var fail = function(errMsg) {
+    fail = function (errMsg) {
         UserView.removeSpinner();
         $('section:visible .text_error').addClass('is-error').text(errMsg);
         $('section:visible input:password').val('');
     };
 
-    var failForgot = function() {
+    failForgot = function () {
         var errMsg = QMCONFIG.errors.notFoundEmail;
         $('section:visible input[type="email"]').addClass('is-error');
         fail(errMsg);
     };
 
-    var failSearch = function() {
+    failSearch = function () {
         $('.popup:visible .note').removeClass('is-hidden').siblings('.popup-elem').addClass('is-hidden');
         ContactListView.removeDataSpinner();
     };
 
     return QBApiCalls;
-
 });
