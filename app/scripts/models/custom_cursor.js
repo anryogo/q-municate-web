@@ -3,13 +3,13 @@
  * Q-MUNICATE custom cursor models Module
  *
  */
-define([], function () {
+define([], function() {
     'use strict';
 
     function Cursor() {
         var self = this;
 
-        this.setCursorAfterElement = function (el) {
+        this.setCursorAfterElement = function(el) {
             var range = document.createRange();
 
             range.setStartAfter(el);
@@ -18,7 +18,7 @@ define([], function () {
             setRange(range);
         };
 
-        this.setCursorToEnd = function (el) {
+        this.setCursorToEnd = function(el) {
             var isSelectionAndRangeAvaible = typeof window.getSelection !== 'undefined'
                                              && typeof document.createRange !== 'undefined';
             var isTextRangeAvaible = typeof document.body.createTextRange !== 'undefined';
@@ -42,7 +42,7 @@ define([], function () {
             }
         };
 
-        this.insertElement = function (element, newClassName) {
+        this.insertElement = function(element, newClassName) {
             var sel;
             var range;
             var emoji;

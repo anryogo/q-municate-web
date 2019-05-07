@@ -4,14 +4,14 @@
  * Contact Module
  *
  */
-define(['config'], function (QMCONFIG) {
+define(['config'], function(QMCONFIG) {
     function Contact(app) {
         this.app = app;
     }
 
     Contact.prototype = {
 
-        create: function (qbUser) {
+        create: function(qbUser) {
             return {
                 id: qbUser.id,
                 full_name: qbUser.full_name || 'Unknown user',

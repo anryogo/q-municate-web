@@ -5,7 +5,7 @@ define([
     'config',
     'Helpers',
     'QBMediaRecorder'
-], function (
+], function(
     QMCONFIG,
     Helpers,
     QBMediaRecorder
@@ -36,7 +36,7 @@ define([
     }
 
     VoiceMessage.prototype = {
-        init: function () {
+        init: function() {
             self.supported = false;
 
             if (Helpers.isIE11orEdge()) return;
@@ -47,12 +47,12 @@ define([
             }
         },
 
-        initRecorder: function () {
+        initRecorder: function() {
             var options = {
-                onstart: function () {
+                onstart: function() {
                     self.startTimer();
                 },
-                onstop: function (blob) {
+                onstop: function(blob) {
                     self.stopTimer();
                     self.blob = blob;
                 },
@@ -73,51 +73,50 @@ define([
             Helpers.log('Recorder is ready to use');
         },
 
-        blockRecorder: function (message) {
+        blockRecorder: function(message) {
             var recorders = document.getElementsByClassName('j-btn_audio_record');
             var error = message || ' (unsupported)';
             var recorder;
-            var i;
 
             if (recorders.length) {
-                for (i = 0; i < recorders.length; i++) {
-                    recorder = recorders[i];
+                recorders.forEach(function(item) {
+                    recorder = item;
 
                     recorder.disabled = true;
                     recorder.classList.remove('is-active');
                     recorder.classList.add('is-unavailable');
                     recorder.setAttribute('data-balloon-length', 'medium');
                     recorder.setAttribute('data-balloon', 'Recorder unavailable' + error);
-                }
+                });
             }
 
             Helpers.log('Recorder unavailable' + error);
         },
 
-        startStream: function (callback) {
+        startStream: function(callback) {
             navigator.mediaDevices.getUserMedia({
                 audio: true
-            }).then(function (stream) {
+            }).then(function(stream) {
                 self.stream = stream;
                 callback();
-            }).catch(function (err) {
+            }).catch(function(err) {
                 self.resetRecord();
                 self.blockRecorder('(microphone wasn\'t found)');
                 throw err;
             });
         },
 
-        stopStream: function () {
+        stopStream: function() {
             if (!self.stream) {
                 return;
             }
 
-            self.stream.getTracks().forEach(function (track) {
+            self.stream.getTracks().forEach(function(track) {
                 track.stop();
             });
         },
 
-        startTimer: function () {
+        startTimer: function() {
             var step = 0;
             var time = 0;
             var min;
@@ -125,7 +124,7 @@ define([
 
             self.ui.progress.classList.add('is-active');
 
-            self.timerID = setInterval(function () {
+            self.timerID = setInterval(function() {
                 step += 1;
 
                 self.ui.title.innerHTML = timerValue();
@@ -147,13 +146,13 @@ define([
             }
         },
 
-        stopTimer: function () {
+        stopTimer: function() {
             clearInterval(self.timerID);
             self.timerID = undefined;
         },
 
-        initHandler: function () {
-            self.ui.chat.addEventListener('click', function (event) {
+        initHandler: function() {
+            self.ui.chat.addEventListener('click', function(event) {
                 var target = event.target;
                 var controlElClassList = self.ui.control.classList;
                 var progressElClassList = self.ui.progress.classList;
@@ -203,7 +202,7 @@ define([
             });
         },
 
-        toggleActiveState: function (bool) {
+        toggleActiveState: function(bool) {
             var buttons = document.querySelectorAll('.j-footer_btn');
             var textarea = document.querySelector('.j-textarea');
             var contenteditable = !bool;
@@ -214,13 +213,13 @@ define([
             // disable footer buttons
             textarea.setAttribute('contenteditable', contenteditable);
 
-            buttons.forEach(function (elem) {
+            buttons.forEach(function(elem) {
                 elem.disabled = bool;
                 elem.style.opacity = opacityLevel;
             });
         },
 
-        resetRecord: function (dialogId) {
+        resetRecord: function(dialogId) {
             var popover;
             var button;
             var activeDialogId;
@@ -256,21 +255,21 @@ define([
             self.toggleActiveState(false);
         },
 
-        startRecord: function () {
+        startRecord: function() {
             self.blob = null;
-            self.startStream(function () {
+            self.startStream(function() {
                 self.recorder.start(self.stream);
                 self.toggleActiveState(true);
             });
         },
 
-        stopRecord: function () {
+        stopRecord: function() {
             self.recorder.stop();
             self.stopStream();
             self.stream = null;
         },
 
-        cancelRecord: function () {
+        cancelRecord: function() {
             if (self.stream) {
                 self.stopRecord();
             }
@@ -278,7 +277,7 @@ define([
             self.toggleActiveState(false);
         },
 
-        sendRecord: function () {
+        sendRecord: function() {
             var recordedAudioFile;
 
             if (!self.blob) {

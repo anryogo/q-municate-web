@@ -5,38 +5,68 @@
  *
  */
 define([
-    'jquery', 'UserModule',
-    'SessionModule', 'SettingsModule',
-    'ContactModule', 'DialogModule',
-    'MessageModule', 'AttachModule',
-    'ContactListModule', 'VideoChatModule',
-    'CursorModule', 'SyncTabsModule',
-    'UserView', 'SettingsView',
-    'DialogView', 'MessageView',
-    'AttachView', 'ContactListView',
-    'VideoChatView', 'Events',
-    'Helpers', 'QBApiCalls',
-    'config', 'Entities',
-    'QMHtml', 'Listeners',
-    'VoiceMessage', 'QMPlayer',
+    'jquery',
+    'UserModule',
+    'SessionModule',
+    'SettingsModule',
+    'ContactModule',
+    'DialogModule',
+    'MessageModule',
+    'AttachModule',
+    'ContactListModule',
+    'VideoChatModule',
+    'CursorModule',
+    'SyncTabsModule',
+    'UserView',
+    'SettingsView',
+    'DialogView',
+    'MessageView',
+    'AttachView',
+    'ContactListView',
+    'VideoChatView',
+    'Events',
+    'Helpers',
+    'QBApiCalls',
+    'config',
+    'Entities',
+    'QMHtml',
+    'Listeners',
+    'VoiceMessage',
+    'QMPlayer',
     'FirebaseWidget'
-], function (
-    $, User,
-    Session, Settings,
-    Contact, Dialog,
-    Message, Attach,
-    ContactList, VideoChat,
-    Cursor, SyncTabs,
-    UserView, SettingsView,
-    DialogView, MessageView,
-    AttachView, ContactListView,
-    VideoChatView, Events,
-    Helpers, QBApiCalls,
-    QMCONFIG, Entities,
-    QMHtml, Listeners,
-    VoiceMessage, QMPlayer,
+], function(
+    $,
+    User,
+    Session,
+    Settings,
+    Contact,
+    Dialog,
+    Message,
+    Attach,
+    ContactList,
+    VideoChat,
+    Cursor,
+    SyncTabs,
+    UserView,
+    SettingsView,
+    DialogView,
+    MessageView,
+    AttachView,
+    ContactListView,
+    VideoChatView,
+    Events,
+    Helpers,
+    QBApiCalls,
+    QMCONFIG,
+    Entities,
+    QMHtml,
+    Listeners,
+    VoiceMessage,
+    QMPlayer,
     FirebaseWidget
 ) {
+    var IS_RELEASE_QB_ACCOUNT = 'QM.isReleaseQBAccount';
+
     function QM() {
         this.listeners = new Listeners(this);
 
@@ -76,7 +106,7 @@ define([
     }
 
     QM.prototype = {
-        init: function () {
+        init: function() {
             var token;
 
             this.setHtml5Patterns();
@@ -86,15 +116,15 @@ define([
             // Checking if autologin was chosen
             if (localStorage['QM.session'] && localStorage['QM.user']
                 // new QB release account (13.02.2015)
-                && localStorage['QM.isReleaseQBAccount']) {
+                && localStorage[IS_RELEASE_QB_ACCOUNT]) {
                 token = JSON.parse(localStorage['QM.session']).token;
                 this.service.init(token);
-            } else if (localStorage['QM.isReleaseQBAccount']) {
+            } else if (localStorage[IS_RELEASE_QB_ACCOUNT]) {
                 this.service.init();
             } else {
                 // removing the old cached data from LocalStorage
                 localStorage.clear();
-                localStorage.setItem('QM.isReleaseQBAccount', '1');
+                localStorage.setItem(IS_RELEASE_QB_ACCOUNT, '1');
                 this.service.init();
             }
 
@@ -104,14 +134,14 @@ define([
             Helpers.log('App init', this);
         },
 
-        preloader: function () {
+        preloader: function() {
             var spinner = $('#welcomePage .l-spinner');
 
             spinner.addClass('is-hidden');
             spinner.prevAll().removeClass('is-hidden');
         },
 
-        setHtml5Patterns: function () {
+        setHtml5Patterns: function() {
             $('.pattern-name').attr('pattern', QMCONFIG.patterns.name);
             $('.pattern-pass').attr('pattern', QMCONFIG.patterns.password);
         }

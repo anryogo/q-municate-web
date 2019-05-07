@@ -9,7 +9,7 @@ define([
     'underscore',
     'Helpers',
     'Entities'
-], function (
+], function(
     QMCONFIG,
     _,
     Helpers,
@@ -22,15 +22,15 @@ define([
     // noinspection JSAnnotator
     Dialog.prototype = {
 
-        download: function (params, callback) {
+        download: function(params, callback) {
             var QBApiCalls = this.app.service;
 
-            QBApiCalls.listDialogs(params, function (error, result) {
+            QBApiCalls.listDialogs(params, function(error, result) {
                 callback(error, result);
             });
         },
 
-        create: function (params) {
+        create: function(params) {
             var User = this.app.models.User;
             var time = Math.floor(Date.now() / 1000);
             // exclude current user from dialog occupants
@@ -59,7 +59,7 @@ define([
             return dialog.id;
         },
 
-        createPrivate: function (idOrJid, isNew, dialogId) {
+        createPrivate: function(idOrJid, isNew, dialogId) {
             var self = this;
             var QBApiCalls = this.app.service;
             var DialogView = this.app.views.Dialog;
@@ -69,14 +69,14 @@ define([
             id = (idOrJid.indexOf('@') > -1) ? QB.chat.helpers.getIdFromNode(idOrJid) : idOrJid;
 
             if (dialogId) {
-                QB.chat.dialog.list({ _id: dialogId }, function (err, resDialogs) {
+                QB.chat.dialog.list({ _id: dialogId }, function(err, resDialogs) {
                     addContactRequestDialogItem(resDialogs.items[0]);
                 });
             } else {
                 QBApiCalls.createDialog({
                     type: 3,
                     occupants_ids: id
-                }, function (res) {
+                }, function(res) {
                     addContactRequestDialogItem(res, true);
                 });
             }
@@ -103,20 +103,20 @@ define([
                     });
                 }
 
-                ContactList.add(dialog.get('occupants_ids'), null, function () {
+                ContactList.add(dialog.get('occupants_ids'), null, function() {
                     DialogView.addDialogItem(dialog, null, isNew);
                 });
             }
         },
 
-        createGroup: function (occupantsNames, params, callback) {
+        createGroup: function(occupantsNames, params, callback) {
             var QBApiCalls = this.app.service;
             var DialogView = this.app.views.Dialog;
             var ContactList = this.app.models.ContactList;
             var contacts = ContactList.contacts;
             var self = this;
 
-            QBApiCalls.createDialog(params, function (res) {
+            QBApiCalls.createDialog(params, function(res) {
                 var dialogId = self.create(res);
                 var dialogs = Entities.Collections.dialogs;
                 var dialog = dialogs.get(dialogId);
@@ -124,7 +124,7 @@ define([
 
                 Helpers.log('Dialog', dialog.toJSON());
 
-                QB.chat.muc.join(dialog.get('room_jid'), function () {
+                QB.chat.muc.join(dialog.get('room_jid'), function() {
                     var msgId;
                     var time;
 
@@ -137,17 +137,15 @@ define([
                         name: 'message',
                         type: 'groupchat',
                         id: msgId
-                    }, function () {
+                    }, function() {
                         var id;
-                        var len;
-                        var i;
 
                         dialog.set('occupants_ids', occupantsIds);
 
                         DialogView.addDialogItem(dialog);
                         // send invites for all occupants
-                        for (i = 0, len = occupantsIds.length; i < len; i++) {
-                            id = occupantsIds[i];
+                        occupantsIds.forEach(function(item) {
+                            id = item;
                             QB.chat.sendSystemMessage(contacts[id].user_jid, {
                                 body: 'Notification message',
                                 extension: {
@@ -161,7 +159,7 @@ define([
                                     type: 2
                                 }
                             });
-                        }
+                        });
 
                         callback(dialog);
                     });
@@ -187,7 +185,7 @@ define([
             });
         },
 
-        restorePrivateDialog: function (id, callback) {
+        restorePrivateDialog: function(id, callback) {
             var QBApiCalls = this.app.service;
             var DialogView = this.app.views.Dialog;
             var self = this;
@@ -195,7 +193,7 @@ define([
             QBApiCalls.createDialog({
                 type: 3,
                 occupants_ids: id
-            }, function (res) {
+            }, function(res) {
                 var dialogs = Entities.Collections.dialogs;
                 var dialogId = self.create(res);
                 var dialog = dialogs.get(dialogId);
@@ -206,7 +204,7 @@ define([
             });
         },
 
-        updateGroup: function (occupantsNames, params, callback) {
+        updateGroup: function(occupantsNames, params, callback) {
             var QBApiCalls = this.app.service;
             var ContactList = this.app.models.ContactList;
             var contacts = ContactList.contacts;
@@ -216,7 +214,7 @@ define([
                 push_all: {
                     occupants_ids: [params.occupants_ids]
                 }
-            }, function (res) {
+            }, function(res) {
                 var dialogId = self.create(res);
                 var dialogs = Entities.Collections.dialogs;
                 var dialog = dialogs.get(dialogId);
@@ -229,16 +227,14 @@ define([
                     name: 'message',
                     type: 'groupchat',
                     id: msgId
-                }, function () {
+                }, function() {
                     var id;
-                    var len;
-                    var i;
 
                     callback(dialog);
 
                     // send invites for all new occupants
-                    for (i = 0, len = params.new_ids.length; i < len; i++) {
-                        id = params.new_ids[i];
+                    params.new_ids.forEach(function(item) {
+                        id = item;
 
                         QB.chat.sendSystemMessage(contacts[id].user_jid, {
                             body: 'Notification message',
@@ -254,7 +250,7 @@ define([
                                 type: 2
                             }
                         });
-                    }
+                    });
                 });
 
                 // send message about added people for history
@@ -276,13 +272,13 @@ define([
             });
         },
 
-        changeName: function (dialogId, name) {
+        changeName: function(dialogId, name) {
             var QBApiCalls = this.app.service;
             var self = this;
 
             QBApiCalls.updateDialog(dialogId, {
                 name: name
-            }, function (res) {
+            }, function(res) {
                 var newDialogId = self.create(res);
                 var dialogs = Entities.Collections.dialogs;
                 var dialog = dialogs.get(newDialogId);
@@ -306,7 +302,7 @@ define([
             });
         },
 
-        changeAvatar: function (dialogId, objDom, callback) {
+        changeAvatar: function(dialogId, objDom, callback) {
             var QBApiCalls = this.app.service;
             var Attach = this.app.models.Attach;
             var AttachView = this.app.views.Attach;
@@ -329,13 +325,13 @@ define([
                     Attach.crop(file, {
                         w: 1000,
                         h: 1000
-                    }, function (avatar) {
-                        Attach.upload(avatar, function (blob) {
+                    }, function(avatar) {
+                        Attach.upload(avatar, function(blob) {
                             var imgUrl = QB.content.publicUrl(blob.uid);
 
                             QBApiCalls.updateDialog(dialogId, {
                                 photo: imgUrl
-                            }, function (res) {
+                            }, function(res) {
                                 var newDialogId = self.create(res);
                                 var dialogs = Entities.Collections.dialogs;
                                 var dialog = dialogs.get(newDialogId);
@@ -367,7 +363,7 @@ define([
             }
         },
 
-        deleteChat: function (dialog) {
+        deleteChat: function(dialog) {
             var QBApiCalls = this.app.service;
             var dialogs = Entities.Collections.dialogs;
             var User = this.app.models.User;
@@ -395,7 +391,7 @@ define([
 
             dialogs.remove(dialogId);
 
-            QBApiCalls.deleteDialog(dialogId, function (res) {
+            QBApiCalls.deleteDialog(dialogId, function(res) {
                 Helpers.log(res);
             });
         }

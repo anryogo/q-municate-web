@@ -7,7 +7,7 @@ define([
     'jquery',
     'underscore',
     'Helpers'
-], function (
+], function(
     $,
     _,
     Helpers
@@ -16,7 +16,7 @@ define([
 
     QMHtml.VideoChat = {
 
-        onCallTpl: function (params) {
+        onCallTpl: function(params) {
             return _.template('<div class="incoming-call l-flexbox l-flexbox_column l-flexbox_flexbetween">'
                 + '<div class="incoming-call-info l-flexbox l-flexbox_column">'
                 + '<div class="message-avatar avatar info-avatar" style="background-image:url(' + params.userAvatar + ')"></div>'
@@ -29,7 +29,7 @@ define([
                 + '</div></div>')(params);
         },
 
-        buildTpl: function (params) {
+        buildTpl: function(params) {
             return _.template('<div class="mediacall l-flexbox">'
                 + '<video id="remoteStream" class="mediacall-remote-stream is-hidden"></video>'
                 + '<video id="localStream" class="mediacall-local mediacall-local-stream is-hidden"></video>'
@@ -53,7 +53,7 @@ define([
                 + '</div></div>')(params);
         },
 
-        showError: function () {
+        showError: function() {
             var isBottom = Helpers.isBeginOfChat();
             var $chat = $('.l-chat:visible');
             var $html = $('<article class="message message_service l-flexbox l-flexbox_alignstretch">'
@@ -70,7 +70,7 @@ define([
             }
         },
 
-        noWebRTC: function () {
+        noWebRTC: function() {
             var isBottom = Helpers.isBeginOfChat();
             var $chat = $('.l-chat:visible');
             var $html = $('<article class="message message_service l-flexbox l-flexbox_alignstretch">'
@@ -92,7 +92,7 @@ define([
 
     QMHtml.User = {
 
-        contactPopover: function (params, roster) {
+        contactPopover: function(params, roster) {
             var $html = $('<ul class="list-actions list-actions_contacts popover j-listActionsContacts"></ul>');
             var htmlStr = '';
 
@@ -114,7 +114,7 @@ define([
             return $html.append(_.template(htmlStr)(params));
         },
 
-        occupantPopover: function (params, roster) {
+        occupantPopover: function(params, roster) {
             var $html = $('<ul class="list-actions list-actions_occupants popover j-listActionsContacts"></ul>');
             var htmlStr = '';
 
@@ -134,7 +134,7 @@ define([
             return $html.append(_.template(htmlStr)(params));
         },
 
-        getControlButtonsForPopupDetails: function (roster) {
+        getControlButtonsForPopupDetails: function(roster) {
             var $html = $('#popupDetails').find('.userDetails-controls');
             var htmlStr = '';
             var params = {
@@ -162,7 +162,7 @@ define([
             $html.append(_.template(htmlStr)(params));
         },
 
-        profilePopover: function () {
+        profilePopover: function() {
             return $('<ul class="list-actions list-actions_profile popover">'
                 + '<li class="list-item"><a id="userProfile" class="list-actions-action" href="#">Profile</a></li>'
                 + '<li class="list-item"><a id="userSettings" class="list-actions-action" href="#">Settings</a></li>'
@@ -173,7 +173,7 @@ define([
 
     QMHtml.Messages = {
 
-        setMap: function (params) {
+        setMap: function(params) {
             var htmlTemplate = _.template(
                 '<a class="open_map" href="<%=mapLink%>" target="_blank">'
                 + '</a>'
@@ -184,7 +184,7 @@ define([
                 .append(htmlTemplate);
         },
 
-        urlPreview: function (params) {
+        urlPreview: function(params) {
             return _.template(
                 '<h4 class="og_title"><%=title%></h4>'
                     + '<span class="og_description"><%=description%></span>'
@@ -200,7 +200,7 @@ define([
 
     QMHtml.Attach = {
 
-        error: function (params) {
+        error: function(params) {
             return _.template('<article class="message message_service l-flexbox l-flexbox_alignstretch">'
                 + '<span class="message-avatar request-button_pending"></span>'
                 + '<div class="message-container-wrap">'
@@ -210,7 +210,7 @@ define([
                 + '</div></div></div></article>')(params);
         },
 
-        attach: function (params) {
+        attach: function(params) {
             return _.template(
                 '<article class="message message_service message_attach l-flexbox l-flexbox_alignstretch">'
                 + '<span class="message-avatar request-button_attach">'

@@ -3,7 +3,7 @@
  * Q-MUNICATE settings models Module
  *
  */
-define([], function () {
+define([], function() {
     'use strict';
 
     function Settings() {
@@ -11,7 +11,7 @@ define([], function () {
         var options;
         var self = this;
 
-        this.init = function (currentUserId) {
+        this.init = function(currentUserId) {
             userId = currentUserId;
             options = {
                 messages_notify: true,
@@ -22,17 +22,17 @@ define([], function () {
             sync();
         };
 
-        this.set = function (params) {
-            Object.keys(params).forEach(function (key) {
+        this.set = function(params) {
+            Object.keys(params).forEach(function(key) {
                 options[key] = params[key];
             });
         };
 
-        this.get = function (prop) {
+        this.get = function(prop) {
             return options[prop];
         };
 
-        this.save = function () {
+        this.save = function() {
             localStorage.setItem('QM.settings-' + userId, JSON.stringify(options));
         };
 

@@ -8,7 +8,7 @@ define([
     'jquery',
     'config',
     'Helpers'
-], function (
+], function(
     $,
     QMCONFIG,
     Helpers
@@ -22,7 +22,7 @@ define([
         self = this;
     }
 
-    VideoChat.prototype.getUserMedia = function (options, callType, callback) {
+    VideoChat.prototype.getUserMedia = function(options, callType, callback) {
         var User = this.app.models.User;
         var params = {
             audio: true,
@@ -52,7 +52,7 @@ define([
 
         curSession = self.session;
 
-        curSession.getUserMedia(params, function (err, stream) {
+        curSession.getUserMedia(params, function(err, stream) {
             if (err) {
                 Helpers.log('Error', err);
                 if (!options.isCallee) {
@@ -84,7 +84,7 @@ define([
     };
 
     // eslint-disable-next-line max-len
-    VideoChat.prototype.sendMessage = function (userId, state, callDuration, dialogId, callType, isErrorMessage, sessionID) {
+    VideoChat.prototype.sendMessage = function(userId, state, callDuration, dialogId, callType, isErrorMessage, sessionID) {
         var jid = QB.chat.helpers.getUserJid(userId, QMCONFIG.qbAccount.appId);
         var User = this.app.models.User;
         var Message = this.app.models.Message;

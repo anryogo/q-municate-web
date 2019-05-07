@@ -12,7 +12,7 @@ define([
     'QMHtml',
     'underscore',
     'mCustomScrollbar'
-], function (
+], function(
     $,
     QMCONFIG,
     Entities,
@@ -40,7 +40,7 @@ define([
 
     ContactListView.prototype = {
 
-        createDataSpinner: function (list) {
+        createDataSpinner: function(list) {
             var spinnerBlock = '';
 
             this.removeDataSpinner();
@@ -54,12 +54,12 @@ define([
             list.after(spinnerBlock);
         },
 
-        removeDataSpinner: function () {
+        removeDataSpinner: function() {
             $('.popup:visible .spinner_bounce').remove();
             $('.popup:visible input').prop('disabled', false);
         },
 
-        globalPopup: function () {
+        globalPopup: function() {
             var popup = $('#popupSearch');
 
             openPopup(popup);
@@ -71,7 +71,7 @@ define([
             popup.find('.mCSB_container').empty();
         },
 
-        globalSearch: function ($form) {
+        globalSearch: function($form) {
             var that = this;
             var $popup = $form.parent();
             var $list = $popup.find('ul:first.list_contacts');
@@ -96,7 +96,7 @@ define([
                 sessionStorage.setItem('QM.search.value', val);
                 sessionStorage.setItem('QM.search.page', 1);
 
-                ContactList.globalSearch(function (results) {
+                ContactList.globalSearch(function(results) {
                     createListResults($list, results, that);
                 });
             } else {
@@ -112,7 +112,7 @@ define([
                 .addClass('is-empty');
         },
 
-        addContactsToChat: function (objDom, type, dialogId, isPrivate) {
+        addContactsToChat: function(objDom, type, dialogId, isPrivate) {
             var ids = objDom.data('ids') ? objDom.data('ids').toString().split(',') : [];
             var popup = $('#popupContacts');
             var contacts = ContactList.contacts;
@@ -122,8 +122,6 @@ define([
             var userId;
             var friends;
             var html;
-            var len;
-            var i;
 
             openPopup(popup, type, dialogId);
             popup.addClass('not-selected').removeClass('is-addition');
@@ -135,13 +133,13 @@ define([
             popup.find('.btn').removeClass('is-hidden');
 
             // get your friends which are sorted by alphabet
-            sortedContacts = _.pluck(_.sortBy(contacts, function (user) {
+            sortedContacts = _.pluck(_.sortBy(contacts, function(user) {
                 if (user.full_name) {
                     return user.full_name.toLowerCase();
                 }
                 return user.full_name;
             }), 'id').map(String);
-            friends = _.filter(sortedContacts, function (el) {
+            friends = _.filter(sortedContacts, function(el) {
                 return roster[el] && roster[el].subscription !== 'none';
             });
             Helpers.log('Friends', friends);
@@ -155,8 +153,8 @@ define([
             // exclude users who are already present in the dialog
             friends = _.difference(friends, ids);
 
-            for (i = 0, len = friends.length; i < len; i++) {
-                userId = friends[i];
+            friends.forEach(function(item) {
+                userId = item;
 
                 html = '';
                 html += '<li class="list-item" data-id="' + userId + '">';
@@ -168,7 +166,7 @@ define([
                 html += '</a></li>';
 
                 popup.find('.mCSB_container').append(html);
-            }
+            });
 
             if (type || isPrivate) {
                 existingIds = ids.length > 0 ? ids : null;
@@ -180,11 +178,11 @@ define([
 
         // subscriptions
 
-        importFBFriend: function (id) {
+        importFBFriend: function(id) {
             var jid = QB.chat.helpers.getUserJid(id, QMCONFIG.qbAccount.appId);
             var roster = ContactList.roster;
 
-            QB.chat.roster.add(jid, function () {
+            QB.chat.roster.add(jid, function() {
                 // update roster
                 roster[id] = {
                     subscription: 'none',
@@ -196,7 +194,7 @@ define([
             });
         },
 
-        sendSubscribe: function (jid, isChat, dialogId) {
+        sendSubscribe: function(jid, isChat, dialogId) {
             var MessageView = this.app.views.Message;
             var $objDom = $('.list-item[data-jid="' + jid + '"]');
             var roster = ContactList.roster;
@@ -223,7 +221,7 @@ define([
                         Dialog.createPrivate(jid, 'new_dialog', dialogId);
                     }
                 } else {
-                    QB.chat.roster.add(jid, function () {
+                    QB.chat.roster.add(jid, function() {
                         if ($dialogItem.length) {
                             // send notification about subscribe
                             sendContactRequest({
@@ -274,7 +272,7 @@ define([
             }
         },
 
-        sendConfirm: function (jid, isClick) {
+        sendConfirm: function(jid, isClick) {
             var DialogView = this.app.views.Dialog;
             var $objDom = $('.j-incomingContactRequest[data-jid="' + jid + '"]');
             var id = QB.chat.helpers.getIdFromNode(jid);
@@ -314,7 +312,7 @@ define([
             Helpers.log('Dialog', dialog.toJSON());
 
             if (isClick) {
-                QB.chat.roster.confirm(jid, function () {
+                QB.chat.roster.confirm(jid, function() {
                     // send notification about confirm
                     sendContactRequest({
                         jid: jid,
@@ -364,7 +362,7 @@ define([
             DialogView.decUnreadCounter(dialogId);
         },
 
-        sendReject: function (jid, isClick) {
+        sendReject: function(jid, isClick) {
             var DialogView = this.app.views.Dialog;
             var id = QB.chat.helpers.getIdFromNode(jid);
             var $objDom = $('.j-incomingContactRequest[data-jid="' + jid + '"]');
@@ -390,7 +388,7 @@ define([
             ContactList.saveNotConfirmed(notConfirmed);
 
             if (isClick) {
-                QB.chat.roster.reject(jid, function () {
+                QB.chat.roster.reject(jid, function() {
                     // send notification about reject
                     sendContactRequest({
                         jid: jid,
@@ -405,7 +403,7 @@ define([
             DialogView.decUnreadCounter(hiddenDialogs[id]);
         },
 
-        sendDelete: function (id, isClick) {
+        sendDelete: function(id, isClick) {
             var DialogView = self.app.views.Dialog;
             var VoiceMessage = self.app.models.VoiceMessage;
             var dialogs = Entities.Collections.dialogs;
@@ -426,7 +424,7 @@ define([
 
             // send notification about reject
             if (isClick) {
-                QB.chat.roster.remove(jid, function () {
+                QB.chat.roster.remove(jid, function() {
                     sendContactRequest({
                         jid: jid,
                         date_sent: time,
@@ -448,7 +446,7 @@ define([
         },
 
         // callbacks
-        onSubscribe: function (id) {
+        onSubscribe: function(id) {
             var html;
             var contacts = ContactList.contacts;
             var jid = QB.chat.helpers.getUserJid(id, QMCONFIG.qbAccount.appId);
@@ -461,7 +459,7 @@ define([
             notConfirmed[id] = true;
             ContactList.saveNotConfirmed(notConfirmed);
 
-            ContactList.add([id], null, function () {
+            ContactList.add([id], null, function() {
                 duplicate = $requestList.find('.j-incomingContactRequest[data-jid="' + jid + '"]').length;
 
                 html = '<li class="list-item j-incomingContactRequest" data-jid="' + jid + '">';
@@ -489,7 +487,7 @@ define([
             }, 'subscribe');
         },
 
-        onConfirm: function (id) {
+        onConfirm: function(id) {
             var roster = ContactList.roster;
             var dialogItem = $('.presence-listener[data-id="' + id + '"]');
             var $chat = $('.l-chat[data-id="' + id + '"]');
@@ -508,7 +506,7 @@ define([
             $chat.removeClass('is-request');
         },
 
-        onReject: function (id) {
+        onReject: function(id) {
             var VoiceMessage = self.app.models.VoiceMessage;
             var dialogItem = $('.presence-listener[data-id="' + id + '"]');
             var jid = QB.chat.helpers.getUserJid(id, QMCONFIG.qbAccount.appId);
@@ -536,7 +534,7 @@ define([
                 dialogItem.addClass('is-request');
             }
             if (request.length > 0) {
-                QB.chat.roster.remove(jid, function () {
+                QB.chat.roster.remove(jid, function() {
                     request.remove();
                     Helpers.Dialogs.isSectionEmpty(list);
                 });
@@ -544,7 +542,7 @@ define([
             dialogItem.addClass('is-request');
         },
 
-        onPresence: function (id, type) {
+        onPresence: function(id, type) {
             var dialogItem = $('.presence-listener[data-id="' + id + '"]');
             var roster = ContactList.roster;
 
@@ -571,7 +569,7 @@ define([
             }
         },
 
-        autoConfirm: function (id) {
+        autoConfirm: function(id) {
             var jid = QB.chat.helpers.getUserJid(id, QMCONFIG.qbAccount.appId);
             var notConfirmed = localStorage['QM.notConfirmed'] ? JSON.parse(localStorage['QM.notConfirmed']) : {};
             var hiddenDialogs = notConfirmed[id] ? JSON.parse(sessionStorage['QM.hiddenDialogs']) : null;
@@ -636,7 +634,7 @@ define([
                 deltaFactor: 'auto'
             },
             callbacks: {
-                onTotalScroll: function () {
+                onTotalScroll: function() {
                     ajaxDownloading(list, selfObj);
                 }
             },
@@ -651,7 +649,7 @@ define([
 
         if (page <= allPages) {
             selfObj.createDataSpinner(list);
-            ContactList.globalSearch(function (results) {
+            ContactList.globalSearch(function(results) {
                 createListResults(list, results, selfObj);
             });
         }
@@ -663,7 +661,7 @@ define([
         var item;
 
         if (results.length > 0) {
-            results.forEach(function (contact) {
+            results.forEach(function(contact) {
                 var rosterItem = roster[contact.id];
 
                 item = '<li class="list-item j-listItem" data-jid="' + contact.user_jid + '">';

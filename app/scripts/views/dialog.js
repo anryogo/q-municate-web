@@ -15,7 +15,7 @@ define([
     'perfectscrollbar',
     'mCustomScrollbar',
     'nicescroll'
-], function (
+], function(
     $,
     _,
     QMCONFIG,
@@ -57,7 +57,7 @@ define([
 
     DialogView.prototype = {
 
-        createDataSpinner: function (chat, groupchat, isAjaxDownloading) {
+        createDataSpinner: function(chat, groupchat, isAjaxDownloading) {
             var spinnerBlock;
 
             this.removeDataSpinner();
@@ -93,11 +93,11 @@ define([
             }
         },
 
-        removeDataSpinner: function () {
+        removeDataSpinner: function() {
             $('.spinner_bounce, .temp-box, div.message_service').remove();
         },
 
-        prepareDownloading: function () {
+        prepareDownloading: function() {
             scrollbarAside();
             Listeners.setQBHandlers();
             User.initProfile();
@@ -106,7 +106,7 @@ define([
             self.app.models.SyncTabs.init(User.contact.id);
         },
 
-        getUnreadCounter: function (dialogId) {
+        getUnreadCounter: function(dialogId) {
             var counter;
 
             if (typeof unreadDialogs[dialogId] === 'undefined') {
@@ -119,7 +119,7 @@ define([
             }
         },
 
-        decUnreadCounter: function (dialogId) {
+        decUnreadCounter: function(dialogId) {
             var counter;
 
             if (typeof unreadDialogs[dialogId] !== 'undefined') {
@@ -136,7 +136,7 @@ define([
             }
         },
 
-        logoutWithClearData: function () {
+        logoutWithClearData: function() {
             scrollbarAside(true);
             unreadDialogs = {};
             $('title').text(TITLE_NAME);
@@ -146,7 +146,7 @@ define([
             $('.mediacall-info-duration').text('');
         },
 
-        downloadDialogs: function (ids, skip) {
+        downloadDialogs: function(ids, skip) {
             var ContactListView = this.app.views.ContactList;
             var hiddenDialogs = sessionStorage['QM.hiddenDialogs'] ? JSON.parse(sessionStorage['QM.hiddenDialogs']) : {};
             var parameter = !skip ? null : 'old_dialog';
@@ -170,11 +170,11 @@ define([
             Dialog.download({
                 sort_desc: 'last_message_date_sent',
                 skip: skip || 0
-            }, function (error, result) {
+            }, function(error, result) {
                 if (error) {
                     self.removeDataSpinner();
 
-                    errorDialogsLoadingID = setTimeout(function () {
+                    errorDialogsLoadingID = setTimeout(function() {
                         self.downloadDialogs(ids, skip);
                     }, UPDATE_PERIOD);
 
@@ -191,12 +191,9 @@ define([
                     occupantsIds = _.uniq(_.flatten(_.pluck(dialogs, 'occupants_ids'), true));
                     // updating of Contact List whereto are included all people
                     // with which maybe user will be to chat (there aren't only his friends)
-                    ContactList.add(occupantsIds, null, function () {
-                        var len;
-                        var i;
-
-                        for (i = 0, len = dialogs.length; i < len; i++) {
-                            dialogId = Dialog.create(dialogs[i]);
+                    ContactList.add(occupantsIds, null, function() {
+                        dialogs.forEach(function(item) {
+                            dialogId = Dialog.create(item);
                             dialog = dialogsCollection.get(dialogId);
 
                             // don't create a duplicate dialog in contact list
@@ -204,7 +201,7 @@ define([
                             if (chat[0] && dialog.get('unread_count')) {
                                 chat.find('.unread').text(dialog.get('unread_count'));
                                 self.getUnreadCounter(dialog.get('id'));
-                                continue; // eslint-disable-line no-continue
+                                return;
                             }
 
                             if ((dialog.get('type') === 2) && !dialog.get('joined')) {
@@ -221,12 +218,12 @@ define([
                             notConfirmed = localStorage['QM.notConfirmed'] ? JSON.parse(localStorage['QM.notConfirmed']) : {};
                             if (privateId && (!roster[privateId]
                                 || (roster[privateId] && roster[privateId].subscription === 'none'
-                                && !roster[privateId].ask && notConfirmed[privateId]))) {
-                                continue; // eslint-disable-line no-continue
+                                    && !roster[privateId].ask && notConfirmed[privateId]))) {
+                                return;
                             }
 
                             self.addDialogItem(dialog, true, parameter);
-                        }
+                        });
 
                         if ($('#requestsList').is('.is-hidden')
                             && $('#recentList').is('.is-hidden')
@@ -240,14 +237,11 @@ define([
 
                 // import FB friends
                 if (ids) {
-                    ContactList.getFBFriends(ids, function (newIds) {
-                        var len;
-                        var i;
-
+                    ContactList.getFBFriends(ids, function(newIds) {
                         openPopup($('#popupImport'));
-                        for (i = 0, len = newIds.length; i < len; i++) {
-                            ContactListView.importFBFriend(newIds[i]);
-                        }
+                        newIds.forEach(function(item) {
+                            ContactListView.importFBFriend(item);
+                        });
                     });
                 }
 
@@ -264,7 +258,7 @@ define([
             });
         },
 
-        showOldHistory: function (callback) {
+        showOldHistory: function(callback) {
             var hiddenDialogs = $('#oldHistoryList ul').children('.j-dialogItem');
             var visibleDialogs = $('#historyList ul');
             var total = hiddenDialogs.length;
@@ -279,7 +273,7 @@ define([
             callback(offListener);
         },
 
-        getAllUsers: function (rosterIds) {
+        getAllUsers: function(rosterIds) {
             var QBApiCalls = this.app.service;
             var Contact = this.app.models.Contact;
             var params = {
@@ -291,8 +285,8 @@ define([
                 per_page: 100
             };
 
-            QBApiCalls.listUsers(params, function (users) {
-                users.items.forEach(function (qbUser) {
+            QBApiCalls.listUsers(params, function(users) {
+                users.items.forEach(function(qbUser) {
                     var user = qbUser.user;
                     var contact = Contact.create(user);
 
@@ -310,14 +304,14 @@ define([
             });
         },
 
-        hideDialogs: function () {
+        hideDialogs: function() {
             $('.j-aside_list_item').addClass('is-hidden');
-            $('.j-list').each(function (index, element) {
+            $('.j-list').each(function(index, element) {
                 $(element).html('');
             });
         },
 
-        addDialogItem: function (dialog, isDownload, parameter) {
+        addDialogItem: function(dialog, isDownload, parameter) {
             if (!dialog) {
                 Helpers.log('Dialog is undefined');
                 return;
@@ -415,8 +409,7 @@ define([
             }
         },
 
-
-        htmlBuild: function (elemOrId, messages) {
+        htmlBuild: function(elemOrId, messages) {
             Entities.Collections.dialogs.saveDraft();
 
             /* eslint-disable vars-on-top */
@@ -448,7 +441,7 @@ define([
 
             // remove the private dialog with deleted user
             if (userId && !user) {
-                QBApiCalls.getUser(userId, function (res) {
+                QBApiCalls.getUser(userId, function(res) {
                     if (!res.items.length) {
                         self.deleteChat(dialogId);
                     }
@@ -469,7 +462,7 @@ define([
 
             $('.l-workspace-wrap .l-workspace').addClass('is-hidden');
 
-            $chatView.each(function (index, element) {
+            $chatView.each(function(index, element) {
                 var $element = $(element);
 
                 if ($element.hasClass('j-mediacall')) {
@@ -512,8 +505,6 @@ define([
 
             function buildChat() {
                 var id;
-                var len;
-                var i;
 
                 new Entities.Models.Chat({ // eslint-disable-line no-new
                     occupantsIds: occupantsIds,
@@ -531,10 +522,11 @@ define([
                 // build occupants of room
                 if (dialog.get('type') === 2) {
                     html = '<div class="chat-occupants">';
-                    for (i = 0, len = occupantsIds.length; i < len; i++) {
-                        id = occupantsIds[i];
 
-                        if (!contacts[id]) continue; // eslint-disable-line no-continue
+                    occupantsIds.forEach(function(item) {
+                        id = item;
+
+                        if (!contacts[id]) return;
 
                         if (id !== User.contact.id) {
                             html += '<a class="occupant l-flexbox_inline presence-listener" data-id="' + id + '" href="#">';
@@ -542,7 +534,8 @@ define([
                             html += '<span class="name name_occupant">' + contacts[id].full_name + '</span>';
                             html += '</a>';
                         }
-                    }
+                    });
+
                     html += '</div>';
                 }
 
@@ -558,7 +551,7 @@ define([
             }
         },
 
-        createGroupChat: function (type, dialogId) {
+        createGroupChat: function(type, dialogId) {
             /* eslint-disable max-len */
             var contacts = ContactList.contacts;
             var newMembers = $('#popupContacts .is-chosen');
@@ -567,17 +560,15 @@ define([
             var occupantsNames = !type && occupantsIds.length > 0 ? [contacts[occupantsIds[0]].full_name] : [];
             var newIds = [];
             var name;
-            var len;
-            var i;
             /* eslint-enable max-len */
 
-            for (i = 0, len = newMembers.length; i < len; i++) {
-                name = $(newMembers[i]).find('.name').text();
+            newMembers.forEach(function(item) {
+                name = $(item).find('.name').text();
                 if (groupName.length < 3) groupName.push(name);
                 occupantsNames.push(name);
-                occupantsIds.push($(newMembers[i]).data('id').toString());
-                newIds.push($(newMembers[i]).data('id').toString());
-            }
+                occupantsIds.push($(item).data('id').toString());
+                newIds.push($(item).data('id').toString());
+            });
 
             groupName = groupName.join(', ');
             occupantsNames = occupantsNames.join(', ');
@@ -589,7 +580,7 @@ define([
                     dialog_id: dialogId,
                     occupants_ids: occupantsIds,
                     new_ids: newIds
-                }, function (dialog) {
+                }, function(dialog) {
                     var dialogItem;
                     var copyDialogItem;
 
@@ -612,7 +603,7 @@ define([
                     name: groupName,
                     occupants_ids: occupantsIds,
                     type: 2
-                }, function (dialog) {
+                }, function(dialog) {
                     self.removeDataSpinner();
                     $('.is-overlay:not(.chat-occupants-wrap)').removeClass('is-overlay');
                     $('[data-dialog="' + dialogId + '"] .contact').click();
@@ -621,7 +612,7 @@ define([
             }
         },
 
-        deleteChat: function (dialogParam, sameUser) {
+        deleteChat: function(dialogParam, sameUser) {
             var dialogs = Entities.Collections.dialogs;
             var dialogId = (typeof dialogParam === 'string') ? dialogParam : dialogParam.data('dialog');
             var dialog = dialogs.get(dialogId);
@@ -636,7 +627,7 @@ define([
             self.removeDialogItem(dialogId);
         },
 
-        removeDialogItem: function (dialogId) {
+        removeDialogItem: function(dialogId) {
             var $dialogItem = $('.dialog-item[data-dialog="' + dialogId + '"]');
             var $chat = $('.l-chat[data-dialog="' + dialogId + '"]');
             var $dialogList = $dialogItem.parents('ul');
@@ -668,7 +659,7 @@ define([
             }
         },
 
-        removeForbiddenDialog: function (dialogId) {
+        removeForbiddenDialog: function(dialogId) {
             var dialogs = Entities.Collections.dialogs;
             var $mediacall = $('.mediacall');
 
@@ -684,7 +675,7 @@ define([
             return false;
         },
 
-        showChatWithNewMessages: function (dialogId, unreadCount, messages) {
+        showChatWithNewMessages: function(dialogId, unreadCount, messages) {
             var MessageView = this.app.views.Message;
             var lastReaded;
             var message;
@@ -714,21 +705,21 @@ define([
             } else {
                 messages = []; // eslint-disable-line no-param-reassign
 
-                Message.download(dialogId, function (response, error) {
+                Message.download(dialogId, function(response, error) {
                     if (error) {
                         if (error.code === 403) {
                             self.removeForbiddenDialog(dialogId);
                         } else {
                             self.removeDataSpinner();
 
-                            errorMessagesLoadingID = setTimeout(function () {
+                            errorMessagesLoadingID = setTimeout(function() {
                                 self.showChatWithNewMessages(dialogId, unreadCount, messages);
                             }, UPDATE_PERIOD);
                         }
                     } else {
                         clearTimeout(errorMessagesLoadingID);
 
-                        _.each(response, function (item) {
+                        _.each(response, function(item) {
                             messages.push(Message.create(item));
                         });
 
@@ -739,18 +730,16 @@ define([
 
             function addItems(items) {
                 var $history;
-                var len;
-                var i;
 
                 $history = $('section.l-chat-content').children('div:not(.spinner_bounce)');
                 $history.css('opacity', '0');
 
-                for (i = 0, len = items.length; i < len; i++) {
-                    message = items[i];
-                    message.stack = Message.isStack(false, items[i], items[i + 1]);
+                items.forEach(function(item, index) {
+                    message = item;
+                    message.stack = Message.isStack(false, item, items[index + 1]);
 
                     if (unreadCount) {
-                        switch (i) {
+                        switch (index) {
                         case (lastReaded - 1):
                             message.stack = false;
                             break;
@@ -763,26 +752,26 @@ define([
                     }
 
                     MessageView.addItem(message, null, null);
-                }
+                });
 
                 setScrollToNewMessages('#mCS_' + dialogId);
 
-                setTimeout(function () {
+                setTimeout(function() {
                     self.removeDataSpinner();
                     $history.css('opacity', '1');
                 }, 150);
             }
         },
 
-        validateAvatar: function (params) {
+        validateAvatar: function(params) {
             var img = new Image();
 
-            img.addEventListener('load', function () {
+            img.addEventListener('load', function() {
                 img = undefined;
             });
 
-            img.addEventListener('error', function () {
-                setTimeout(function () {
+            img.addEventListener('error', function() {
+                setTimeout(function() {
                     var avatar = document.querySelector('.j-dialogItem[data-dialog="' + params.dialogId + '"] .j-avatar');
                     var user;
                     var dialog;
@@ -822,10 +811,10 @@ define([
                 scrollAmount: 120
             },
             callbacks: {
-                onTotalScrollBack: function () {
+                onTotalScrollBack: function() {
                     ajaxDownloading(selector);
                 },
-                onTotalScroll: function () {
+                onTotalScroll: function() {
                     var $currentDialog = $('.dialog-item.is-selected');
                     var dialogId = $currentDialog.data('dialog');
 
@@ -837,7 +826,7 @@ define([
                         self.decUnreadCounter(dialogId);
                     }
                 },
-                onScroll: function () {
+                onScroll: function() {
                     isBottom = Helpers.isBeginOfChat();
 
                     if (!isBottom) {
@@ -894,26 +883,23 @@ define([
         var count = $messages.length;
         var message;
 
-        Message.download(dialogId, function (messages, error) {
-            var len;
-            var i;
-
-            for (i = 0, len = messages.length; i < len; i++) {
+        Message.download(dialogId, function(messages, error) {
+            messages.forEach(function(item, index) {
                 if (error && error.code === 403) {
                     self.removeForbiddenDialog(dialogId);
 
                     return;
                 }
 
-                message = Message.create(messages[i], 'ajax');
-                message.stack = Message.isStack(false, messages[i], messages[i + 1]);
+                message = Message.create(item, 'ajax');
+                message.stack = Message.isStack(false, item, messages[index + 1]);
 
                 MessageView.addItem(message, true, null);
 
-                if ((i + 1) === len) {
+                if ((index + 1) === messages.length) {
                     $(selector).mCustomScrollbar('scrollTo', '#' + firstMsgId);
                 }
-            }
+            });
         }, count, 'ajax');
     }
 
@@ -971,7 +957,7 @@ define([
     }
 
     function isNeedToStopTheVideo() {
-        $('.j-videoPlayer').each(function (index, element) {
+        $('.j-videoPlayer').each(function(index, element) {
             var $element = $(element);
 
             if (!element.paused) {

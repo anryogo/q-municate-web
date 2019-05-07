@@ -8,7 +8,7 @@ define([
     'backbone',
     'config',
     'Helpers'
-], function (
+], function(
     $,
     _,
     Backbone,
@@ -44,12 +44,12 @@ define([
             status: ''
         },
 
-        initialize: function () {
+        initialize: function() {
             this.accumulateInDialogModel();
         },
 
         // accumulate messages in dialogs
-        accumulateInDialogModel: function () {
+        accumulateInDialogModel: function() {
             var dialogId = this.get('dialog_id');
             var dialog = entities.Collections.dialogs.get(dialogId);
             var messageId;
@@ -104,7 +104,7 @@ define([
             }
         },
 
-        addMessageToCollection: function (collection) {
+        addMessageToCollection: function(collection) {
             var online = this.get('online');
 
             if (online) {
@@ -118,19 +118,19 @@ define([
 
     /**
      * [Messages collection]
-     * @type {[Backbone collection]}
+     * @type {Backbone.Collection}
      */
     entities.Collections.Messages = Backbone.Collection.extend({
         model: entities.Models.Message,
 
-        initialize: function () {
+        initialize: function() {
             this.listenTo(this, 'add', this.keepCountOfMessages);
         },
 
         // keep count for messages collection
-        keepCountOfMessages: function () {
+        keepCountOfMessages: function() {
             var stack = QMCONFIG.stackMessages;
-            var dialogId = this.models[0].get('dialog_id');
+            var dialogId = this.at(0).get('dialog_id');
             var dialog = entities.Collections.dialogs.get(dialogId);
             var unreadCount = dialog.get('unread_count');
 
@@ -155,11 +155,11 @@ define([
             userId: null
         },
 
-        initialize: function () {
+        initialize: function() {
             this.accumulateInDialogModel();
         },
 
-        accumulateInDialogModel: function () {
+        accumulateInDialogModel: function() {
             var dialogId = this.get('dialogId');
             var dialog = entities.Collections.dialogs.get(dialogId);
             var unreadCount = dialog.get('unread_count');
@@ -205,14 +205,14 @@ define([
         },
 
         // add dialog to collection after initialize
-        initialize: function () {
+        initialize: function() {
             entities.Collections.dialogs.push(this);
 
             this.listenTo(this, 'change:unread_count', this.cutMessages);
             this.listenTo(this, 'remove', this.setActiveDialog);
         },
 
-        cutMessages: function () {
+        cutMessages: function() {
             var messages = this.get('messages');
             var curCount = this.get('unread_count');
             var stack = QMCONFIG.stackMessages;
@@ -220,13 +220,14 @@ define([
             var i;
 
             if (+curCount === 0) {
+                // eslint-disable-next-line no-plusplus, no-loops/no-loops
                 for (i = 0; i < (msgCount - stack); i++) {
                     messages.pop();
                 }
             }
         },
 
-        setActiveDialog: function () {
+        setActiveDialog: function() {
             if (this.get('id') === entities.active) {
                 entities.active = '';
             }
@@ -240,14 +241,14 @@ define([
     entities.Collections.Dialogs = Backbone.Collection.extend({
         model: entities.Models.Dialog,
 
-        initialize: function () {
-            this.listenTo(this, 'reset', function () {
+        initialize: function() {
+            this.listenTo(this, 'reset', function() {
                 entities.active = '';
                 $('.chatView').remove();
             });
         },
 
-        readAll: function (dialogId) {
+        readAll: function(dialogId) {
             var dialog = this.get(dialogId);
             var unreadCount = dialog.get('unread_count');
             var unreadMeassages = dialog.get('unread_messages');
@@ -255,7 +256,7 @@ define([
 
             if (unreadMeassages.length > 0) {
                 // send read status for online messages
-                unreadMeassages.each(function (params) {
+                unreadMeassages.each(function(params) {
                     QB.chat.sendReadStatus(params.toJSON());
                     unreadMeassagesIds.push(params.get('messageId'));
                 });
@@ -267,13 +268,13 @@ define([
                 QB.chat.message.update(null, {
                     chat_dialog_id: dialogId,
                     read: 1
-                }, function () {
+                }, function() {
                     dialog.set('unread_count', '');
                 });
             }
         },
 
-        saveDraft: function () {
+        saveDraft: function() {
             var dialogId = entities.active;
             var dialog;
             var text;
@@ -286,7 +287,7 @@ define([
             }
         },
 
-        selectDialog: function (dialogId) {
+        selectDialog: function(dialogId) {
             var MessageView = entities.app.views.Message;
             var DialogView = entities.app.views.Dialog;
             var Cursor = entities.app.models.Cursor;
@@ -324,11 +325,11 @@ define([
             jid: ''
         },
 
-        initialize: function () {
+        initialize: function() {
             this.buildChatView();
         },
 
-        buildChatView: function () {
+        buildChatView: function() {
             entities.Views.chat = new entities.Views.Chat({ model: this });
         }
     });
@@ -342,15 +343,17 @@ define([
         className: 'chatView',
         template: _.template($('#chatTpl').html()),
 
-        initialize: function () {
+        initialize: function() {
             this.render();
         },
 
-        render: function () {
+        render: function() {
             var chatTpl = this.template(this.model.toJSON());
             var chatElem = this.$el.html(chatTpl);
 
             $('#chatWrap').removeClass('is-hidden').append(chatElem);
+
+            return this;
         }
     });
 
@@ -359,7 +362,7 @@ define([
      */
 
     // select and open dialog
-    $('.list_contextmenu').on('click', '.contact', function () {
+    $('.list_contextmenu').on('click', '.contact', function() {
         var dialogId = $(this).parent().data('dialog');
 
         if (entities.active !== dialogId) {
@@ -368,7 +371,7 @@ define([
     });
 
     // read all unread messages
-    $(window).focus(function () {
+    $(window).focus(function() {
         var dialogId;
 
         Helpers.Dialogs.setScrollToNewMessages();
@@ -381,7 +384,7 @@ define([
     });
 
     // unselect all dialogs
-    $('.j-home').on('click', function () {
+    $('.j-home').on('click', function() {
     // clear active dialog id
         entities.Collections.dialogs.saveDraft();
         entities.active = '';

@@ -3,7 +3,7 @@
  * Q-MUNICATE sync tabs models Module
  *
  */
-define(['jquery'], function ($) {
+define(['jquery'], function($) {
     'use strict';
 
     function SyncTabs(app) {
@@ -18,19 +18,19 @@ define(['jquery'], function ($) {
 
         this.app = app;
 
-        this.init = function (userId) {
+        this.init = function(userId) {
             currentUserId = userId;
 
             // set params to local storage
             set();
 
             // enter to new page (listener)
-            $(window).focus(function () {
+            $(window).focus(function() {
                 localStorage.setItem(mainTab, curTab);
             });
 
             // is closed page (listener)
-            $(window).unload(function () {
+            $(window).unload(function() {
                 localStorage.setItem(closedTab, curTab); // informed about closed tab
 
                 // remove all info about sync tabs if current tab was the last one
@@ -42,12 +42,12 @@ define(['jquery'], function ($) {
             });
 
             // localStorage listener
-            $(window).bind('storage', function (e) {
+            $(window).bind('storage', function(e) {
                 sync(e);
             });
         };
 
-        this.get = function () {
+        this.get = function() {
             return (localStorage[mainTab] === curTab);
         };
 

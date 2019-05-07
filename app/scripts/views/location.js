@@ -7,7 +7,7 @@ define([
     'googlemaps!',
     'gmaps',
     'Helpers'
-], function (
+], function(
     googleMaps,
     GMaps,
     Helpers
@@ -17,12 +17,12 @@ define([
 
     Location = {
 
-        getGeoCoordinates: function (watch, callback) {
+        getGeoCoordinates: function(watch, callback) {
             function success(pos) {
-                var geoCoords = {};
-
-                geoCoords.latitude = pos.coords.latitude;
-                geoCoords.longitude = pos.coords.longitude;
+                var geoCoords = {
+                    latitude: pos.coords.latitude,
+                    longitude: pos.coords.longitude
+                };
 
                 callback(geoCoords);
             }
@@ -40,7 +40,7 @@ define([
             }
         },
 
-        getStaticMapUrl: function (geoCoords, options) {
+        getStaticMapUrl: function(geoCoords, options) {
             var params = {
                 size: (options && options.size) || [200, 150],
                 lat: geoCoords.lat,
@@ -55,16 +55,16 @@ define([
             return GMaps.staticMapURL(params);
         },
 
-        getMapUrl: function (geoCoords) {
+        getMapUrl: function(geoCoords) {
             return 'https://www.google.com/maps?q=' + geoCoords.lat + ',' + geoCoords.lng;
         },
 
-        toggleGeoCoordinatesToLocalStorage: function (saveLocation, callback) {
+        toggleGeoCoordinatesToLocalStorage: function(saveLocation, callback) {
             var isCoords = !!((localStorage['QM.latitude'] && localStorage['QM.longitude']));
             var $button = $('.j-send_location');
 
             if (saveLocation) {
-                this.getGeoCoordinates(true, function (res, err) {
+                this.getGeoCoordinates(true, function(res, err) {
                     if (err) {
                         Helpers.log(err);
 
@@ -102,7 +102,7 @@ define([
             }
         },
 
-        addMap: function ($gmap) {
+        addMap: function($gmap) {
             var mapCoords = {};
             var isCoords;
             var map;
@@ -121,7 +121,7 @@ define([
             $('#map img').addClass('gooImg');
 
             if (!isCoords) {
-                this.getGeoCoordinates(false, function (res) {
+                this.getGeoCoordinates(false, function(res) {
                     if (res) {
                         map.setZoom(15);
                         map.setCenter(res.latitude, res.longitude);
@@ -129,7 +129,7 @@ define([
                 });
             }
 
-            GMaps.on('click', map.map, function (event) {
+            GMaps.on('click', map.map, function(event) {
                 mapCoords.lat = event.latLng.lat();
                 mapCoords.lng = event.latLng.lng();
 

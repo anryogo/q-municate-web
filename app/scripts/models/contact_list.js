@@ -8,7 +8,7 @@ define([
     'config',
     'underscore',
     'Helpers'
-], function (
+], function(
     QMCONFIG,
     _,
     Helpers
@@ -25,19 +25,19 @@ define([
 
     ContactList.prototype = {
 
-        saveRoster: function (roster) {
+        saveRoster: function(roster) {
             this.roster = roster;
         },
 
-        saveNotConfirmed: function (notConfirmed) {
+        saveNotConfirmed: function(notConfirmed) {
             localStorage.setItem('QM.notConfirmed', JSON.stringify(notConfirmed));
         },
 
-        saveHiddenDialogs: function (hiddenDialogs) {
+        saveHiddenDialogs: function(hiddenDialogs) {
             sessionStorage.setItem('QM.hiddenDialogs', JSON.stringify(hiddenDialogs));
         },
 
-        add: function (occupantsIds, dialog, callback, subscribe) {
+        add: function(occupantsIds, dialog, callback, subscribe) {
             var QBApiCalls = this.app.service;
             var Contact = this.app.models.Contact;
             var self = this;
@@ -62,8 +62,8 @@ define([
                     per_page: 100
                 };
 
-                QBApiCalls.listUsers(params, function (users) {
-                    users.items.forEach(function (qbUser) {
+                QBApiCalls.listUsers(params, function(users) {
+                    users.items.forEach(function(qbUser) {
                         var user = qbUser.user;
                         var contact = Contact.create(user);
 
@@ -79,10 +79,10 @@ define([
             }
         },
 
-        cleanUp: function (requestIds, responseIds) {
+        cleanUp: function(requestIds, responseIds) {
             var ids = _.difference(requestIds, responseIds);
 
-            ids.forEach(function (id) {
+            ids.forEach(function(id) {
                 localStorage.removeItem('QM.contact-' + id);
             });
 
@@ -90,7 +90,7 @@ define([
             localStorage.setItem('QM.contacts', contactIds.join());
         },
 
-        globalSearch: function (callback) {
+        globalSearch: function(callback) {
             var self = this;
             var QBApiCalls = this.app.service;
             var val;
@@ -110,7 +110,7 @@ define([
                 full_name: val,
                 page: page,
                 per_page: 20
-            }, function (data) {
+            }, function(data) {
                 isExistingRequest = false;
 
                 if (data.items.length) {
@@ -124,7 +124,7 @@ define([
                 sessionStorage.setItem('QM.search.allPages', Math.ceil(data.total_entries / data.per_page));
                 sessionStorage.setItem('QM.search.page', page);
 
-                contacts.sort(function (first, second) {
+                contacts.sort(function(first, second) {
                     var a = first.full_name.toLowerCase();
                     var b = second.full_name.toLowerCase();
                     var res;
@@ -146,13 +146,13 @@ define([
             });
         },
 
-        getResults: function (data) {
+        getResults: function(data) {
             var Contact = this.app.models.Contact;
             var User = this.app.models.User;
             var contacts = [];
             var contact;
 
-            data.forEach(function (item) {
+            data.forEach(function(item) {
                 if (item.user.id !== User.contact.id) {
                     contact = Contact.create(item.user);
                     contacts.push(contact);
@@ -162,7 +162,7 @@ define([
             return contacts;
         },
 
-        getFBFriends: function (ids, callback) {
+        getFBFriends: function(ids, callback) {
             var QBApiCalls = this.app.service;
             var Contact = this.app.models.Contact;
             var self = this;
@@ -178,8 +178,8 @@ define([
                 }
             };
 
-            QBApiCalls.listUsers(params, function (users) {
-                users.items.forEach(function (qbUser) {
+            QBApiCalls.listUsers(params, function(users) {
+                users.items.forEach(function(qbUser) {
                     var user = qbUser.user;
                     var contact = Contact.create(user);
                     newIds.push(user.id);
@@ -203,20 +203,18 @@ define([
     function getContacts() {
         var contacts = {};
         var ids = localStorage['QM.contacts'] ? localStorage['QM.contacts'].split(',') : [];
-        var len;
-        var i;
 
         if (ids.length > 0) {
             try {
-                for (i = 0, len = ids.length; i < len; i++) {
-                    contacts[ids[i]] = typeof localStorage['QM.contact-' + ids[i]] !== 'undefined'
-                        ? JSON.parse(localStorage['QM.contact-' + ids[i]])
+                ids.forEach(function(item) {
+                    contacts[item] = typeof localStorage['QM.contact-' + item] !== 'undefined'
+                        ? JSON.parse(localStorage['QM.contact-' + item])
                         : true;
 
-                    if (contacts[ids[i]] === true) {
-                        delete contacts[ids[i]];
+                    if (contacts[item] === true) {
+                        delete contacts[item];
                     }
-                }
+                });
             } catch (e) {
                 Helpers.log('Error getting contacts from cache. Clearing...');
                 localStorage.clear();

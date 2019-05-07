@@ -8,7 +8,7 @@ define([
     'jquery',
     'underscore',
     'backbone'
-], function (
+], function(
     $,
     _,
     Backbone
@@ -22,7 +22,7 @@ define([
             'click .returnBackToPopup': 'returnToPopup'
         },
 
-        render: function () {
+        render: function() {
             var template = this.$el.html(this.template());
 
             $('.popups').append(template);
@@ -30,7 +30,7 @@ define([
             return this;
         },
 
-        openPopup: function () {
+        openPopup: function() {
             if ($('.passWrap')[0]) {
                 $('.passWrap').addClass('tempHide');
             } else if ($('.profileWrap')[0]) {
@@ -43,7 +43,7 @@ define([
             this.$el.find('.popup').add('.popups').addClass('is-overlay');
         },
 
-        returnToPopup: function (event) {
+        returnToPopup: function(event) {
             event.preventDefault();
             this.remove();
             $('.tempHide').show();

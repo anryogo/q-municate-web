@@ -12,7 +12,7 @@ define([
     'LocationView',
     'underscore',
     'progressbar'
-], function (
+], function(
     $,
     QMCONFIG,
     Helpers,
@@ -38,7 +38,7 @@ define([
 
     AttachView.prototype = {
 
-        changeInput: function (objDom, recordedAudioFile) {
+        changeInput: function(objDom, recordedAudioFile) {
             var file = recordedAudioFile || objDom[0].files[0];
             var chat = $('.l-chat:visible .l-chat-content .mCSB_container');
             var id = _.uniqueId();
@@ -76,7 +76,7 @@ define([
                     Attach.crop(file, {
                         w: 1000,
                         h: 1000
-                    }, function (blob) {
+                    }, function(blob) {
                         self.createProgressBar(id, fileSizeCrop, metadata, blob);
                     });
                 } else {
@@ -85,7 +85,7 @@ define([
             }
         },
 
-        pastErrorMessage: function (errMsg, objDom, chat) {
+        pastErrorMessage: function(errMsg, objDom, chat) {
             var html = QMHtml.Attach.error({
                 errMsg: errMsg
             });
@@ -101,7 +101,7 @@ define([
             return false;
         },
 
-        createProgressBar: function (id, fileSizeCrop, metadata, file) {
+        createProgressBar: function(id, fileSizeCrop, metadata, file) {
             var progressBar = new ProgressBar('progress_' + id);
             var dialogId = self.app.entities.active;
             var $chatItem = $('.j-chatItem[data-dialog="' + dialogId + '"]');
@@ -127,7 +127,7 @@ define([
 
             setPercent();
 
-            Attach.upload(file, function (blob) {
+            Attach.upload(file, function(blob) {
                 Helpers.log('Blob:', blob);
 
                 if (!blob.size) {
@@ -149,7 +149,7 @@ define([
                     part = fileSizeCrop;
                     $('.attach-part_' + id).text(part);
 
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $('.attach-part_' + id).parents('article').remove();
                     }, 50);
                 } else {
@@ -165,11 +165,11 @@ define([
             }
         },
 
-        cancel: function (objDom) {
+        cancel: function(objDom) {
             objDom.parents('article').remove();
         },
 
-        sendMessage: function (chat, blob, metadata, mapCoords) {
+        sendMessage: function(chat, blob, metadata, mapCoords) {
             var MessageView = this.app.views.Message;
             var jid = chat.data('jid');
             var id = chat.data('id');
@@ -273,7 +273,7 @@ define([
             }
         },
 
-        validateFile: function (file) {
+        validateFile: function(file) {
             var errMsg;
             var maxSize;
             var fullType;
@@ -351,7 +351,7 @@ define([
             image = new Image();
 
             image.src = WINDOW_URL.createObjectURL(file);
-            image.onload = function () {
+            image.onload = function() {
                 metadata.width = this.width;
                 metadata.height = this.height;
             };
@@ -361,7 +361,7 @@ define([
             audio = new Audio();
 
             audio.src = WINDOW_URL.createObjectURL(file);
-            audio.onloadedmetadata = function () {
+            audio.onloadedmetadata = function() {
                 metadata.duration = Math.floor(this.duration);
             };
             break;
@@ -370,7 +370,7 @@ define([
             video = document.createElement('video');
 
             video.src = WINDOW_URL.createObjectURL(file);
-            video.onloadedmetadata = function () {
+            video.onloadedmetadata = function() {
                 metadata.width = this.videoWidth;
                 metadata.height = this.videoHeight;
                 metadata.duration = Math.floor(this.duration);

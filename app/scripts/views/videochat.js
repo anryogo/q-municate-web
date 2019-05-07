@@ -11,7 +11,7 @@ define([
     'Helpers',
     'QBNotification',
     'QMHtml'
-], function (
+], function(
     $,
     Entities,
     QMCONFIG,
@@ -42,7 +42,7 @@ define([
         VoiceMessage = this.app.models.VoiceMessage;
     }
 
-    VideoChatView.prototype.cancelCurrentCalls = function () {
+    VideoChatView.prototype.cancelCurrentCalls = function() {
         var $mediacall = $('.mediacall');
 
         if ($mediacall.length > 0) {
@@ -50,7 +50,7 @@ define([
         }
     };
 
-    VideoChatView.prototype.clearChat = function () {
+    VideoChatView.prototype.clearChat = function() {
         var $chatView = $('.chatView');
 
         if ($chatView.length > 1) {
@@ -58,11 +58,11 @@ define([
         }
     };
 
-    VideoChatView.prototype.init = function () {
+    VideoChatView.prototype.init = function() {
         var DialogView = this.app.views.Dialog;
         var Dialog = this.app.models.Dialog;
 
-        $('body').on('click', '.videoCall, .audioCall', function () {
+        $('body').on('click', '.videoCall, .audioCall', function() {
             var $this = $(this);
             var className;
             var userId;
@@ -79,7 +79,7 @@ define([
                     dialogId = $dialogItem.data('dialog');
                     openChatAndStartCall(dialogId);
                 } else {
-                    Dialog.restorePrivateDialog(userId, function (dialog) {
+                    Dialog.restorePrivateDialog(userId, function(dialog) {
                         dialogId = dialog.get('id');
                         openChatAndStartCall(dialogId);
                     });
@@ -102,7 +102,7 @@ define([
             return false;
         });
 
-        $('#popupIncoming').on('click', '.btn_decline', function () {
+        $('#popupIncoming').on('click', '.btn_decline', function() {
             var $self = $(this);
             var $incomingCall = $self.parents('.incoming-call');
             var opponentId = $self.data('id');
@@ -126,7 +126,7 @@ define([
             return false;
         });
 
-        $('#popupIncoming').on('click', '.btn_accept', function () {
+        $('#popupIncoming').on('click', '.btn_accept', function() {
             var $self = $(this);
             var id;
             var $dialogItem;
@@ -155,7 +155,7 @@ define([
             $chat = $('.l-chat[data-dialog="' + dialogId + '"]');
 
             $self.parents('.incoming-call').remove();
-            $('#popupIncoming .mCSB_container').children().each(function () {
+            $('#popupIncoming .mCSB_container').children().each(function() {
                 $self.find('.btn_decline').click();
             });
 
@@ -167,7 +167,7 @@ define([
 
             params.isCallee = true;
 
-            VideoChat.getUserMedia(params, callType, function (err) {
+            VideoChat.getUserMedia(params, callType, function(err) {
                 if (err) {
                     $chat.find('.mediacall .btn_hangup').data('errorMessage', 1);
                     $chat.find('.mediacall .btn_hangup').click();
@@ -193,7 +193,7 @@ define([
             return false;
         });
 
-        $('body').on('click', '.btn_hangup', function () {
+        $('body').on('click', '.btn_hangup', function() {
             var $self = $(this);
             var $chat;
             var opponentId;
@@ -248,7 +248,7 @@ define([
         $('body').on('click', '.btn_camera_off, .btn_mic_off', switchOffDevice);
 
         // full-screen-mode
-        $('body').on('click', '.btn_full-mode', function () {
+        $('body').on('click', '.btn_full-mode', function() {
             var mediaScreen = document.getElementsByClassName('mediacall')[0];
             var isFullScreen = false;
 
@@ -289,12 +289,12 @@ define([
             return false;
         });
 
-        $(window).on('resize', function () {
+        $(window).on('resize', function() {
             setScreenStyle();
         });
     };
 
-    VideoChatView.prototype.onCall = function (session, extension) {
+    VideoChatView.prototype.onCall = function(session, extension) {
         var audioSignal;
         var $incomings;
         var id;
@@ -328,7 +328,7 @@ define([
         autoReject = QMCONFIG.QBconf.webrtc.answerTimeInterval * 1000;
 
         if (!dialogId && ContactList.roster[id]) {
-            self.app.models.Dialog.restorePrivateDialog(id, function (dialog) {
+            self.app.models.Dialog.restorePrivateDialog(id, function(dialog) {
                 dialogId = dialog.get('id');
                 incomingCall();
             });
@@ -368,13 +368,13 @@ define([
                 callType: callType
             });
 
-            sendAutoReject = setTimeout(function () {
+            sendAutoReject = setTimeout(function() {
                 $('.btn_decline').click();
             }, autoReject);
         }
     };
 
-    VideoChatView.prototype.onIgnored = function (state, session, id, extension) {
+    VideoChatView.prototype.onIgnored = function(state, session, id, extension) {
         var dialogId;
         var callType;
 
@@ -393,7 +393,7 @@ define([
         }
     };
 
-    VideoChatView.prototype.onAccept = function (session, id) {
+    VideoChatView.prototype.onAccept = function(session, id) {
         var audioSignal = document.getElementById('callingSignal');
         var dialogId = $('li.list-item.dialog-item[data-id="' + id + '"]').data('dialog');
         var callType = self.type;
@@ -414,14 +414,14 @@ define([
         });
     };
 
-    VideoChatView.prototype.onRemoteStream = function (session, id, stream) {
+    VideoChatView.prototype.onRemoteStream = function(session, id, stream) {
         var video = document.getElementById('remoteStream');
 
         curSession.attachMediaStream('remoteStream', stream);
         $('.mediacall .btn_full-mode').prop('disabled', false);
 
         if (self.type === 'video') {
-            video.addEventListener('timeupdate', function () {
+            video.addEventListener('timeupdate', function() {
                 var duration = getTimer(Math.floor(video.currentTime));
                 $('.mediacall-info-duration').text(duration);
             });
@@ -429,7 +429,7 @@ define([
             $('#remoteUser').addClass('is-hidden');
             $('#remoteStream').removeClass('is-hidden');
         } else {
-            setTimeout(function () {
+            setTimeout(function() {
                 setDuration();
 
                 $('#remoteStream').addClass('is-hidden');
@@ -438,7 +438,7 @@ define([
         }
     };
 
-    VideoChatView.prototype.onReject = function (session, id) {
+    VideoChatView.prototype.onReject = function(session, id) {
         var dialogId = $('li.list-item.dialog-item[data-id="' + id + '"]').data('dialog');
         var $chat = $('.l-chat[data-dialog="' + dialogId + '"]');
         var isCurrentUser = (User.contact.id === id);
@@ -468,11 +468,11 @@ define([
         addCallTypeIcon(id, null);
     };
 
-    VideoChatView.prototype.onStop = function (session, id) {
+    VideoChatView.prototype.onStop = function(session, id) {
         closeStreamScreen(id);
     };
 
-    VideoChatView.prototype.onUpdateCall = function (session, id, extension) {
+    VideoChatView.prototype.onUpdateCall = function(session, id, extension) {
         var dialogId = $('li.list-item.dialog-item[data-id="' + id + '"]').data('dialog');
         var $chat = $('.l-chat[data-dialog="' + dialogId + '"]');
         var $selector = $(window.document.body);
@@ -490,7 +490,7 @@ define([
     };
 
     // eslint-disable-next-line max-len
-    VideoChatView.prototype.onSessionConnectionStateChangedListener = function (session, userID, connectionState) {
+    VideoChatView.prototype.onSessionConnectionStateChangedListener = function(session, userID, connectionState) {
     // connectionState === 3 (failed) - will close connection (for firefox browser)
         if (isFirefox && (connectionState === 3)) {
             curSession.closeConnection(userID);
@@ -498,17 +498,17 @@ define([
         }
     };
 
-    VideoChatView.prototype.onSessionCloseListener = function () {
+    VideoChatView.prototype.onSessionCloseListener = function() {
         var opponentId = User.contact.id === VideoChat.callee ? VideoChat.caller : VideoChat.callee;
 
         closeStreamScreen(opponentId);
     };
 
-    VideoChatView.prototype.onUserNotAnswerListener = function () {
+    VideoChatView.prototype.onUserNotAnswerListener = function() {
         $('.btn_hangup').click();
     };
 
-    VideoChatView.prototype.startCall = function (className, dialogId) {
+    VideoChatView.prototype.startCall = function(className, dialogId) {
         var audioSignal = document.getElementById('callingSignal');
         var params = self.build(dialogId);
         var $chat = $('.l-chat:visible');
@@ -518,7 +518,7 @@ define([
         var fullName = User.contact.full_name;
         var id = $chat.data('id');
 
-        VideoChat.getUserMedia(params, callType, function (err) {
+        VideoChat.getUserMedia(params, callType, function(err) {
             fixScroll();
             if (err) {
                 $chat.find('.mediacall .btn_hangup').click();
@@ -548,7 +548,7 @@ define([
         });
     };
 
-    VideoChatView.prototype.build = function (id) {
+    VideoChatView.prototype.build = function(id) {
         var $chat = id ? $('.j-chatItem[data-dialog="' + id + '"]') : $('.j-chatItem:visible');
         var userId = $chat.data('id');
         var dialogId = $chat.data('dialog');
@@ -581,7 +581,7 @@ define([
         };
     };
 
-    VideoChatView.prototype.mute = function (callType) {
+    VideoChatView.prototype.mute = function(callType) {
         curSession.mute(callType);
         if (callType === 'video') {
             $('#localStream').addClass('is-hidden');
@@ -589,7 +589,7 @@ define([
         }
     };
 
-    VideoChatView.prototype.unmute = function (callType) {
+    VideoChatView.prototype.unmute = function(callType) {
         curSession.unmute(callType);
         if (callType === 'video') {
             $('#localStream').removeClass('is-hidden');
@@ -714,7 +714,7 @@ define([
             if (!QBNotification.needsPermission()) {
                 Helpers.Notifications.show(title, options);
             } else {
-                QBNotification.requestPermission(function (state) {
+                QBNotification.requestPermission(function(state) {
                     if (state === 'granted') {
                         Helpers.Notifications.show(title, options);
                     }
@@ -780,7 +780,7 @@ define([
     function setDuration(currentTime) {
         var c = currentTime || 0;
         $('.mediacall-info-duration').text(getTimer(c));
-        callTimer = setTimeout(function () {
+        callTimer = setTimeout(function() {
             c += 1;
             setDuration(c);
         }, 1000);

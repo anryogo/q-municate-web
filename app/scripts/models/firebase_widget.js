@@ -9,7 +9,7 @@ define([
     'initTelInput',
     'intlTelInputUtils',
     'Events'
-], function (
+], function(
     _,
     Backbone,
     QMCONFIG,
@@ -22,7 +22,7 @@ define([
 
     var widget;
 
-    var FirebaseWidget = function (login) {
+    var FirebaseWidget = function(login) {
         FirebaseWidget.init();
 
         widget = this;
@@ -35,14 +35,14 @@ define([
         widget.states = {};
 
         Object.defineProperty(widget, 'filled', {
-            set: function (prop) {
+            set: function(prop) {
                 widget.states.filled = prop;
                 widget.setDisableState();
             }
         });
 
         Object.defineProperty(widget, 'verified', {
-            set: function (prop) {
+            set: function(prop) {
                 widget.states.verified = prop;
                 widget.setDisableState();
             }
@@ -51,31 +51,31 @@ define([
         widget.firebasePhoneNumberForm();
     };
 
-    FirebaseWidget.init = function () {
+    FirebaseWidget.init = function() {
         if (!FirebaseWidget.started) {
             FirebaseWidget.started = true;
             firebase.initializeApp(QMCONFIG.firebase);
         }
     };
 
-    FirebaseWidget.prototype.sendSMS = function () {
+    FirebaseWidget.prototype.sendSMS = function() {
         firebase.auth()
             .signInWithPhoneNumber(widget.fullPhoneNumber, widget.recaptchaVerifier)
-            .then(function (confirmationResult) {
+            .then(function(confirmationResult) {
                 widget.firebaseDigitsNumberForm();
                 widget.confirmationResult = confirmationResult;
-            }).catch(function (error) {
+            }).catch(function(error) {
                 Helpers.log('Error:', error);
                 if (error.message) throw error.message;
             });
     };
 
-    FirebaseWidget.prototype.confirmPhone = function (code) {
+    FirebaseWidget.prototype.confirmPhone = function(code) {
         widget.confirmationResult.confirm(code)
-            .then(function (result) {
+            .then(function(result) {
                 widget.closeWidget();
                 widget.login(result.user);
-            }).catch(function (error) {
+            }).catch(function(error) {
                 Helpers.log('Error:', error);
                 if (error.message) throw error.message;
             });
@@ -92,20 +92,22 @@ define([
             input: 'validateAction'
         },
 
-        initialize: function () {
+        initialize: function() {
             this.render();
             this.addTelInput();
             this.addRecaptcha();
         },
 
-        render: function () {
+        render: function() {
             this.$el.html(this.template());
             widget.phoneNumberForm = this.$el;
             widget.container.append(this.$el);
             widget.currentSubmitButton = this.$el.find('.j-firebase__button_verify');
+
+            return this;
         },
 
-        submitAction: function (event) {
+        submitAction: function(event) {
             var $input = $('#firebase__phone_number_input');
 
             event.preventDefault();
@@ -117,26 +119,26 @@ define([
             if (widget.fullPhoneNumber) widget.sendSMS();
         },
 
-        cancelAction: function (event) {
+        cancelAction: function(event) {
             event.preventDefault();
             widget.closeWidget();
         },
 
-        validateAction: function (event) {
+        validateAction: function(event) {
             event.preventDefault();
             widget.filled = !!event.target.value;
         },
 
-        addTelInput: function () {
+        addTelInput: function() {
             var $input = $('#firebase__phone_number_input');
 
             $input.intlTelInput({
                 initialCountry: widget.countryCode || 'auto',
-                geoIpLookup: function (callback) {
+                geoIpLookup: function(callback) {
                     if (widget.countryCode) {
                         callback(widget.countryCode);
                     } else {
-                        $.get('https://ipinfo.io', function () {}, 'jsonp').always(function (resp) {
+                        $.get('https://ipinfo.io', function() {}, 'jsonp').always(function(resp) {
                             widget.countryCode = (resp && resp.country) ? resp.country : '';
                             callback(widget.countryCode);
                         });
@@ -148,7 +150,7 @@ define([
             $input.val(widget.phoneNumber);
         },
 
-        addRecaptcha: function () {
+        addRecaptcha: function() {
             widget.recaptchaBuilder('firebase__recaptcha_container', 'normal');
             widget.recaptchaVerifier.render();
         }
@@ -166,41 +168,43 @@ define([
             'click .j-firebase__resend': 'resendCode'
         },
 
-        initialize: function () {
+        initialize: function() {
             this.render();
         },
 
-        render: function () {
+        render: function() {
             this.$el.html(this.template({ fullPhoneNumber: widget.fullPhoneNumber }));
             widget.digitsNumberForm = this.$el;
             widget.container.append(this.$el);
             widget.currentSubmitButton = this.$el.find('.j-firebase__button_verify');
             Events.intiAuthorizationInputs(this.$el.find('#firebase__code_input'));
             this.resendTimer(widget.resendTime);
+
+            return this;
         },
 
-        submitAction: function (event) {
+        submitAction: function(event) {
             event.preventDefault();
             widget.confirmPhone($('#firebase__code_input').val());
         },
 
-        cancelAction: function (event) {
+        cancelAction: function(event) {
             event.preventDefault();
             widget.closeWidget();
         },
 
-        validateAction: function (event) {
+        validateAction: function(event) {
             event.preventDefault();
             widget.filled = !!event.target.value;
         },
 
-        resendCode: function (event) {
+        resendCode: function(event) {
             event.preventDefault();
             $('.j-firebase__resend').hide();
             widget.sendSMS();
         },
 
-        resendTimer: function (timeLeft) {
+        resendTimer: function(timeLeft) {
             var self = this;
             var $text = $('.j-firebase__timer_text');
             var $timer = $('.j-firebase__resend_time');
@@ -222,7 +226,7 @@ define([
             }
 
             function next() {
-                setTimeout(function () {
+                setTimeout(function() {
                     timeLeft -= 1; // eslint-disable-line no-param-reassign
                     self.resendTimer(timeLeft);
                 }, 1000);
@@ -230,32 +234,32 @@ define([
         }
     });
 
-    FirebaseWidget.prototype.firebasePhoneNumberForm = function () {
+    FirebaseWidget.prototype.firebasePhoneNumberForm = function() {
         widget.closeWidget();
         widget.show();
         new widget.firebasePhoneNumberForm(); // eslint-disable-line no-new, new-cap
     };
 
-    FirebaseWidget.prototype.firebaseDigitsNumberForm = function () {
+    FirebaseWidget.prototype.firebaseDigitsNumberForm = function() {
         widget.closeWidget();
         widget.show();
         new widget.firebaseDigitsNumberForm(); // eslint-disable-line no-new, new-cap
     };
 
-    FirebaseWidget.prototype.closeWidget = function () {
+    FirebaseWidget.prototype.closeWidget = function() {
         widget.cleanup();
         widget.hide();
     };
 
-    FirebaseWidget.prototype.show = function () {
+    FirebaseWidget.prototype.show = function() {
         widget.container.css('visibility', 'visible');
     };
 
-    FirebaseWidget.prototype.hide = function () {
+    FirebaseWidget.prototype.hide = function() {
         widget.container.css('visibility', 'hidden');
     };
 
-    FirebaseWidget.prototype.cleanup = function () {
+    FirebaseWidget.prototype.cleanup = function() {
         if (widget.phoneNumberForm) {
             widget.phoneNumberForm.remove();
             widget.phoneNumberForm = null;
@@ -271,19 +275,19 @@ define([
         widget.confirmationResult = null;
     };
 
-    FirebaseWidget.prototype.recaptchaBuilder = function (target, size) {
+    FirebaseWidget.prototype.recaptchaBuilder = function(target, size) {
         widget.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(target, {
             size: size,
-            callback: function () {
+            callback: function() {
                 widget.verified = true;
             },
-            'expired-callback': function () {
+            'expired-callback': function() {
                 widget.verified = false;
             }
         });
     };
 
-    FirebaseWidget.prototype.setDisableState = function () {
+    FirebaseWidget.prototype.setDisableState = function() {
         var verified = widget.states.verified;
         var filled = widget.states.filled;
         var button = widget.currentSubmitButton;

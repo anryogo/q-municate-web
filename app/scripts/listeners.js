@@ -6,7 +6,7 @@ define([
     'config',
     'Helpers',
     'perfectscrollbar'
-], function (
+], function(
     _,
     $,
     QMCONFIG,
@@ -28,7 +28,7 @@ define([
         self.disconnected = false;
         self.offline = false;
 
-        self.setChatState = function (state) {
+        self.setChatState = function(state) {
             if (typeof state === 'boolean') {
                 chatConnection = state;
             } else {
@@ -37,11 +37,11 @@ define([
             }
         };
 
-        self.getChatState = function () {
+        self.getChatState = function() {
             return chatConnection;
         };
 
-        self.setChatViewPosition = function (value) {
+        self.setChatViewPosition = function(value) {
             if (!self.blockChatViewPosition) {
                 position = value;
             }
@@ -49,7 +49,7 @@ define([
             self.blockChatViewPosition = false;
         };
 
-        self.getChatViewPosition = function () {
+        self.getChatViewPosition = function() {
             var direction = '';
             var value = 0;
 
@@ -67,7 +67,7 @@ define([
 
     Listeners.prototype = {
 
-        init: function () {
+        init: function() {
             window.addEventListener('online', self.onNetworkStatusListener);
             window.addEventListener('offline', self.onNetworkStatusListener);
 
@@ -76,7 +76,7 @@ define([
             document.addEventListener('fullscreenchange', self.onFullScreenChange);
         },
 
-        setQBHandlers: function () {
+        setQBHandlers: function() {
             var ContactListView = self.app.views.ContactList;
             var MessageView = self.app.views.Message;
             var VideoChatView = self.app.views.VideoChat;
@@ -112,14 +112,14 @@ define([
             }
         },
 
-        listenToMediaElement: function (selector) {
-            document.querySelector(selector).onplaying = function (event) {
+        listenToMediaElement: function(selector) {
+            document.querySelector(selector).onplaying = function(event) {
                 // pause all media sources except started one
                 Helpers.pauseAllMedia(event.target);
             };
         },
 
-        listenToPsTotalEnd: function (onOrOff) {
+        listenToPsTotalEnd: function(onOrOff) {
             var scroll = document.querySelector('.j-scrollbar_aside');
 
             if (onOrOff) {
@@ -129,7 +129,7 @@ define([
             }
         },
 
-        onDisconnected: function () {
+        onDisconnected: function() {
             if (self.stateActive) {
                 self.updateDialogs(false);
                 self.setChatState(false);
@@ -137,21 +137,21 @@ define([
             }
         },
 
-        onReconnected: function () {
+        onReconnected: function() {
             self.updateDialogs(true);
             self.setChatState(true);
             switchToOnlineMode();
         },
 
-        onReconnectFailed: function () {
+        onReconnectFailed: function() {
             self.app.service.disconnectChat();
 
-            self.app.models.User.autologin(function () {
+            self.app.models.User.autologin(function() {
                 switchToOnlineMode();
             });
         },
 
-        onNetworkStatusListener: function () {
+        onNetworkStatusListener: function() {
             var condition = navigator.onLine ? 'online' : 'offline';
 
             if (typeof self.onNetworkStatus === 'function' && condition) {
@@ -159,11 +159,11 @@ define([
             }
         },
 
-        onNextDilogsList: function () {
+        onNextDilogsList: function() {
             if (self.activePsListener) {
                 self.listenToPsTotalEnd(false);
 
-                self.app.views.Dialog.showOldHistory(function (stopListener) {
+                self.app.views.Dialog.showOldHistory(function(stopListener) {
                     self.onUpdatePerfectScroll();
 
                     if (!stopListener) {
@@ -175,18 +175,18 @@ define([
             }
         },
 
-        onUpdatePerfectScroll: function () {
+        onUpdatePerfectScroll: function() {
             Ps.update(document.querySelector('.j-scrollbar_aside'));
         },
 
-        updateDialogs: function (reconnected) {
+        updateDialogs: function(reconnected) {
             var DialogView = self.app.views.Dialog;
             var dialogsCollection = self.app.entities.Collections.dialogs;
 
             if (reconnected) {
                 DialogView.downloadDialogs();
             } else {
-                dialogsCollection.forEach(function (dialog) {
+                dialogsCollection.forEach(function(dialog) {
                     if (dialog.get('type') === 2) {
                         dialog.set({
                             joined: false,
@@ -197,7 +197,7 @@ define([
             }
         },
 
-        onNetworkStatus: function (status) {
+        onNetworkStatus: function(status) {
             if (self.getChatState()) {
                 if (status === 'online') {
                     self.updateDialogs(true);
@@ -208,7 +208,7 @@ define([
             }
         },
 
-        onFullScreenChange: function (event) {
+        onFullScreenChange: function(event) {
             var fullscreenElement = document.fullscreenElement
                                     || document.mozFullscreenElement
                                     || document.webkitFullscreenElement;

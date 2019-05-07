@@ -10,7 +10,7 @@ define([
     'backbone',
     'config',
     'Helpers'
-], function (
+], function(
     $,
     _,
     Backbone,
@@ -33,7 +33,7 @@ define([
             user_tags: null
         },
 
-        validate: function (attrs) {
+        validate: function(attrs) {
             var MAX_SIZE = QMCONFIG.maxLimitFile * 1024 * 1024;
 
             // Field: full_name
@@ -79,12 +79,12 @@ define([
             return '';
         },
 
-        parse: function (data, options) {
+        parse: function(data, options) {
             if (typeof options === 'object') {
                 App = options.app;
             }
 
-            _.each(data, function (val, key) {
+            _.each(data, function(val, key) {
                 var isHasKey = _.has(this.defaults, key);
                 if (key !== 'id' && !isHasKey) {
                     delete data[key];
@@ -96,11 +96,7 @@ define([
             return data;
         },
 
-        initialize: function () {
-
-        },
-
-        update: function () {
+        update: function() {
             var currentUser = App.models.User.contact;
             var QBApiCalls = App.service;
             var data = this.toJSON();
@@ -125,7 +121,7 @@ define([
                 params.custom_data = JSON.stringify(customData);
             }
             if (data.avatar) {
-                this.uploadAvatar(data.avatar, function (blob) {
+                this.uploadAvatar(data.avatar, function(blob) {
                     var avatarUrl = QB.content.publicUrl(blob.uid);
 
                     self.set('avatar_url', avatarUrl);
@@ -141,7 +137,7 @@ define([
                     $('.profileUserAvatar[data-id="' + currentUser.id + '"]').css('background-image', 'url(' + currentUser.avatar_url + ')');
                     App.models.User.rememberMe();
 
-                    QBApiCalls.updateUser(currentUser.id, params, function (res) {
+                    QBApiCalls.updateUser(currentUser.id, params, function(res) {
                         Helpers.log('update of user', res);
                     });
                 });
@@ -149,30 +145,30 @@ define([
                 $('.profileUserName[data-id="' + currentUser.id + '"]').text(currentUser.full_name);
                 App.models.User.rememberMe();
 
-                QBApiCalls.updateUser(currentUser.id, params, function (res) {
+                QBApiCalls.updateUser(currentUser.id, params, function(res) {
                     Helpers.log('update of user', res);
                 });
             }
         },
 
-        uploadAvatar: function (avatar, callback) {
+        uploadAvatar: function(avatar, callback) {
             var QBApiCalls = App.service;
             var Attach = App.models.Attach;
 
             Attach.crop(avatar, {
                 w: 1000,
                 h: 1000
-            }, function (file) {
+            }, function(file) {
                 QBApiCalls.createBlob({
                     file: file,
                     public: true
-                }, function (blob) {
+                }, function(blob) {
                     callback(blob);
                 });
             });
         },
 
-        changeQBPass: function (data, callback) {
+        changeQBPass: function(data, callback) {
             var currentUser = App.models.User.contact;
             var Session = App.models.Session;
             var QBApiCalls = App.service;
@@ -182,7 +178,7 @@ define([
             params.old_password = data.oldPass;
             params.password = data.newPass;
 
-            QBApiCalls.updateUser(currentUser.id, params, function (res, err) {
+            QBApiCalls.updateUser(currentUser.id, params, function(res, err) {
                 if (res) {
                     Helpers.log('update of user', res);
                     Session.update({
@@ -199,7 +195,7 @@ define([
             });
         },
 
-        connectFB: function (fbId, callback) {
+        connectFB: function(fbId, callback) {
             var currentUser = App.models.User.contact;
             var QBApiCalls = App.service;
             var customData = (currentUser.custom_data && JSON.parse(currentUser.custom_data)) || {};
@@ -213,7 +209,7 @@ define([
             params.facebook_id = fbId;
             params.custom_data = JSON.stringify(customData);
 
-            QBApiCalls.updateUser(currentUser.id, params, function (res, err) {
+            QBApiCalls.updateUser(currentUser.id, params, function(res, err) {
                 if (res) {
                     Helpers.log('update of user', res);
 
@@ -238,31 +234,29 @@ define([
             });
         },
 
-        getFBFriends: function () {
+        getFBFriends: function() {
             var isFriendsPermission = false;
             var self = this;
 
-            FB.api('/me/permissions', function (response) {
-                var len;
-                var i;
-
+            FB.api('/me/permissions', function(response) {
                 Helpers.log('FB Permissions', response);
-                for (i = 0, len = response.data.length; i < len; i++) {
-                    if (response.data[i].permission === 'user_friends' && response.data[i].status === 'granted') {
+
+                response.data.forEach(function(item) {
+                    if (item.permission === 'user_friends' && item.status === 'granted') {
                         isFriendsPermission = true;
                     }
-                }
+                });
 
                 if (isFriendsPermission) {
                     // import FB friends
-                    FB.api('/me/friends', function (res) {
+                    FB.api('/me/friends', function(res) {
                         var ids = [];
 
                         Helpers.log('FB friends', res);
 
-                        for (i = 0, len = res.data.length; i < len; i++) {
-                            ids.push(res.data[i].id);
-                        }
+                        res.data.forEach(function(item) {
+                            ids.push(item.id);
+                        });
 
                         if (ids.length > 0) {
                             self.import(ids);
@@ -272,18 +266,16 @@ define([
             });
         },
 
-        import: function (ids) {
+        import: function(ids) {
             var ContactList = App.models.ContactList;
             var ContactListView = App.views.ContactList;
             var FBImport = App.views.FBImport;
 
-            ContactList.getFBFriends(ids, function (newIds) {
-                var len;
-                var i;
+            ContactList.getFBFriends(ids, function(newIds) {
+                newIds.forEach(function(item) {
+                    ContactListView.importFBFriend(item);
+                });
 
-                for (i = 0, len = newIds.length; i < len; i++) {
-                    ContactListView.importFBFriend(newIds[i]);
-                }
                 FBImport.render().openPopup();
             });
         }

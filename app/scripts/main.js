@@ -97,7 +97,7 @@ require([
     'backbone',
     'QBNotification',
     'fetch' // the fetch polifil for IE 10+
-], function (
+], function(
     $,
     QMCONFIG,
     Helpers,
@@ -109,7 +109,7 @@ require([
     var APP;
 
     // Application initialization
-    $(function () {
+    $(function() {
     // set Q-MUNICATE version
         $('.j-appVersion').html('v. 1.15.0');
 
@@ -129,7 +129,7 @@ require([
         }
 
         // emoji smiles run
-        $('.smiles-group').each(function () {
+        $('.smiles-group').each(function() {
             var obj = $(this);
             obj.html(minEmoji(obj.text(), true));
         });

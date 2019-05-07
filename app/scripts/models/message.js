@@ -7,7 +7,7 @@
 define([
     'config',
     'Entities'
-], function (
+], function(
     QMCONFIG,
     Entities
 ) {
@@ -21,7 +21,7 @@ define([
 
     Message.prototype = {
 
-        download: function (dialogId, callback, count, isAjaxDownloading) {
+        download: function(dialogId, callback, count, isAjaxDownloading) {
             var QBApiCalls = this.app.service;
             var DialogView = this.app.views.Dialog;
             var limitCount = QMCONFIG.stackMessages;
@@ -43,7 +43,7 @@ define([
                 sort_desc: 'date_sent',
                 limit: limitCount,
                 skip: skipCount || 0
-            }, function (messages, error) {
+            }, function(messages, error) {
                 if (error) {
                     callback(null, error);
                     return;
@@ -58,7 +58,7 @@ define([
             });
         },
 
-        create: function (params, ajax) {
+        create: function(params, ajax) {
             /* eslint-disable max-len */
             var message = {
                 // eslint-disable-next-line no-underscore-dangle
@@ -101,7 +101,7 @@ define([
                 message.attachment.size = parseInt(message.attachment.size, 10);
             }
 
-            Object.keys(message).forEach(function (prop) {
+            Object.keys(message).forEach(function(prop) {
                 if (message[prop] === null) {
                     delete message[prop];
                 }
@@ -114,7 +114,7 @@ define([
             return message;
         },
 
-        isStack: function (online, curMsg, prevMsg) {
+        isStack: function(online, curMsg, prevMsg) {
             var sameUser; var sameTime;
             var stack = false;
             var lastMessageSender;

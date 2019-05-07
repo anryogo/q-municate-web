@@ -15,7 +15,7 @@ define([
     'LocationView',
     'QMHtml',
     'Entities'
-], function (
+], function(
     $,
     QMCONFIG,
     _,
@@ -55,9 +55,9 @@ define([
     MessageView.prototype = {
 
         // this needs only for group chats: check if user exist in group chat
-        checkSenderId: function (senderId, callback) {
+        checkSenderId: function(senderId, callback) {
             if (senderId !== User.contact.id) {
-                ContactList.add([senderId], null, function () {
+                ContactList.add([senderId], null, function() {
                     callback();
                 });
             } else {
@@ -65,7 +65,7 @@ define([
             }
         },
 
-        addItem: function (message, isCallback, isMessageListener) {
+        addItem: function(message, isCallback, isMessageListener) {
             var Contact = this.app.models.Contact;
             var $chat = $('.l-chat[data-dialog="' + message.dialog_id + '"]');
             var isOnline = message.online;
@@ -98,7 +98,7 @@ define([
                 contact = contacts[senderID];
             }
 
-            this.checkSenderId(senderID, function () {
+            this.checkSenderId(senderID, function() {
                 var type = message.notification_type || (message.callState && (parseInt(message.callState, 10) + 7).toString()) || 'message';
                 var attachType = (message.attachment && message.attachment['content-type']) || (message.attachment && message.attachment.type) || null;
                 // eslint-disable-next-line max-len
@@ -423,7 +423,7 @@ define([
             });
         },
 
-        addStatusMessages: function (messageId, dialogId, messageStatus, isListener) {
+        addStatusMessages: function(messageId, dialogId, messageStatus, isListener) {
             var $chat = $('.l-chat[data-dialog="' + dialogId + '"]');
             var time = $chat.find('article#' + messageId + ' .message-container-wrap .message-container .message-time');
             var statusHtml = $chat.find('article#' + messageId + ' .message-container-wrap .message-container .message-status');
@@ -443,7 +443,7 @@ define([
             }
 
             if (isListener) {
-                setTimeout(function () {
+                setTimeout(function() {
                     time.removeClass('is-hidden');
                     statusHtml.addClass('is-hidden');
                 }, 1000);
@@ -453,7 +453,7 @@ define([
             }
         },
 
-        sendMessage: function (form) {
+        sendMessage: function(form) {
             var jid = form.parents('.l-chat').data('jid');
             var dialogId = form.parents('.l-chat').data('dialog');
             var $textarea = form.find('.textarea');
@@ -471,7 +471,7 @@ define([
             var msg;
 
             if ($smiles.length > 0) {
-                $smiles.each(function () {
+                $smiles.each(function() {
                     $(this).after($(this).data('unicode')).remove();
                 });
                 val = $textarea.html();
@@ -534,7 +534,7 @@ define([
         },
 
         // send start or stop typing status to chat or groupchat
-        sendTypingStatus: function (jid, start) {
+        sendTypingStatus: function(jid, start) {
             var roomJid = QB.chat.helpers.getRoomJid(jid);
             var xmppRoomJid = roomJid.split('/')[0];
 
@@ -546,12 +546,12 @@ define([
         },
 
         // claer the list typing when switch to another chat
-        clearTheListTyping: function () {
+        clearTheListTyping: function() {
             $('.j-typing').empty();
             typingList = [];
         },
 
-        onMessage: function (id, message) {
+        onMessage: function(id, message) {
             if (message.type === 'error') {
                 return;
             }
@@ -603,7 +603,7 @@ define([
             /* eslint-enable vars-on-top */
 
             if (!dialog && roster[id] && notificationType !== '4') {
-                Dialog.download({ _id: dialogId }, function (error, results) {
+                Dialog.download({ _id: dialogId }, function(error, results) {
                     var newDialogId;
 
                     if (results) {
@@ -672,13 +672,11 @@ define([
 
                 // add new people
                 if (newIds) {
-                    ContactList.add(dialog.get('occupants_ids'), null, function () {
+                    ContactList.add(dialog.get('occupants_ids'), null, function() {
                         var newId;
-                        var len;
-                        var i;
 
-                        for (i = 0, len = newIds.length; i < len; i++) {
-                            newId = newIds[i].toString();
+                        newIds.forEach(function(item) {
+                            newId = item.toString();
 
                             if (newId !== User.contact.id.toString()) {
                                 occupant = '<a class="occupant l-flexbox_inline presence-listener" data-id="' + newId + '" href="#">';
@@ -686,7 +684,7 @@ define([
                                 occupant += '<span class="name name_occupant">' + contacts[newId].full_name + '</span></a>';
                                 $chat.find('.chat-occupants-wrap .mCSB_container').append(occupant);
                             }
-                        }
+                        });
 
                         $chat.find('.addToGroupChat').data('ids', dialog.get('occupants_ids'));
                     });
@@ -735,7 +733,7 @@ define([
                 hiddenDialogs[id] = dialogId;
                 ContactList.saveHiddenDialogs(hiddenDialogs);
                 // update contact list
-                QBApiCalls.getUser(id, function (user) {
+                QBApiCalls.getUser(id, function(user) {
                     contacts[id] = Contact.create(user);
                 });
             } else {
@@ -780,7 +778,7 @@ define([
             }
         },
 
-        onSystemMessage: function (message) {
+        onSystemMessage: function(message) {
             var DialogView = self.app.views.Dialog;
             var notificationType = message.extension && message.extension.notification_type;
             var dialogId = message.extension && message.extension.dialog_id;
@@ -814,7 +812,7 @@ define([
 
                 Helpers.log('Dialog', dialog.toJSON());
 
-                ContactList.add(occupantsIds, null, function () {
+                ContactList.add(occupantsIds, null, function() {
                     // don't create a duplicate dialog in contact list
                     dialogItem = $('.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="' + dialogId + '"]')[0];
 
@@ -823,7 +821,7 @@ define([
                     }
 
                     if (dialog && !dialog.get('joined')) {
-                        QB.chat.muc.join(roomJid, function () {
+                        QB.chat.muc.join(roomJid, function() {
                             dialog.set('joined', true);
                         });
                     }
@@ -846,7 +844,7 @@ define([
             }
         },
 
-        onMessageTyping: function (isTyping, userId, dialogId) {
+        onMessageTyping: function(isTyping, userId, dialogId) {
             var ContactListMsg = self.app.models.ContactList;
             var contacts = ContactListMsg.contacts;
             var contact = contacts[userId];
@@ -857,13 +855,13 @@ define([
             if (recipient && visible) {
                 // stop displays the status if they do not come
                 if (clearTyping === undefined) {
-                    clearTyping = setTimeout(function () {
+                    clearTyping = setTimeout(function() {
                         typingList = [];
                         stopShowTyping(contact.full_name);
                     }, 6000);
                 } else {
                     clearTimeout(clearTyping);
-                    clearTyping = setTimeout(function () {
+                    clearTyping = setTimeout(function() {
                         typingList = [];
                         stopShowTyping(contact.full_name);
                     }, 6000);
@@ -879,17 +877,17 @@ define([
             }
         },
 
-        onDeliveredStatus: function (messageId, dialogId) {
+        onDeliveredStatus: function(messageId, dialogId) {
             self.addStatusMessages(messageId, dialogId, 'delivered', true);
             updatedMessageModel(messageId, dialogId, 'delivered');
         },
 
-        onReadStatus: function (messageId, dialogId) {
+        onReadStatus: function(messageId, dialogId) {
             self.addStatusMessages(messageId, dialogId, 'displayed', true);
             updatedMessageModel(messageId, dialogId, 'displayed');
         },
 
-        updateMediaElement: function (params) {
+        updateMediaElement: function(params) {
             var Listeners = this.app.listeners;
             var QMPlayer = self.app.QMPlayer.Model;
             var duration;
@@ -1040,7 +1038,7 @@ define([
             if (!QBNotification.needsPermission()) {
                 Helpers.Notifications.show(title, options);
             } else {
-                QBNotification.requestPermission(function (state) {
+                QBNotification.requestPermission(function(state) {
                     if (state === 'granted') {
                         Helpers.Notifications.show(title, options);
                     }
@@ -1165,7 +1163,7 @@ define([
         $hyperText = $message.find('a:not(a.open_googlemaps, a.file-download, a.qm_player_download)');
 
         if ($hyperText.length) {
-            $hyperText.each(function (index) {
+            $hyperText.each(function(index) {
                 var $this = $(this);
                 var url;
                 var params;
@@ -1190,7 +1188,7 @@ define([
                         Helpers.getOpenGraphInfo({
                             url: url,
                             token: JSON.parse(localStorage['QM.session']).token
-                        }, function (error, result) {
+                        }, function(error, result) {
                             if (result && (result.ogTitle || result.ogDescription)) {
                                 params = {
                                     title: result.ogTitle || result.ogUrl || '',

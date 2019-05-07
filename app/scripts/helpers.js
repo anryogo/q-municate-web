@@ -6,7 +6,7 @@ define([
     'underscore',
     'config',
     'QBNotification'
-], function (
+], function(
     $,
     _,
     QMCONFIG,
@@ -16,7 +16,7 @@ define([
 
     Helpers.Notifications = {
 
-        show: function (title, options) {
+        show: function(title, options) {
             var notify;
 
             // show notification if all parameters are is
@@ -26,7 +26,7 @@ define([
             }
         },
 
-        getTitle: function (message, params) {
+        getTitle: function(message, params) {
             var contacts = params.contacts;
             var roomName = params.roomName;
             var contact = contacts[message.sender_id];
@@ -37,7 +37,7 @@ define([
             return title;
         },
 
-        getOptions: function (message, params) {
+        getOptions: function(message, params) {
             var myUser = params.user;
             var contacts = params.contacts;
             var roomPhoto = params.roomPhoto;
@@ -154,7 +154,7 @@ define([
                     body: text,
                     icon: photo,
                     tag: message.dialog_id,
-                    onClick: function () {
+                    onClick: function() {
                         window.focus();
                         selectDialog.click();
                     },
@@ -168,26 +168,25 @@ define([
     };
 
     Helpers.Messages = {
-        getOccupantsNames: function (occupantsIds, myUser, contacts) {
+        getOccupantsNames: function(occupantsIds, myUser, contacts) {
             var occupantsNames = '';
             var myContact = myUser.contact;
+            var len = occupantsIds.length;
             var user;
-            var len;
-            var i;
 
-            for (i = 0, len = occupantsIds.length; i < len; i++) {
-                user = contacts[occupantsIds[i]] && contacts[occupantsIds[i]].full_name;
+            occupantsIds.forEach(function(item, index) {
+                user = contacts[item] && contacts[item].full_name;
                 if (user) {
-                    occupantsNames = (i + 1) === len ? occupantsNames.concat(user) : occupantsNames.concat(user).concat(', ');
-                } else if (occupantsIds[i] === myContact.id) {
-                    occupantsNames = (i + 1) === len ? occupantsNames.concat(myContact.full_name) : occupantsNames.concat(myContact.full_name).concat(', ');
+                    occupantsNames = (index + 1) === len ? occupantsNames.concat(user) : occupantsNames.concat(user).concat(', ');
+                } else if (item === myContact.id) {
+                    occupantsNames = (index + 1) === len ? occupantsNames.concat(myContact.full_name) : occupantsNames.concat(myContact.full_name).concat(', ');
                 }
-            }
+            });
 
             return occupantsNames;
         },
 
-        parser: function (str) {
+        parser: function(str) {
             var url;
             var urlText;
             var URL_REGEXP = /\b((?:https?:\/\/|www\d{0,3}\.|[\d-.a-z]+\.[a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s!"'(),.:;<>?[\]`{}«»‘’“”]))/gi;
@@ -199,7 +198,7 @@ define([
             str = str.replace(/\n/g, '<br>');
 
             // parser of links
-            str = str.replace(URL_REGEXP, function (match) {
+            str = str.replace(URL_REGEXP, function(match) {
                 url = (/^[a-z]+:/i).test(match) ? match : 'http://' + match;
                 urlText = match;
                 return '<a href="' + escapeHTML(url) + '" target="_blank">' + escapeHTML(urlText) + '</a>';
@@ -215,7 +214,7 @@ define([
     };
 
     Helpers.Dialogs = {
-        moveDialogToTop: function (dialogId) {
+        moveDialogToTop: function(dialogId) {
             var dialogItem = $('.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="' + dialogId + '"]');
             var copyDialogItem;
 
@@ -230,7 +229,7 @@ define([
             }
         },
 
-        isSectionEmpty: function (list) {
+        isSectionEmpty: function(list) {
             if (list.contents().length === 0) {
                 list.parent().addClass('is-hidden');
             }
@@ -246,7 +245,7 @@ define([
             }
         },
 
-        setScrollToNewMessages: function () {
+        setScrollToNewMessages: function() {
             var $chat = $('.j-chatItem .j-scrollbar_message');
 
             if ($('.j-newMessages').length) {
@@ -257,31 +256,35 @@ define([
 
     // smart console
     /* eslint-disable no-console */
-    Helpers.log = function () {
+    Helpers.log = function() {
+        var args = Array.prototype.slice.call(arguments);
         var i;
 
         if (QMCONFIG.debug) {
-            if (arguments.length <= 1) {
+            if (args.length <= 1) {
                 console.group('[Q-MUNICATE debug mode]:');
-                console.log(arguments[0]);
+                console.log(args[0]);
                 console.groupEnd();
             } else {
                 console.group('[Q-MUNICATE debug mode]:');
-                for (i = 0; i < arguments.length; i++) {
-                    if ((typeof arguments[i] === 'string') && (typeof arguments[i + 1] !== 'string')) {
-                        console.log(arguments[i], arguments[i + 1]);
+
+                // eslint-disable-next-line no-plusplus, no-loops/no-loops
+                for (i = 0; i < args.length; i++) {
+                    if ((typeof args[i] === 'string') && (typeof args[i + 1] !== 'string')) {
+                        console.log(args[i], args[i + 1]);
                         i += 1;
                     } else {
-                        console.log(arguments[i]);
+                        console.log(args[i]);
                     }
                 }
+
                 console.groupEnd();
             }
         }
     };
     /* eslint-enable no-console */
 
-    Helpers.isBeginOfChat = function () {
+    Helpers.isBeginOfChat = function() {
         var bottom = true;
         var viewPort;
         var msgList;
@@ -308,14 +311,14 @@ define([
         return bottom;
     };
 
-    Helpers.getDuration = function (seconds, duration) {
+    Helpers.getDuration = function(seconds, duration) {
         if (duration) {
             return Date.parse('Thu, 01 Jan 1970 ' + duration + ' GMT') / 1000;
         }
         return new Date(seconds * 1000).toUTCString().split(/ /)[4];
     };
 
-    Helpers.getTime = function (time, isDate) {
+    Helpers.getTime = function(time, isDate) {
         var messageDate = new Date(time * 1000);
         var startOfCurrentDay = new Date();
 
@@ -329,7 +332,7 @@ define([
         return messageDate.getDate() + '/' + (messageDate.getMonth() + 1) + '/' + messageDate.getFullYear();
     };
 
-    Helpers.scaleAvatar = function ($pic) {
+    Helpers.scaleAvatar = function($pic) {
         var $chat = $pic.parents('.l-chat');
         var name = $pic.data('name');
         var url = $pic.css('background-image').replace(/.*\s?url\(["']?/, '')
@@ -350,13 +353,13 @@ define([
         $popup.add('.popups').addClass('is-overlay');
     };
 
-    Helpers.getOpenGraphInfo = function (params, callback) {
+    Helpers.getOpenGraphInfo = function(params, callback) {
         var ajaxCall = {
             url: 'https://ogs.quickblox.com/?url=' + params.url + '&token=' + params.token,
-            error: function (jqHXR, status, error) {
+            error: function(jqHXR, status, error) {
                 callback(error, null);
             },
-            success: function (data) {
+            success: function(data) {
                 callback(null, data);
             }
         };
@@ -364,17 +367,17 @@ define([
         $.ajax(ajaxCall);
     };
 
-    Helpers.isValidUrl = function (url) {
+    Helpers.isValidUrl = function(url) {
         var validator = /^(?:([a-z]+):(?:([a-z]*):)?\/\/)?(?:([^:@]*)(?::([^:@]*))?@)?((?:[\w-]+\.)+[a-z]{2,}|localhost|(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d\d?|2[0-4]\d|25[0-5]))(?::(\d+))?(?:([^#:?]+))?(?:\?([^#]+))?(?:#(\S+))?$/i;
         return validator.test(url);
     };
 
-    Helpers.isImageUrl = function (url) {
+    Helpers.isImageUrl = function(url) {
         return /.svg|.png|.jpg|.jpeg|.gif/i.test(url);
     };
 
-    Helpers.pauseAllMedia = function (target) {
-        document.querySelectorAll('.j-audioPlayer, .j-videoPlayer').forEach(function (element) {
+    Helpers.pauseAllMedia = function(target) {
+        document.querySelectorAll('.j-audioPlayer, .j-videoPlayer').forEach(function(element) {
             if (element !== target) {
                 element.pause();
                 if (target) {
@@ -384,7 +387,7 @@ define([
         });
     };
 
-    Helpers.isIE11orEdge = function () {
+    Helpers.isIE11orEdge = function() {
         return (/rv:11.0/i.test(navigator.userAgent) || /edge\/\d./i.test(navigator.userAgent));
     };
 

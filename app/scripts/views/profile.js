@@ -10,7 +10,7 @@ define([
     'backbone',
     'config',
     'Helpers'
-], function (
+], function(
     $,
     _,
     Backbone,
@@ -22,40 +22,39 @@ define([
 
         template: _.template($('#templateProfile').html()),
 
-        initialize: function () {
-            this.model.on('invalid', this.validateError, this);
-        },
-
         events: {
             click: 'editProfile',
             'change .btn_userProfile_file': 'chooseAvatar'
         },
 
-        render: function () {
-            var self = this;
+        initialize: function() {
+            this.listenTo(this.model, 'invalid', this.validateError.bind(this));
+        },
+
+        render: function() {
+            var renderObj = this.model.toJSON();
             var template;
-            var renderObj = self.model.toJSON();
 
             if (renderObj.phone && (renderObj.full_name === 'Unknown user')) {
                 renderObj.full_name = renderObj.phone;
             }
 
-            template = self.$el.html(self.template(renderObj));
+            template = this.$el.html(this.template(renderObj));
             $('.popups').append(template);
-            self.delegateEvents(self.events);
+            this.delegateEvents(this.events);
 
-            return self;
+            return this;
         },
 
-        openPopup: function () {
+        openPopup: function() {
             this.$el.find('.popup').add('.popups').addClass('is-overlay');
         },
 
-        closePopup: function () {
+        closePopup: function() {
             $('.is-overlay:not(.chat-occupants-wrap)').removeClass('is-overlay');
         },
 
-        editProfile: function (event) {
+        editProfile: function(event) {
             var obj = $(event.target);
             var isError;
             var params;
@@ -88,12 +87,12 @@ define([
             }
         },
 
-        validateError: function (model, error) {
+        validateError: function(model, error) {
             this.$el.find('.userProfile-errors').text(error);
             this.$el.find('.userProfile-success').text('');
         },
 
-        chooseAvatar: function () {
+        chooseAvatar: function() {
             var URL = window.URL;
             var avatar = this.$el.find('.btn_userProfile_file')[0].files[0];
             var src;
@@ -109,10 +108,10 @@ define([
             this.$el.find('.userDetails-avatar').css('background-image', 'url(' + src + ')');
         },
 
-        addFBAccount: function (fbId) {
+        addFBAccount: function(fbId) {
             var self = this;
 
-            this.model.connectFB(fbId, function (err) {
+            this.model.connectFB(fbId, function(err) {
                 if (err) {
                     self.validateError(self.model, QMCONFIG.errors.FBAccountExists);
                     self.$el.find('.btn_userProfile_connect').prop('disabled', false);
