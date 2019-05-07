@@ -47,7 +47,9 @@
     "copy:html": "cpy *.html \"../dist\" --cwd=app",
     "copy:assets": "cpy audio/ workers/ \"../dist\" --cwd=app --parents",
     "test": "npm run lint",
-    "lint": "eslint app/scripts"
+    "lint": "npm-run-all --parallel lint:*",
+    "lint:css": "stylelint app/styles",
+    "lint:js": "eslint app/scripts"
   },
   "cross-os": {
     "requirejs": {
@@ -62,6 +64,7 @@
     }
   },
   "lint-staged": {
+    "*.scss": "stylelint",
     "*.js": "eslint"
   },
   "engines": {
@@ -92,6 +95,8 @@
     "npm-run-all": "^4.1.5",
     "requirejs": "^2.3.6",
     "rimraf": "^2.6.3",
+    "stylelint": "^10.0.1",
+    "stylelint-config-standard": "^18.3.0",
     "uglify-js": "^3.5.9"
   }
 }
