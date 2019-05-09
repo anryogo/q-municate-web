@@ -1,4 +1,5 @@
-/******************** Module for dialogs and messages *************************/
+/** ****************** Module for dialogs and messages ************************ */
+
 'use strict';
 
 define([
@@ -14,16 +15,15 @@ define([
     QMCONFIG,
     Helpers
 ) {
-    
     var QB = window.QB;
-    
+
     var entities = {
-		Models: {},
-		Views: {},
-		Collections: {},
+        Models: {},
+        Views: {},
+        Collections: {},
         Helpers: {},
         active: ''
-	};
+    };
 
     /**
      * [Message model]
@@ -50,43 +50,53 @@ define([
 
         // accumulate messages in dialogs
         accumulateInDialogModel: function() {
-            var dialogId = this.get('dialog_id'),
-                dialog = entities.Collections.dialogs.get(dialogId);
+            var dialogId = this.get('dialog_id');
+            var dialog = entities.Collections.dialogs.get(dialogId);
+            var messageId;
+            var type;
+            var senderId;
+            var readIds;
+            var isOpen;
+            var myUserId;
+            var isActive;
+            var isHidden;
+            var isFromOtherUser;
+            var isUnreadMessage;
 
             if (!dialog) {
-                return true;
+                return;
             }
 
-            var messageId = this.get('id'),
-                type = this.get('type'),
-                senderId = this.get('sender_id'),
-                readIds = this.get('read_ids'),
-                isOpen = dialog.get('opened'),
-                myUserId = entities.app.models.User.contact.id,
-                isActive = (dialogId === entities.active),
-                isHidden = (isActive && !window.isQMAppActive),
-                isFromOtherUser = (myUserId !== senderId),
-                isUnreadMessage = (readIds.length < 2);
+            messageId = this.get('id');
+            type = this.get('type');
+            senderId = this.get('sender_id');
+            readIds = this.get('read_ids');
+            isOpen = dialog.get('opened');
+            myUserId = entities.app.models.User.contact.id;
+            isActive = (dialogId === entities.active);
+            isHidden = (isActive && !window.isQMAppActive);
+            isFromOtherUser = (myUserId !== senderId);
+            isUnreadMessage = (readIds.length < 2);
 
             if (isOpen) {
                 // save as uread if dialog isn't active
                 if ((!isActive || isHidden) && isFromOtherUser) {
-                    new entities.Models.UnreadMessage({
-                        'userId': senderId,
-                        'dialogId': dialogId,
-                        'messageId': messageId
+                    new entities.Models.UnreadMessage({ // eslint-disable-line no-new
+                        userId: senderId,
+                        dialogId: dialogId,
+                        messageId: messageId
                     });
                 } else if (isUnreadMessage && isFromOtherUser) {
                     QB.chat.sendReadStatus({
-                        'userId': senderId,
-                        'dialogId': dialogId,
-                        'messageId': messageId
+                        userId: senderId,
+                        dialogId: dialogId,
+                        messageId: messageId
                     });
                 } else if ((type === 'groupchat') && !isFromOtherUser) {
                     QB.chat.sendDeliveredStatus({
-                        'userId': senderId,
-                        'dialogId': dialogId,
-                        'messageId': messageId
+                        userId: senderId,
+                        dialogId: dialogId,
+                        messageId: messageId
                     });
                 }
                 // collect last messages for opened dialog's
@@ -108,7 +118,7 @@ define([
 
     /**
      * [Messages collection]
-     * @type {[Backbone collection]}
+     * @type {Backbone.Collection}
      */
     entities.Collections.Messages = Backbone.Collection.extend({
         model: entities.Models.Message,
@@ -119,14 +129,15 @@ define([
 
         // keep count for messages collection
         keepCountOfMessages: function() {
-            var stack = QMCONFIG.stackMessages,
-                dialogId = this.models[0].get('dialog_id'),
-                dialog = entities.Collections.dialogs.get(dialogId),
-                unreadCount = dialog.get('unread_count');
+            var stack = QMCONFIG.stackMessages;
+            var dialogId = this.at(0).get('dialog_id');
+            var dialog = entities.Collections.dialogs.get(dialogId);
+            var unreadCount = dialog.get('unread_count');
 
             if (
-                ((this.length > stack) && (unreadCount < stack)) ||
-                ((unreadCount >= stack) && (this.length > ++unreadCount))
+                ((this.length > stack) && (unreadCount < stack))
+                // eslint-disable-next-line no-plusplus
+                || ((unreadCount >= stack) && (this.length > ++unreadCount))
             ) {
                 this.pop();
             }
@@ -149,16 +160,16 @@ define([
         },
 
         accumulateInDialogModel: function() {
-            var dialogId = this.get('dialogId'),
-                messageId = this.get('messageId'),
-                userId = this.get('userId'),
-                dialog = entities.Collections.dialogs.get(dialogId),
-                unreadCount = dialog.get('unread_count'),
-                unreadMessages = dialog.get('unread_messages');
+            var dialogId = this.get('dialogId');
+            var dialog = entities.Collections.dialogs.get(dialogId);
+            var unreadCount = dialog.get('unread_count');
+            var unreadMessages = dialog.get('unread_messages');
 
-            dialog.set('unread_count', ++unreadCount);
+            unreadCount += 1;
+
+            dialog.set('unread_count', unreadCount);
             unreadMessages.add(this);
-        },
+        }
     });
 
     /**
@@ -202,13 +213,15 @@ define([
         },
 
         cutMessages: function() {
-            var messages = this.get('messages'),
-                curCount = this.get('unread_count'),
-                stack = QMCONFIG.stackMessages,
-                msgCount = messages.length;
+            var messages = this.get('messages');
+            var curCount = this.get('unread_count');
+            var stack = QMCONFIG.stackMessages;
+            var msgCount = messages.length;
+            var i;
 
             if (+curCount === 0) {
-                for (var i = 0; i < (msgCount - stack); i++) {
+                // eslint-disable-next-line no-plusplus, no-loops/no-loops
+                for (i = 0; i < (msgCount - stack); i++) {
                     messages.pop();
                 }
             }
@@ -228,7 +241,7 @@ define([
     entities.Collections.Dialogs = Backbone.Collection.extend({
         model: entities.Models.Dialog,
 
-        initialize: function functionName() {
+        initialize: function() {
             this.listenTo(this, 'reset', function() {
                 entities.active = '';
                 $('.chatView').remove();
@@ -236,10 +249,10 @@ define([
         },
 
         readAll: function(dialogId) {
-            var dialog = this.get(dialogId),
-                unreadCount = dialog.get('unread_count'),
-                unreadMeassages = dialog.get('unread_messages'),
-                unreadMeassagesIds = [];
+            var dialog = this.get(dialogId);
+            var unreadCount = dialog.get('unread_count');
+            var unreadMeassages = dialog.get('unread_messages');
+            var unreadMeassagesIds = [];
 
             if (unreadMeassages.length > 0) {
                 // send read status for online messages
@@ -263,20 +276,22 @@ define([
 
         saveDraft: function() {
             var dialogId = entities.active;
+            var dialog;
+            var text;
 
             if (dialogId) {
-                var dialog = this.get(dialogId),
-                    text = $('#textarea_' + dialogId).text();
+                dialog = this.get(dialogId);
+                text = $('#textarea_' + dialogId).text();
 
                 dialog.set('draft', text);
             }
         },
 
         selectDialog: function(dialogId) {
-            var MessageView = entities.app.views.Message,
-                DialogView = entities.app.views.Dialog,
-                Cursor = entities.app.models.Cursor,
-                dialog = this.get(dialogId);
+            var MessageView = entities.app.views.Message;
+            var DialogView = entities.app.views.Dialog;
+            var Cursor = entities.app.models.Cursor;
+            var dialog = this.get(dialogId);
 
             if (dialog.get('opened')) {
                 DialogView.htmlBuild(dialogId, dialog.get('messages').toJSON());
@@ -315,7 +330,7 @@ define([
         },
 
         buildChatView: function() {
-            entities.Views.chat = new entities.Views.Chat({model: this});
+            entities.Views.chat = new entities.Views.Chat({ model: this });
         }
     });
 
@@ -333,10 +348,12 @@ define([
         },
 
         render: function() {
-            var chatTpl = this.template(this.model.toJSON()),
-                chatElem = this.$el.html(chatTpl);
+            var chatTpl = this.template(this.model.toJSON());
+            var chatElem = this.$el.html(chatTpl);
 
             $('#chatWrap').removeClass('is-hidden').append(chatElem);
+
+            return this;
         }
     });
 
@@ -344,20 +361,22 @@ define([
      * Events
      */
 
-	// select and open dialog
-	$('.list_contextmenu').on('click', '.contact', function() {
+    // select and open dialog
+    $('.list_contextmenu').on('click', '.contact', function() {
         var dialogId = $(this).parent().data('dialog');
 
         if (entities.active !== dialogId) {
             entities.Collections.dialogs.selectDialog(dialogId);
         }
-	});
+    });
 
     // read all unread messages
     $(window).focus(function() {
+        var dialogId;
+
         Helpers.Dialogs.setScrollToNewMessages();
 
-        var dialogId = entities.active;
+        dialogId = entities.active;
 
         if (dialogId) {
             entities.Collections.dialogs.readAll(dialogId);
@@ -366,7 +385,7 @@ define([
 
     // unselect all dialogs
     $('.j-home').on('click', function() {
-        // clear active dialog id
+    // clear active dialog id
         entities.Collections.dialogs.saveDraft();
         entities.active = '';
     });

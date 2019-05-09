@@ -25,7 +25,7 @@ define([
         },
 
         buildView: function() {
-            new QMPlayer.View({model: this});
+            new QMPlayer.View({ model: this }); // eslint-disable-line no-new
         }
     });
 
@@ -42,25 +42,27 @@ define([
         },
 
         render: function(id) {
-            var qmplayerTpl = this.template(this.model.toJSON()),
-                qmplayerEl = this.el.innerHTML = qmplayerTpl;
+            var qmplayerTpl = this.template(this.model.toJSON());
 
-            document.querySelector('#audio_player_' + id).innerHTML = qmplayerEl;
+            this.el.innerHTML = qmplayerTpl;
+            document.querySelector('#audio_player_' + id).innerHTML = qmplayerTpl;
+
+            return this;
         },
 
         start: function(id) {
-            new QMPlayer.init(id);
+            QMPlayer.init(id);
         }
     });
 
     QMPlayer.init = function(id) {
-        var audioEl = document.querySelector('#audio_' + id),
-            controlEl = document.querySelector('#qm_player_control_' + id),
-            setterEl = document.querySelector('#qm_player_setter_' + id),
-            progressEl = document.querySelector('#qm_player_progress_' + id),
-            timeEl = document.querySelector('#qm_player_time_' + id),
-            fullLength = document.querySelector('#qm_player_wrap_' + id).offsetWidth,
-            durationTime;
+        var audioEl = document.querySelector('#audio_' + id);
+        var controlEl = document.querySelector('#qm_player_control_' + id);
+        var setterEl = document.querySelector('#qm_player_setter_' + id);
+        var progressEl = document.querySelector('#qm_player_progress_' + id);
+        var timeEl = document.querySelector('#qm_player_time_' + id);
+        var fullLength = document.querySelector('#qm_player_wrap_' + id).offsetWidth;
+        var durationTime;
 
         setterEl.onclick = function(e) {
             audioEl.currentTime = audioEl.duration * (e.offsetX / fullLength);
@@ -91,8 +93,8 @@ define([
         };
 
         audioEl.ontimeupdate = function() {
-            var currentTime = setTime(audioEl.currentTime),
-                length = Math.round(fullLength * (audioEl.currentTime / audioEl.duration));
+            var currentTime = setTime(audioEl.currentTime);
+            var length = Math.round(fullLength * (audioEl.currentTime / audioEl.duration));
 
             timeEl.innerHTML = currentTime + ' / ' + durationTime;
 
@@ -100,8 +102,8 @@ define([
         };
 
         function setTime(time) {
-            var min,
-                sec;
+            var min;
+            var sec;
 
             min = Math.floor(time / 60);
             min = min >= 10 ? min : '0' + min;
@@ -114,4 +116,3 @@ define([
 
     return QMPlayer;
 });
-

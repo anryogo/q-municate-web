@@ -7,14 +7,14 @@ define(['jquery'], function($) {
     'use strict';
 
     function SyncTabs(app) {
-        var self = this,
-            curTab = 1,
-            currentUserId,
-            countTabs,
-            mainTab,
-            closedTab,
-            logOutAll,
-            readBadge;
+        var self = this;
+        var curTab = 1;
+        var currentUserId;
+        var countTabs;
+        var mainTab;
+        var closedTab;
+        var logOutAll;
+        var readBadge;
 
         this.app = app;
 
@@ -22,7 +22,7 @@ define(['jquery'], function($) {
             currentUserId = userId;
 
             // set params to local storage
-            _set();
+            set();
 
             // enter to new page (listener)
             $(window).focus(function() {
@@ -43,41 +43,42 @@ define(['jquery'], function($) {
 
             // localStorage listener
             $(window).bind('storage', function(e) {
-                _sync(e);
+                sync(e);
             });
         };
 
         this.get = function() {
-            return (localStorage[mainTab] == curTab) ? true : false;
+            return (localStorage[mainTab] === curTab);
         };
 
-        function _set() {
-            countTabs = 'QM.' + currentUserId + '_countTabs',
-            mainTab   = 'QM.' + currentUserId + '_mainTab',
-            closedTab = 'QM.' + currentUserId + '_closedTab',
+        function set() {
+            countTabs = 'QM.' + currentUserId + '_countTabs';
+            mainTab = 'QM.' + currentUserId + '_mainTab';
+            closedTab = 'QM.' + currentUserId + '_closedTab';
             logOutAll = 'QM.' + currentUserId + '_logOut';
             readBadge = 'QM.' + currentUserId + '_readBadge';
 
             if (localStorage[mainTab] && localStorage[countTabs]) {
-                curTab = +localStorage[countTabs] + 1;   // set new order for current tab
+                curTab = +localStorage[countTabs] + 1; // set new order for current tab
                 localStorage.setItem(countTabs, curTab); // set the number of existing tabs
-                localStorage.setItem(mainTab, curTab);   // set the last active tab
+                localStorage.setItem(mainTab, curTab); // set the last active tab
             } else {
                 localStorage.setItem(countTabs, curTab); // set the number of existing tabs
-                localStorage.setItem(mainTab, curTab);   // set this tab as active
+                localStorage.setItem(mainTab, curTab); // set this tab as active
             }
         }
 
-        function _sync(e) {
-            var key    = e.originalEvent.key,
-                oldVal = e.originalEvent.oldValue,
-                newVal = e.originalEvent.newValue;
+        function sync(e) {
+            var key = e.originalEvent.key;
+            var newVal = e.originalEvent.newValue;
 
             // fire if has closed tab
             if (key === closedTab) {
                 if (+localStorage[countTabs] === curTab) {
-                    curTab = +newVal; // set new number for last tab if the number of tabs was changed
-                    localStorage.setItem(countTabs, (+localStorage[countTabs] - 1)); // set the number of existing tabs
+                    // set new number for last tab if the number of tabs was changed
+                    curTab = +newVal;
+                    // set the number of existing tabs
+                    localStorage.setItem(countTabs, (+localStorage[countTabs] - 1));
 
                     if (localStorage[countTabs] < localStorage[mainTab]) {
                         localStorage.setItem(mainTab, curTab);
@@ -107,7 +108,6 @@ define(['jquery'], function($) {
                 self.app.views.Dialog.decUnreadCounter(newVal);
             }
         }
-
     }
 
     return SyncTabs;

@@ -47,7 +47,9 @@
     "copy:html": "cpy *.html \"../dist\" --cwd=app",
     "copy:assets": "cpy audio/ workers/ \"../dist\" --cwd=app --parents",
     "test": "npm run lint",
-    "lint": "jshint app/scripts --reporter=node_modules/jshint-stylish"
+    "lint": "npm-run-all --parallel lint:*",
+    "lint:css": "stylelint app/styles",
+    "lint:js": "eslint app/scripts"
   },
   "cross-os": {
     "requirejs": {
@@ -56,14 +58,18 @@
       "win32": "r.js.cmd -o scripts/requirejs.js"
     }
   },
-  "config": {
-    "ghooks": {
-      "pre-push": "npm test"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
     }
   },
+  "lint-staged": {
+    "*.scss": "stylelint",
+    "*.js": "eslint"
+  },
   "engines": {
-    "node": "^10.15.3",
-    "npm": "^6.4.1"
+    "node": ">=8.11.4",
+    "npm": ">=5.6.0"
   },
   "devDependencies": {
     "@songkick/injectassets": "^1.1.0",
@@ -72,18 +78,26 @@
     "cpy-cli": "^2.0.0",
     "cross-env": "^5.2.0",
     "cross-os": "^1.3.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-backbone": "^2.1.1",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-no-loops": "^0.3.0",
+    "eslint-plugin-optimize-regex": "^1.1.6",
+    "eslint-plugin-requirejs": "^4.0.0",
     "fs-extra": "^7.0.1",
-    "ghooks": "^1.3.2",
     "hashmark": "^5.0.0",
     "headr": "0.0.4",
+    "husky": "^2.2.0",
     "imagemin-cli": "^4.0.1",
-    "jshint": "^2.10.2",
-    "jshint-stylish": "^2.1.0",
+    "lint-staged": "^8.1.6",
     "live-server": "^1.2.1",
     "node-sass": "^4.11.0",
     "npm-run-all": "^4.1.5",
     "requirejs": "^2.3.6",
     "rimraf": "^2.6.3",
+    "stylelint": "^10.0.1",
+    "stylelint-config-standard": "^18.3.0",
     "uglify-js": "^3.5.9"
   }
 }

@@ -5,7 +5,6 @@
  *
  */
 define(['config'], function(QMCONFIG) {
-    
     function Contact(app) {
         this.app = app;
     }
@@ -24,7 +23,8 @@ define(['config'], function(QMCONFIG) {
                 user_tags: qbUser.tag || qbUser.user_tags || null,
                 avatar_url: getAvatar(qbUser),
                 status: qbUser.status || getStatus(qbUser) || '',
-                user_jid: qbUser.user_jid || QB.chat.helpers.getUserJid(qbUser.id, QMCONFIG.qbAccount.appId),
+                user_jid: qbUser.user_jid
+                    || QB.chat.helpers.getUserJid(qbUser.id, QMCONFIG.qbAccount.appId),
                 custom_data: qbUser.custom_data || null
             };
         }
@@ -54,9 +54,8 @@ define(['config'], function(QMCONFIG) {
     }
 
     function getStatus(contact) {
-        return contact.custom_data && JSON.parse(contact.custom_data).status || '';
+        return (contact.custom_data && JSON.parse(contact.custom_data).status) || '';
     }
 
     return Contact;
-
 });

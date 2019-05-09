@@ -1,0 +1,49 @@
+{
+    "extends": [
+        "airbnb-base/legacy",
+        "plugin:requirejs/recommended",
+        "plugin:backbone/recommended"
+    ],
+    "env": {
+        "browser": true,
+        "jquery": true
+    },
+    "globals": {
+        "FB": "readonly",
+        "QB": "readonly",
+        "firebase": "readonly"
+    },
+    "plugins": [
+        "optimize-regex",
+        "no-loops",
+        "requirejs",
+        "backbone"
+    ],
+    "rules": {
+        "indent": ["error", 4],
+        "func-names": ["error", "never"],
+        "space-before-function-paren": ["error", "never"],
+        "no-use-before-define": ["error", { "functions": false }],
+        "no-param-reassign": ["error", { "props": false }],
+
+        "optimize-regex/optimize-regex": "warn",
+        "no-loops/no-loops": "error",
+        "requirejs/one-dependency-per-line": "error",
+        "backbone/no-native-jquery": "off",
+        "backbone/initialize-on-top": ["warn", {
+            "View": [
+                "tagName",
+                "className",
+                "template",
+                "events"
+            ],
+            "Model": ["defaults"],
+            "Collection": ["model"]
+        }],
+        "backbone/events-on-top": ["warn", [
+            "tagName",
+            "className",
+            "template"
+        ]]
+    }
+}

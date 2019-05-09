@@ -12,24 +12,25 @@ define([
     QMCONFIG,
     QBNotification
 ) {
-
     var Helpers = {};
 
     Helpers.Notifications = {
 
         show: function(title, options) {
+            var notify;
+
             // show notification if all parameters are is
             if (title && options) {
-                var notify = new QBNotification(title, options);
+                notify = new QBNotification(title, options);
                 notify.show();
             }
         },
 
         getTitle: function(message, params) {
-            var contacts = params.contacts,
-                roomName = params.roomName,
-                contact = contacts[message.sender_id],
-                title;
+            var contacts = params.contacts;
+            var roomName = params.roomName;
+            var contact = contacts[message.sender_id];
+            var title;
 
             title = roomName || contact.full_name;
 
@@ -37,18 +38,18 @@ define([
         },
 
         getOptions: function(message, params) {
-            var myUser = params.user,
-                contacts = params.contacts,
-                roomPhoto = params.roomPhoto,
-                contact = contacts[message.sender_id],
-                chatType = message.type,
-                photo = (chatType === 'chat') ? (contact.avatar_url || QMCONFIG.defAvatar.url_png) : (roomPhoto || QMCONFIG.defAvatar.group_url_png),
-                type = message.notification_type || (message.callState && (parseInt(message.callState) + 7).toString()) || 'message',
-                selectDialog = $('.dialog-item[data-dialog="' + message.dialog_id + '"] .contact'),
-                occupants_ids,
-                occupantsNames = '',
-                options,
-                text;
+            var myUser = params.user;
+            var contacts = params.contacts;
+            var roomPhoto = params.roomPhoto;
+            var contact = contacts[message.sender_id];
+            var chatType = message.type;
+            var photo = (chatType === 'chat') ? (contact.avatar_url || QMCONFIG.defAvatar.url_png) : (roomPhoto || QMCONFIG.defAvatar.group_url_png);
+            var type = message.notification_type || (message.callState && (parseInt(message.callState, 10) + 7).toString()) || 'message';
+            var selectDialog = $('.dialog-item[data-dialog="' + message.dialog_id + '"] .contact');
+            var occupantsIds;
+            var occupantsNames = '';
+            var options;
+            var text;
 
             // hot fix (local notifications can't shows image.svg)
             if (photo === 'images/ava-single.svg') {
@@ -74,81 +75,81 @@ define([
              * default - message
              */
             switch (type) {
-                // system notifications
-                case '1':
-                    occupants_ids = _.without(message.current_occupant_ids.split(',').map(Number), contact.id);
-                    occupantsNames = Helpers.Messages.getOccupantsNames(occupants_ids, myUser, contacts);
-                    text = contact.full_name + ' has added ' + occupantsNames + ' to the group chat';
-                    break;
+            // system notifications
+            case '1':
+                occupantsIds = _.without(message.current_occupant_ids.split(',').map(Number), contact.id);
+                occupantsNames = Helpers.Messages.getOccupantsNames(occupantsIds, myUser, contacts);
+                text = contact.full_name + ' has added ' + occupantsNames + ' to the group chat';
+                break;
 
                 // groupchat updated
-                case '2':
-                    text = 'Notification message';
-                    break;
+            case '2':
+                text = 'Notification message';
+                break;
 
                 // contacts
-                case '4':
-                    text = contact.full_name + ' has sent a request to you';
-                    break;
+            case '4':
+                text = contact.full_name + ' has sent a request to you';
+                break;
 
-                case '5':
-                    text = 'Your request has been accepted by ' + contact.full_name;
-                    break;
+            case '5':
+                text = 'Your request has been accepted by ' + contact.full_name;
+                break;
 
-                case '6':
-                    text = 'Your request has been rejected by ' + contact.full_name;
-                    break;
+            case '6':
+                text = 'Your request has been rejected by ' + contact.full_name;
+                break;
 
-                case '7':
-                    text = 'You have been deleted from the contact list by ' + contact.full_name;
-                    break;
+            case '7':
+                text = 'You have been deleted from the contact list by ' + contact.full_name;
+                break;
 
                 // calls
-                case '8':
-                    if (message.caller === myUser.contact.id) {
-                        text = 'Call to ' + contacts[message.callee].full_name + ', duration ' + Helpers.getDuration(message.callDuration);
-                    } else {
-                        text = 'Call from ' + contacts[message.caller].full_name + ', duration ' + Helpers.getDuration(message.callDuration);
-                    }
-                    break;
+            case '8':
+                if (message.caller === myUser.contact.id) {
+                    text = 'Call to ' + contacts[message.callee].full_name + ', duration ' + Helpers.getDuration(message.callDuration);
+                } else {
+                    text = 'Call from ' + contacts[message.caller].full_name + ', duration ' + Helpers.getDuration(message.callDuration);
+                }
+                break;
 
-                case '9':
-                    if (message.caller === myUser.contact.id) {
-                        text = 'Call to ' + contacts[message.callee].full_name + ', no answer';
-                    } else {
-                        text = 'Missed call from ' + contacts[message.caller].full_name;
-                    }
-                    break;
+            case '9':
+                if (message.caller === myUser.contact.id) {
+                    text = 'Call to ' + contacts[message.callee].full_name + ', no answer';
+                } else {
+                    text = 'Missed call from ' + contacts[message.caller].full_name;
+                }
+                break;
 
-                case '10':
-                    if (message.caller === myUser.contact.id) {
-                        text = contacts[message.callee].full_name + ' doesn\'t have camera and/or microphone.';
-                    } else {
-                        text = 'Camera and/or microphone wasn\'t found.';
-                    }
-                    break;
+            case '10':
+                if (message.caller === myUser.contact.id) {
+                    text = contacts[message.callee].full_name + ' doesn\'t have camera and/or microphone.';
+                } else {
+                    text = 'Camera and/or microphone wasn\'t found.';
+                }
+                break;
 
-                case '11':
-                    text = 'Incomming ' + message.callType + ' Call from ' + contact.full_name;
-                    break;
+            case '11':
+                text = 'Incomming ' + message.callType + ' Call from ' + contact.full_name;
+                break;
 
-                case '12':
-                    text = 'The ' + message.callType + ' Call accepted by ' + contact.full_name;
-                    break;
+            case '12':
+                text = 'The ' + message.callType + ' Call accepted by ' + contact.full_name;
+                break;
 
                 // messages
-                default:
-                    if (chatType === 'groupchat') {
-                        text = contact.full_name + ': ' + message.body;
-                    } else {
-                        text = message.body;
-                    }
+            default:
+                if (chatType === 'groupchat') {
+                    text = contact.full_name + ': ' + message.body;
+                } else {
+                    text = message.body;
+                }
 
-                    break;
+                break;
             }
 
             if (text) {
-                text = text.replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&amp;/gi, "&");
+                text = text.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&amp;/gi, '&');
                 options = {
                     body: text,
                     icon: photo,
@@ -167,26 +168,30 @@ define([
     };
 
     Helpers.Messages = {
-        getOccupantsNames: function(occupants_ids, myUser, contacts) {
-            var occupants_names = '',
-                myContact = myUser.contact;
+        getOccupantsNames: function(occupantsIds, myUser, contacts) {
+            var occupantsNames = '';
+            var myContact = myUser.contact;
+            var len = occupantsIds.length;
+            var user;
 
-            for (var i = 0, len = occupants_ids.length, user; i < len; i++) {
-                user = contacts[occupants_ids[i]] && contacts[occupants_ids[i]].full_name;
+            occupantsIds.forEach(function(item, index) {
+                user = contacts[item] && contacts[item].full_name;
                 if (user) {
-                    occupants_names = (i + 1) === len ? occupants_names.concat(user) : occupants_names.concat(user).concat(', ');
-                } else if (occupants_ids[i] === myContact.id) {
-                    occupants_names = (i + 1) === len ? occupants_names.concat(myContact.full_name) : occupants_names.concat(myContact.full_name).concat(', ');
+                    occupantsNames = (index + 1) === len ? occupantsNames.concat(user) : occupantsNames.concat(user).concat(', ');
+                } else if (item === myContact.id) {
+                    occupantsNames = (index + 1) === len ? occupantsNames.concat(myContact.full_name) : occupantsNames.concat(myContact.full_name).concat(', ');
                 }
-            }
+            });
 
-            return occupants_names;
+            return occupantsNames;
         },
 
         parser: function(str) {
-            var url, url_text;
-            var URL_REGEXP = /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi;
+            var url;
+            var urlText;
+            var URL_REGEXP = /\b((?:https?:\/\/|www\d{0,3}\.|[\d-.a-z]+\.[a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s!"'(),.:;<>?[\]`{}«»‘’“”]))/gi;
 
+            /* eslint-disable no-param-reassign */
             str = escapeHTML(str);
 
             // parser of paragraphs
@@ -195,14 +200,15 @@ define([
             // parser of links
             str = str.replace(URL_REGEXP, function(match) {
                 url = (/^[a-z]+:/i).test(match) ? match : 'http://' + match;
-                url_text = match;
-                return '<a href="' + escapeHTML(url) + '" target="_blank">' + escapeHTML(url_text) + '</a>';
+                urlText = match;
+                return '<a href="' + escapeHTML(url) + '" target="_blank">' + escapeHTML(urlText) + '</a>';
             });
+            /* eslint-enable no-param-reassign */
 
             return str;
 
             function escapeHTML(s) {
-                return s.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                return s.replace(/</g, '&lt;').replace(/>/g, '&gt;');
             }
         }
     };
@@ -210,6 +216,7 @@ define([
     Helpers.Dialogs = {
         moveDialogToTop: function(dialogId) {
             var dialogItem = $('.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="' + dialogId + '"]');
+            var copyDialogItem;
 
             if (dialogItem.length > 0) {
                 copyDialogItem = dialogItem.clone();
@@ -231,11 +238,9 @@ define([
                 $('#historyList ul.j-list').parent().addClass('is-hidden');
             }
 
-            if ($('#requestsList').is('.is-hidden') &&
-                $('#recentList').is('.is-hidden') &&
-                $('#historyList').is('.is-hidden')) {
-
-
+            if ($('#requestsList').is('.is-hidden')
+                && $('#recentList').is('.is-hidden')
+                && $('#historyList').is('.is-hidden')) {
                 $('#emptyList').removeClass('is-hidden');
             }
         },
@@ -250,46 +255,57 @@ define([
     };
 
     // smart console
+    /* eslint-disable no-console */
     Helpers.log = function() {
+        var args = Array.prototype.slice.call(arguments);
+        var i;
+
         if (QMCONFIG.debug) {
-            if (arguments.length <= 1) {
-                console.group("[Q-MUNICATE debug mode]:");
-                console.log(arguments[0]);
+            if (args.length <= 1) {
+                console.group('[Q-MUNICATE debug mode]:');
+                console.log(args[0]);
                 console.groupEnd();
             } else {
-                console.group("[Q-MUNICATE debug mode]:");
-                for (var i = 0; i < arguments.length; i++) {
-                    if ((typeof arguments[i] === "string") && (typeof arguments[i + 1] !== "string")) {
-                        console.log(arguments[i], arguments[i + 1]);
-                        i = i + 1;
+                console.group('[Q-MUNICATE debug mode]:');
+
+                // eslint-disable-next-line no-plusplus, no-loops/no-loops
+                for (i = 0; i < args.length; i++) {
+                    if ((typeof args[i] === 'string') && (typeof args[i + 1] !== 'string')) {
+                        console.log(args[i], args[i + 1]);
+                        i += 1;
                     } else {
-                        console.log(arguments[i]);
+                        console.log(args[i]);
                     }
                 }
+
                 console.groupEnd();
             }
         }
     };
+    /* eslint-enable no-console */
 
     Helpers.isBeginOfChat = function() {
+        var bottom = true;
+        var viewPort;
+        var msgList;
+        var viewPortBottom;
+        var msgListPosition;
+        var msgListHeight;
+        var msgListBottom;
+
         if (!document.querySelector('.j-chatItem')) {
             return null;
         }
 
-        var viewPort = document.querySelector('.j-scrollbar_message'),
-            msgList = document.querySelector('.j-scrollbar_message .mCSB_container'),
-            viewPortBottom = viewPort.clientHeight,
-            msgListPosition = msgList.offsetTop,
-            msgListHeight = msgList.clientHeight,
-            msgListBottom = msgListPosition + msgListHeight,
-            bottom = true;
+        viewPort = document.querySelector('.j-scrollbar_message');
+        msgList = document.querySelector('.j-scrollbar_message .mCSB_container');
+        viewPortBottom = viewPort.clientHeight + 350;
+        msgListPosition = msgList.offsetTop;
+        msgListHeight = msgList.clientHeight;
+        msgListBottom = msgListPosition + msgListHeight;
 
         if (msgListPosition < 0) {
-            bottom = false;
-
-            if ((viewPortBottom + 350) > msgListBottom) {
-                bottom = true;
-            }
+            bottom = viewPortBottom > msgListBottom;
         }
 
         return bottom;
@@ -298,38 +314,36 @@ define([
     Helpers.getDuration = function(seconds, duration) {
         if (duration) {
             return Date.parse('Thu, 01 Jan 1970 ' + duration + ' GMT') / 1000;
-        } else {
-            return new Date(seconds*1000).toUTCString().split(/ /)[4];
         }
+        return new Date(seconds * 1000).toUTCString().split(/ /)[4];
     };
 
     Helpers.getTime = function(time, isDate) {
-        var messageDate = new Date(time * 1000),
-            startOfCurrentDay = new Date();
+        var messageDate = new Date(time * 1000);
+        var startOfCurrentDay = new Date();
 
         startOfCurrentDay.setHours(0, 0, 0, 0);
 
         if (messageDate > startOfCurrentDay) {
             return messageDate.getHours() + ':' + (messageDate.getMinutes().toString().length === 1 ? '0' + messageDate.getMinutes() : messageDate.getMinutes());
-        } else if ((messageDate.getFullYear() === startOfCurrentDay.getFullYear()) && !isDate) {
+        } if ((messageDate.getFullYear() === startOfCurrentDay.getFullYear()) && !isDate) {
             return $.timeago(messageDate);
-        } else {
-            return messageDate.getDate() + '/' + (messageDate.getMonth() + 1) + '/' + messageDate.getFullYear();
         }
+        return messageDate.getDate() + '/' + (messageDate.getMonth() + 1) + '/' + messageDate.getFullYear();
     };
 
     Helpers.scaleAvatar = function($pic) {
-        var $chat = $pic.parents('.l-chat'),
-            name = $pic.data('name'),
-            url = $pic.css('background-image').replace(/.*\s?url\([\'\"]?/, '')
-                .replace(/[\'\"]?\).*/, ''), // take URL from css background source
-            $popup = $('.j-popupAvatar'),
-            dialog_id;
+        var $chat = $pic.parents('.l-chat');
+        var name = $pic.data('name');
+        var url = $pic.css('background-image').replace(/.*\s?url\(["']?/, '')
+            .replace(/["']?\).*/, ''); // take URL from css background source
+        var $popup = $('.j-popupAvatar');
+        var dialogId;
 
         if ($chat.is('.is-group')) {
-            dialog_id = $chat.data('dialog');
+            dialogId = $chat.data('dialog');
             $popup.find('.j-changePic').removeClass('is-hidden')
-                .data('dialog', dialog_id);
+                .data('dialog', dialogId);
         } else {
             $popup.find('.j-changePic').addClass('is-hidden');
         }
@@ -345,7 +359,7 @@ define([
             error: function(jqHXR, status, error) {
                 callback(error, null);
             },
-            success: function(data, status, jqHXR) {
+            success: function(data) {
                 callback(null, data);
             }
         };
@@ -354,7 +368,7 @@ define([
     };
 
     Helpers.isValidUrl = function(url) {
-        var validator = /^(?:([a-z]+):(?:([a-z]*):)?\/\/)?(?:([^:@]*)(?::([^:@]*))?@)?((?:[a-z0-9_-]+\.)+[a-z]{2,}|localhost|(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])\.){3}(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])))(?::(\d+))?(?:([^:\?\#]+))?(?:\?([^\#]+))?(?:\#([^\s]+))?$/i;
+        var validator = /^(?:([a-z]+):(?:([a-z]*):)?\/\/)?(?:([^:@]*)(?::([^:@]*))?@)?((?:[\w-]+\.)+[a-z]{2,}|localhost|(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d\d?|2[0-4]\d|25[0-5]))(?::(\d+))?(?:([^#:?]+))?(?:\?([^#]+))?(?:#(\S+))?$/i;
         return validator.test(url);
     };
 
@@ -374,7 +388,7 @@ define([
     };
 
     Helpers.isIE11orEdge = function() {
-        return (/rv:11.0/i.test(navigator.userAgent) || /Edge\/\d./i.test(navigator.userAgent));
+        return (/rv:11.0/i.test(navigator.userAgent) || /edge\/\d./i.test(navigator.userAgent));
     };
 
     return Helpers;

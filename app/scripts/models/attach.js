@@ -9,7 +9,6 @@ define([
 ], function(
     loadImage
 ) {
-
     function Attach(app) {
         this.app = app;
     }
@@ -17,32 +16,39 @@ define([
     Attach.prototype = {
 
         upload: function(file, callback) {
-            var self = this,
-                QBApiCalls = self.app.service;
+            var self = this;
+            var QBApiCalls = self.app.service;
 
             QBApiCalls.createBlob({
-                'file': file,
-                'public': true
+                file: file,
+                public: true
             }, function(blob) {
                 callback(blob);
             });
         },
 
         create: function(blob, metadata) {
-            var type = blob.content_type.indexOf('image/') === 0 ? 'image' :
-                blob.content_type.indexOf('audio/') === 0 ? 'audio' :
-                blob.content_type.indexOf('video/') === 0 ? 'video' :
-                'file';
+            var type;
+
+            if (blob.content_type.indexOf('image/') === 0) {
+                type = 'image';
+            } else if (blob.content_type.indexOf('audio/') === 0) {
+                type = 'audio';
+            } else if (blob.content_type.indexOf('video/') === 0) {
+                type = 'video';
+            } else {
+                type = 'file';
+            }
 
             return {
-                'type': type,
-                'id': blob.uid,
-                'name': blob.name,
-                'size': blob.size || metadata.size,
+                type: type,
+                id: blob.uid,
+                name: blob.name,
+                size: blob.size || metadata.size,
                 'content-type': blob.content_type,
-                'duration': metadata.duration,
-                'height': metadata.height,
-                'width': metadata.width
+                duration: metadata.duration,
+                height: metadata.height,
+                width: metadata.width
             };
         },
 
@@ -51,7 +57,7 @@ define([
                 file,
                 function(img) {
                     var attr = {
-                        'crop': true
+                        crop: true
                     };
                     if (img.width > img.height) {
                         attr.maxWidth = params.w;
@@ -76,5 +82,4 @@ define([
     };
 
     return Attach;
-
 });

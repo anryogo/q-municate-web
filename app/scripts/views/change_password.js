@@ -17,18 +17,17 @@ define([
     QMCONFIG,
     Helpers
 ) {
-
-    var ChangePassView = Backbone.View.extend({
+    return Backbone.View.extend({
         className: 'passWrap',
 
         template: _.template($('#templateChangePass').html()),
 
-        initialize: function() {
-            this.model.on('invalid', this.validateError, this);
+        events: {
+            click: 'cancelChange'
         },
 
-        events: {
-            'click': 'cancelChange'
+        initialize: function() {
+            this.listenTo(this.model, 'invalid', this.validateError.bind(this));
         },
 
         render: function() {
@@ -43,11 +42,10 @@ define([
         },
 
         validateError: function(model, error) {
-            if (error === "Fields mustn't be empty" ||
-                error === QMCONFIG.errors.oldPass ||
-                error === QMCONFIG.errors.invalidPass ||
-                error === QMCONFIG.errors.shortPass) {
-
+            if (error === "Fields mustn't be empty"
+                || error === QMCONFIG.errors.oldPass
+                || error === QMCONFIG.errors.invalidPass
+                || error === QMCONFIG.errors.shortPass) {
                 model.set('password', '');
                 this.remove();
                 this.render().openPopup();
@@ -56,15 +54,12 @@ define([
         },
 
         cancelChange: function(event) {
-            var obj = $(event.target),
-                params;
+            var obj = $(event.target);
 
             if (obj.is('.' + this.className)) {
                 this.remove();
                 $('.profileWrap .userProfile-errors, .profileWrap .userProfile-success').text('');
                 $('.profileWrap').show();
-            } else {
-                return;
             }
         },
 
@@ -76,10 +71,10 @@ define([
 
         createDataSpinner: function() {
             var spinnerBlock = '<div class="popup-elem spinner_bounce spinner_bounce_changepass">';
-                spinnerBlock += '<div class="spinner_bounce-bounce1"></div>';
-                spinnerBlock += '<div class="spinner_bounce-bounce2"></div>';
-                spinnerBlock += '<div class="spinner_bounce-bounce3"></div>';
-                spinnerBlock += '</div>';
+            spinnerBlock += '<div class="spinner_bounce-bounce1"></div>';
+            spinnerBlock += '<div class="spinner_bounce-bounce2"></div>';
+            spinnerBlock += '<div class="spinner_bounce-bounce3"></div>';
+            spinnerBlock += '</div>';
 
             this.$el.find('.popup-footer').append(spinnerBlock);
         },
@@ -90,11 +85,11 @@ define([
         },
 
         changePass: function() {
-            var self = this,
-                params = {
-                    oldPass: this.$el.find('#old-password').val().trim(),
-                    newPass: this.$el.find('#new-password').val().trim()
-                };
+            var self = this;
+            var params = {
+                oldPass: this.$el.find('#old-password').val().trim(),
+                newPass: this.$el.find('#new-password').val().trim()
+            };
 
             if (!params.oldPass || !params.newPass) {
                 this.validateError(this.model, "Fields mustn't be empty");
@@ -106,7 +101,7 @@ define([
                 });
                 Helpers.log(this.model);
                 if (!this.model.validationError) {
-                    this.model.changeQBPass(params, function(err, res) {
+                    this.model.changeQBPass(params, function(err) {
                         if (err) {
                             self.validateError(self.model, QMCONFIG.errors.oldPass);
                         } else {
@@ -120,7 +115,4 @@ define([
             }
         }
     });
-
-    return ChangePassView;
-
 });

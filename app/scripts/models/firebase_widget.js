@@ -37,18 +37,18 @@ define([
         Object.defineProperty(widget, 'filled', {
             set: function(prop) {
                 widget.states.filled = prop;
-                widget._setDisableState();
+                widget.setDisableState();
             }
         });
 
         Object.defineProperty(widget, 'verified', {
             set: function(prop) {
                 widget.states.verified = prop;
-                widget._setDisableState();
+                widget.setDisableState();
             }
         });
 
-        widget._firebasePhoneNumberForm();
+        widget.firebasePhoneNumberForm();
     };
 
     FirebaseWidget.init = function() {
@@ -62,22 +62,22 @@ define([
         firebase.auth()
             .signInWithPhoneNumber(widget.fullPhoneNumber, widget.recaptchaVerifier)
             .then(function(confirmationResult) {
-                widget._firebaseDigitsNumberForm();
+                widget.firebaseDigitsNumberForm();
                 widget.confirmationResult = confirmationResult;
             }).catch(function(error) {
                 Helpers.log('Error:', error);
-                if (error.message) alert(error.message);
+                if (error.message) throw error.message;
             });
     };
 
     FirebaseWidget.prototype.confirmPhone = function(code) {
         widget.confirmationResult.confirm(code)
             .then(function(result) {
-                widget._closeWidget();
+                widget.closeWidget();
                 widget.login(result.user);
-            }).catch(function (error) {
+            }).catch(function(error) {
                 Helpers.log('Error:', error);
-                if (error.message) alert(error.message);
+                if (error.message) throw error.message;
             });
     };
 
@@ -87,9 +87,9 @@ define([
         template: _.template($('#firebasePhoneNumberForm').html()),
 
         events: {
-            'submit': 'submitAction',
-            'reset': 'cancelAction',
-            'input': 'validateAction'
+            submit: 'submitAction',
+            reset: 'cancelAction',
+            input: 'validateAction'
         },
 
         initialize: function() {
@@ -103,12 +103,14 @@ define([
             widget.phoneNumberForm = this.$el;
             widget.container.append(this.$el);
             widget.currentSubmitButton = this.$el.find('.j-firebase__button_verify');
+
+            return this;
         },
 
         submitAction: function(event) {
-            event.preventDefault();
-
             var $input = $('#firebase__phone_number_input');
+
+            event.preventDefault();
 
             // widget.fullPhoneNumber === widget.countryCode + widget.phoneNumber
             widget.phoneNumber = $input.val();
@@ -119,7 +121,7 @@ define([
 
         cancelAction: function(event) {
             event.preventDefault();
-            widget._closeWidget();
+            widget.closeWidget();
         },
 
         validateAction: function(event) {
@@ -149,7 +151,7 @@ define([
         },
 
         addRecaptcha: function() {
-            widget._recaptchaBuilder('firebase__recaptcha_container', 'normal');
+            widget.recaptchaBuilder('firebase__recaptcha_container', 'normal');
             widget.recaptchaVerifier.render();
         }
     });
@@ -160,10 +162,10 @@ define([
         template: _.template($('#firebaseDigitsNumberForm').html()),
 
         events: {
-            'submit': 'submitAction',
-            'reset': 'cancelAction',
-            'input': 'validateAction',
-            'click .j-firebase__resend': 'resendCode',
+            submit: 'submitAction',
+            reset: 'cancelAction',
+            input: 'validateAction',
+            'click .j-firebase__resend': 'resendCode'
         },
 
         initialize: function() {
@@ -171,12 +173,14 @@ define([
         },
 
         render: function() {
-            this.$el.html(this.template({fullPhoneNumber: widget.fullPhoneNumber}));
+            this.$el.html(this.template({ fullPhoneNumber: widget.fullPhoneNumber }));
             widget.digitsNumberForm = this.$el;
             widget.container.append(this.$el);
             widget.currentSubmitButton = this.$el.find('.j-firebase__button_verify');
             Events.intiAuthorizationInputs(this.$el.find('#firebase__code_input'));
             this.resendTimer(widget.resendTime);
+
+            return this;
         },
 
         submitAction: function(event) {
@@ -186,7 +190,7 @@ define([
 
         cancelAction: function(event) {
             event.preventDefault();
-            widget._closeWidget();
+            widget.closeWidget();
         },
 
         validateAction: function(event) {
@@ -201,10 +205,10 @@ define([
         },
 
         resendTimer: function(timeLeft) {
-            var self = this,
-                $text = $('.j-firebase__timer_text'),
-                $timer = $('.j-firebase__resend_time'),
-                $button = $('.j-firebase__resend');
+            var self = this;
+            var $text = $('.j-firebase__timer_text');
+            var $timer = $('.j-firebase__resend_time');
+            var $button = $('.j-firebase__resend');
             if (widget.resendTime === timeLeft) {
                 $button.hide();
                 $text.show();
@@ -212,7 +216,7 @@ define([
             if (timeLeft < 0) {
                 $text.hide();
                 $button.show();
-                widget._recaptchaBuilder('resend_btn', 'invisible');
+                widget.recaptchaBuilder('resend_btn', 'invisible');
             } else if (timeLeft < 10) {
                 $timer.html('0' + timeLeft);
                 next();
@@ -223,38 +227,39 @@ define([
 
             function next() {
                 setTimeout(function() {
-                    self.resendTimer(--timeLeft);
+                    timeLeft -= 1; // eslint-disable-line no-param-reassign
+                    self.resendTimer(timeLeft);
                 }, 1000);
             }
         }
     });
 
-    FirebaseWidget.prototype._firebasePhoneNumberForm = function() {
-        widget._closeWidget();
-        widget._show();
-        new widget.firebasePhoneNumberForm();
+    FirebaseWidget.prototype.firebasePhoneNumberForm = function() {
+        widget.closeWidget();
+        widget.show();
+        new widget.firebasePhoneNumberForm(); // eslint-disable-line no-new, new-cap
     };
 
-    FirebaseWidget.prototype._firebaseDigitsNumberForm = function() {
-        widget._closeWidget();
-        widget._show();
-        new widget.firebaseDigitsNumberForm();
+    FirebaseWidget.prototype.firebaseDigitsNumberForm = function() {
+        widget.closeWidget();
+        widget.show();
+        new widget.firebaseDigitsNumberForm(); // eslint-disable-line no-new, new-cap
     };
 
-    FirebaseWidget.prototype._closeWidget = function() {
-        widget._cleanup();
-        widget._hide();
+    FirebaseWidget.prototype.closeWidget = function() {
+        widget.cleanup();
+        widget.hide();
     };
 
-    FirebaseWidget.prototype._show = function() {
+    FirebaseWidget.prototype.show = function() {
         widget.container.css('visibility', 'visible');
     };
 
-    FirebaseWidget.prototype._hide = function() {
+    FirebaseWidget.prototype.hide = function() {
         widget.container.css('visibility', 'hidden');
     };
 
-    FirebaseWidget.prototype._cleanup = function() {
+    FirebaseWidget.prototype.cleanup = function() {
         if (widget.phoneNumberForm) {
             widget.phoneNumberForm.remove();
             widget.phoneNumberForm = null;
@@ -270,10 +275,10 @@ define([
         widget.confirmationResult = null;
     };
 
-    FirebaseWidget.prototype._recaptchaBuilder = function(target, size) {
+    FirebaseWidget.prototype.recaptchaBuilder = function(target, size) {
         widget.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(target, {
-            'size': size,
-            'callback': function(response) {
+            size: size,
+            callback: function() {
                 widget.verified = true;
             },
             'expired-callback': function() {
@@ -282,10 +287,10 @@ define([
         });
     };
 
-    FirebaseWidget.prototype._setDisableState = function() {
-        var verified = widget.states.verified,
-            filled = widget.states.filled,
-            button = widget.currentSubmitButton;
+    FirebaseWidget.prototype.setDisableState = function() {
+        var verified = widget.states.verified;
+        var filled = widget.states.filled;
+        var button = widget.currentSubmitButton;
 
         if (verified && filled) {
             disableButton(false);
@@ -297,10 +302,10 @@ define([
             var currentState = button.attr('disabled');
 
             if (currentState === newState) {
-                return true;
-            } else {
-                button.attr('disabled', newState);
+                return;
             }
+
+            button.attr('disabled', newState);
         }
     };
 

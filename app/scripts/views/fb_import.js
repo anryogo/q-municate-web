@@ -13,8 +13,7 @@ define([
     _,
     Backbone
 ) {
-
-    var FBImportView = Backbone.View.extend({
+    return Backbone.View.extend({
         className: 'importWrap',
 
         template: _.template($('#templateFBImport').html()),
@@ -52,7 +51,4 @@ define([
         }
 
     });
-
-    return FBImportView;
-
 });

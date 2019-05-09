@@ -11,7 +11,6 @@ define([
     QMCONFIG,
     CryptoJS
 ) {
-
     function Session(app) {
         this.app = app;
     }
@@ -59,14 +58,18 @@ define([
         // crypto methods for password
         encrypt: function(params) {
             if (params && params.password) {
-                params.password = CryptoJS.AES.encrypt(params.password, QMCONFIG.qbAccount.authSecret).toString();
+                params.password = CryptoJS.AES
+                    .encrypt(params.password, QMCONFIG.qbAccount.authSecret)
+                    .toString();
             }
             return params;
         },
 
         decrypt: function(params) {
             if (params && params.password) {
-                params.password = CryptoJS.AES.decrypt(params.password, QMCONFIG.qbAccount.authSecret).toString(CryptoJS.enc.Utf8);
+                params.password = CryptoJS.AES
+                    .decrypt(params.password, QMCONFIG.qbAccount.authSecret)
+                    .toString(CryptoJS.enc.Utf8);
             }
             return params;
         }
@@ -74,5 +77,4 @@ define([
     };
 
     return Session;
-
 });

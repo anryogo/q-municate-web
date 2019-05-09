@@ -12,17 +12,17 @@ define([
     GMaps,
     Helpers
 ) {
-    var Location,
-        watchId;
+    var Location;
+    var watchId;
 
     Location = {
 
         getGeoCoordinates: function(watch, callback) {
             function success(pos) {
-                var geoCoords = {};
-
-                geoCoords.latitude = pos.coords.latitude;
-                geoCoords.longitude = pos.coords.longitude;
+                var geoCoords = {
+                    latitude: pos.coords.latitude,
+                    longitude: pos.coords.longitude
+                };
 
                 callback(geoCoords);
             }
@@ -42,11 +42,11 @@ define([
 
         getStaticMapUrl: function(geoCoords, options) {
             var params = {
-                'size': options && options.size || [200, 150],
-                'lat': geoCoords.lat,
-                'lng': geoCoords.lng,
-                'zoom': options && options.zoom || 15,
-                'markers': [{
+                size: (options && options.size) || [200, 150],
+                lat: geoCoords.lat,
+                lng: geoCoords.lng,
+                zoom: (options && options.zoom) || 15,
+                markers: [{
                     lat: geoCoords.lat,
                     lng: geoCoords.lng
                 }]
@@ -60,8 +60,8 @@ define([
         },
 
         toggleGeoCoordinatesToLocalStorage: function(saveLocation, callback) {
-            var isCoords = (localStorage['QM.latitude'] && localStorage['QM.longitude']) ? true : false,
-                $button = $('.j-send_location');
+            var isCoords = !!((localStorage['QM.latitude'] && localStorage['QM.longitude']));
+            var $button = $('.j-send_location');
 
             if (saveLocation) {
                 this.getGeoCoordinates(true, function(res, err) {
@@ -103,22 +103,25 @@ define([
         },
 
         addMap: function($gmap) {
+            var mapCoords = {};
+            var isCoords;
+            var map;
+
             $gmap.prepend('<div id="map" class="open_map j-open_map"></div>');
 
-            var isCoords = (localStorage['QM.latitude'] && localStorage['QM.longitude']) ? true : false,
-                mapCoords = {};
+            isCoords = !!((localStorage['QM.latitude'] && localStorage['QM.longitude']));
 
-            var map = new GMaps({
-                'div': '#map',
-                'lat': isCoords ? localStorage['QM.latitude'] : 0,
-                'lng': isCoords ? localStorage['QM.longitude'] : 0,
-                'zoom': isCoords ? 15 : 1
+            map = new GMaps({
+                div: '#map',
+                lat: isCoords ? localStorage['QM.latitude'] : 0,
+                lng: isCoords ? localStorage['QM.longitude'] : 0,
+                zoom: isCoords ? 15 : 1
             });
 
             $('#map img').addClass('gooImg');
 
             if (!isCoords) {
-                this.getGeoCoordinates(false, function(res, err) {
+                this.getGeoCoordinates(false, function(res) {
                     if (res) {
                         map.setZoom(15);
                         map.setCenter(res.latitude, res.longitude);
@@ -135,13 +138,12 @@ define([
                 map.removeMarkers();
 
                 map.addMarker({
-                    'lat': mapCoords.lat,
-                    'lng': mapCoords.lng,
-                    'title': 'Marker'
+                    lat: mapCoords.lat,
+                    lng: mapCoords.lng,
+                    title: 'Marker'
                 });
 
                 $('.j-send_map').addClass('is-active');
-
             });
         }
 

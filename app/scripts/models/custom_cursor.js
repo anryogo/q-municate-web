@@ -6,7 +6,7 @@
 define([], function() {
     'use strict';
 
-    function Cursor(app) {
+    function Cursor() {
         var self = this;
 
         this.setCursorAfterElement = function(el) {
@@ -19,20 +19,22 @@ define([], function() {
         };
 
         this.setCursorToEnd = function(el) {
-            var isSelectionAndRangeAvaible = typeof window.getSelection !== 'undefined' &&
-                                             typeof document.createRange !== 'undefined',
-                isTextRangeAvaible = typeof document.body.createTextRange !== 'undefined';
+            var isSelectionAndRangeAvaible = typeof window.getSelection !== 'undefined'
+                                             && typeof document.createRange !== 'undefined';
+            var isTextRangeAvaible = typeof document.body.createTextRange !== 'undefined';
+            var range;
+            var textRange;
 
             el.focus();
 
             if (isSelectionAndRangeAvaible) {
-                var range = document.createRange();
+                range = document.createRange();
 
                 range.selectNodeContents(el);
                 range.collapse(false);
                 setRange(range);
             } else if (isTextRangeAvaible) {
-                var textRange = document.body.createTextRange();
+                textRange = document.body.createTextRange();
 
                 textRange.moveToElementText(el);
                 textRange.collapse(false);
@@ -41,12 +43,16 @@ define([], function() {
         };
 
         this.insertElement = function(element, newClassName) {
+            var sel;
+            var range;
+            var emoji;
+
             if (window.getSelection) {
-                var sel = window.getSelection();
+                sel = window.getSelection();
 
                 if (sel.getRangeAt && sel.rangeCount) {
-                    var range = getRange();
-                    var emoji = element.cloneNode(true);
+                    range = getRange();
+                    emoji = element.cloneNode(true);
 
                     emoji.classList.add(newClassName);
                     range.insertNode(emoji);
@@ -57,9 +63,10 @@ define([], function() {
 
         function getRange() {
             var range;
+            var sel;
 
-            if (document.getSelection){
-                var sel = document.getSelection();
+            if (document.getSelection) {
+                sel = document.getSelection();
 
                 if (sel.rangeCount > 0) {
                     range = sel.getRangeAt(0);
@@ -72,8 +79,10 @@ define([], function() {
         }
 
         function setRange(range) {
+            var sel;
+
             if (document.getSelection) {
-                var sel = window.getSelection();
+                sel = window.getSelection();
 
                 sel.removeAllRanges();
                 sel.addRange(range);

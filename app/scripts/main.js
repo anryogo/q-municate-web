@@ -1,7 +1,6 @@
-/*global require*/
 'use strict';
 
-requirejs.config({
+require.config({
     googlemaps: {
         params: {
             key: 'AIzaSyAhduIkJbVdtRm0Hz6XpkihGt8h_R8cZds',
@@ -12,7 +11,7 @@ requirejs.config({
     shim: {
         gmaps: {
             deps: ['googlemaps'],
-            exports: "GMaps"
+            exports: 'GMaps'
         },
         cryptojs: {
             exports: 'CryptoJS'
@@ -25,7 +24,7 @@ requirejs.config({
         }
     },
     paths: {
-        // libs
+    // libs
         googlemaps: '../vendor/googlemaps-amd/googlemaps',
         async: '../vendor/requirejs-plugins/async',
         gmaps: 'https://cdnjs.cloudflare.com/ajax/libs/gmaps.js/0.4.24/gmaps.min',
@@ -89,7 +88,7 @@ requirejs.config({
     }
 });
 
-requirejs([
+require([
     'jquery',
     'config',
     'Helpers',
@@ -111,7 +110,7 @@ requirejs([
 
     // Application initialization
     $(function() {
-        // set Q-MUNICATE version
+    // set Q-MUNICATE version
         $('.j-appVersion').html('v. 1.15.0');
 
         // Set the chat protocol BOSH for IE(11+)/Edge(14+) browsers
@@ -119,10 +118,10 @@ requirejs([
             QMCONFIG.QBconf.chatProtocol.active = 1;
         }
 
-        $.ajaxSetup({cache: true});
+        $.ajaxSetup({ cache: true });
 
         // initialize facebook sdk
-        if (window.hasOwnProperty('FB')) {
+        if (FB) {
             FB.init({
                 appId: QMCONFIG.fbAccount.appId,
                 version: 'v3.0'
@@ -142,5 +141,4 @@ requirejs([
         APP = new QM();
         APP.init();
     });
-
 });

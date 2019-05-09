@@ -13,9 +13,8 @@ define([
     QMCONFIG,
     Helpers
 ) {
-    
-    var curSession,
-        self;
+    var curSession;
+    var self;
 
     function VideoChat(app) {
         this.app = app;
@@ -27,7 +26,7 @@ define([
         var User = this.app.models.User;
         var params = {
             audio: true,
-            video: callType === 'video' ? true : false,
+            video: callType === 'video',
             elemId: 'localStream',
             options: {
                 muted: true,
@@ -37,9 +36,17 @@ define([
 
         if (!options.isCallee) {
             if (callType === 'video') {
-                self.session = QB.webrtc.createNewSession([options.opponentId], QB.webrtc.CallType.VIDEO, null, {bandwidth: 512});
+                self.session = QB.webrtc.createNewSession(
+                    [options.opponentId],
+                    QB.webrtc.CallType.VIDEO,
+                    null,
+                    { bandwidth: 512 }
+                );
             } else {
-                self.session = QB.webrtc.createNewSession([options.opponentId], QB.webrtc.CallType.AUDIO);
+                self.session = QB.webrtc.createNewSession(
+                    [options.opponentId],
+                    QB.webrtc.CallType.AUDIO
+                );
             }
         }
 
@@ -59,7 +66,7 @@ define([
 
                 if (!$('.l-chat[data-dialog="' + options.dialogId + '"]').find('.mediacall')[0]) {
                     stream.stop({});
-                    return true;
+                    return;
                 }
 
                 if (options.isCallee) {
@@ -76,27 +83,29 @@ define([
         });
     };
 
+    // eslint-disable-next-line max-len
     VideoChat.prototype.sendMessage = function(userId, state, callDuration, dialogId, callType, isErrorMessage, sessionID) {
-        var jid = QB.chat.helpers.getUserJid(userId, QMCONFIG.qbAccount.appId),
-            User = this.app.models.User,
-            Message = this.app.models.Message,
-            MessageView = this.app.views.Message,
-            VideoChatView = this.app.views.VideoChat,
-            DialogView = this.app.views.Dialog,
-            time = Math.floor(Date.now() / 1000),
-            $dialogItem = $('.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="' + dialogId + '"]'),
-            selected = $('[data-dialog = ' + dialogId + ']').is('.is-selected'),
-            unread = parseInt($dialogItem.length > 0 &&
-                $dialogItem.find('.unread').text().length > 0 ?
-                $dialogItem.find('.unread').text() : 0),
-            extension,
-            message,
-            msg;
+        var jid = QB.chat.helpers.getUserJid(userId, QMCONFIG.qbAccount.appId);
+        var User = this.app.models.User;
+        var Message = this.app.models.Message;
+        var MessageView = this.app.views.Message;
+        var VideoChatView = this.app.views.VideoChat;
+        var DialogView = this.app.views.Dialog;
+        var time = Math.floor(Date.now() / 1000);
+        var $dialogItem = $('.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="' + dialogId + '"]');
+        var selected = $('[data-dialog = ' + dialogId + ']').is('.is-selected');
+        var unread = parseInt($dialogItem.length > 0
+                && $dialogItem.find('.unread').text().length > 0
+            ? $dialogItem.find('.unread').text() : 0, 10);
+        var extension;
+        var message;
+        var msg;
 
         if (!isErrorMessage) {
             extension = {
                 save_to_history: 1,
                 date_sent: time,
+                // eslint-disable-next-line no-nested-ternary
                 callType: state === '2' ? (callType === 'video' ? '2' : '1') : (VideoChatView.type === 'video' ? '2' : '1'),
                 callState: state === '1' && !callDuration ? '2' : state,
                 caller: state === '2' ? userId : self.caller,
@@ -129,7 +138,7 @@ define([
             callee: extension.callee,
             callDuration: extension.callDuration || null,
             sessionID: extension.sessionID || null,
-            'online': true
+            online: true
         };
 
         msg.id = QB.chat.send(jid, {
@@ -144,7 +153,7 @@ define([
 
         // show counter on dialog item about missed calls
         if (!selected) {
-            unread++;
+            unread += 1;
             $dialogItem.find('.unread').text(unread);
             DialogView.getUnreadCounter(dialogId);
         }
@@ -156,5 +165,4 @@ define([
     ---------------------------------------------------------------------- */
 
     return VideoChat;
-
 });

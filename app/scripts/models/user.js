@@ -25,15 +25,14 @@ define([
     ChangePassView,
     FBImportView
 ) {
-    
-    var self,
-        tempParams,
-        isFacebookCalled;
+    var self;
+    var tempParams;
+    var isFacebookCalled;
 
     function User(app) {
         this.app = app;
-        this._is_import = null;
-        this._valid = false;
+        this.isImport = null;
+        this.valid = false;
         self = this;
     }
 
@@ -77,10 +76,10 @@ define([
         logInFirebasePhone: function(user, callback) {
             user.getIdToken().then(function(idToken) {
                 var authParams = {
-                    'provider': 'firebase_phone',
-                    'firebase_phone': {
-                        'access_token': idToken,
-                        'project_id': QMCONFIG.firebase.projectId
+                    provider: 'firebase_phone',
+                    firebase_phone: {
+                        access_token: idToken,
+                        project_id: QMCONFIG.firebase.projectId
                     }
                 };
 
@@ -92,12 +91,12 @@ define([
             });
         },
 
-        logInFacebook: function () {
+        logInFacebook: function() {
             if (isFacebookCalled) {
-                return false;
-            } else {
-                isFacebookCalled = true;
+                return;
             }
+            isFacebookCalled = true;
+
 
             // NOTE!! You should use FB.login method instead FB.getLoginStatus
             // and your browser won't block FB Login popup
@@ -124,11 +123,10 @@ define([
         },
 
         providerConnect: function(params) {
-            var self = this,
-                QBApiCalls = self.app.service,
-                UserView = self.app.views.User,
-                DialogView = self.app.views.Dialog,
-                Contact = self.app.models.Contact;
+            var QBApiCalls = self.app.service;
+            var UserView = self.app.views.User;
+            var DialogView = self.app.views.Dialog;
+            var Contact = self.app.models.Contact;
 
             UserView.loginQB();
             UserView.createSpinner();
@@ -136,20 +134,20 @@ define([
             if (params.provider === 'facebook') {
                 QBApiCalls.createSession(params, function(session) {
                     QBApiCalls.getUser(session.user_id, function(user) {
-                        _prepareChat(user, true);
+                        prepareChat(user, true);
                     });
                 });
             } else {
                 QBApiCalls.createSession({}, function() {
                     QBApiCalls.loginUser(params, function(user) {
-                        _prepareChat(user);
+                        prepareChat(user);
                     });
                 });
             }
 
-            function _prepareChat(user, isFB) {
+            function prepareChat(user, isFB) {
                 self.contact = Contact.create(user);
-                self._is_import = getImport(user);
+                self.isImport = getImport(user);
 
                 Helpers.log('User', self);
 
@@ -160,7 +158,7 @@ define([
                     DialogView.prepareDownloading();
                     DialogView.downloadDialogs();
 
-                    if (!self._is_import && isFB) {
+                    if (!self.isImport && isFB) {
                         self.import(user);
                     }
 
@@ -172,28 +170,28 @@ define([
         },
 
         import: function(user) {
-            var DialogView = this.app.views.Dialog,
-                isFriendsPermission = false,
-                self = this;
+            var DialogView = this.app.views.Dialog;
+            var isFriendsPermission = false;
 
             FB.api('/me/permissions', function(response) {
                 Helpers.log('FB Permissions', response);
-                for (var i = 0, len = response.data.length; i < len; i++) {
-                    if (response.data[i].permission === 'user_friends' && response.data[i].status === 'granted') {
+
+                response.data.forEach(function(item) {
+                    if (item.permission === 'user_friends' && item.status === 'granted') {
                         isFriendsPermission = true;
                     }
-                }
+                });
 
                 if (isFriendsPermission) {
-
                     // import FB friends
                     FB.api('/me/friends', function(res) {
-                        Helpers.log('FB friends', res);
                         var ids = [];
 
-                        for (var i = 0, len = res.data.length; i < len; i++) {
-                            ids.push(res.data[i].id);
-                        }
+                        Helpers.log('FB friends', res);
+
+                        res.data.forEach(function(item) {
+                            ids.push(item.id);
+                        });
 
                         if (ids.length > 0) {
                             DialogView.downloadDialogs(ids);
@@ -201,42 +199,40 @@ define([
                             DialogView.downloadDialogs();
                         }
                     });
-
                 } else {
                     DialogView.downloadDialogs();
                 }
-                self._is_import = '1';
+                self.isImport = '1';
                 self.updateQBUser(user);
             });
         },
 
         updateQBUser: function(user) {
-            var QBApiCalls = this.app.service,
-                custom_data;
+            var QBApiCalls = this.app.service;
+            var customData;
 
             try {
-                custom_data = JSON.parse(user.custom_data) || {};
+                customData = JSON.parse(user.custom_data) || {};
             } catch (err) {
-                custom_data = {};
+                customData = {};
             }
 
-            custom_data.is_import = '1';
-            custom_data = JSON.stringify(custom_data);
+            customData.is_import = '1';
+            customData = JSON.stringify(customData);
             QBApiCalls.updateUser(user.id, {
-                custom_data: custom_data
-            }, function(res) {
+                custom_data: customData
+            }, function() {
 
             });
         },
 
         signup: function() {
-            var QBApiCalls = this.app.service,
-                UserView = this.app.views.User,
-                DialogView = this.app.views.Dialog,
-                Contact = this.app.models.Contact,
-                form = $('section:visible form'),
-                self = this,
-                params;
+            var QBApiCalls = this.app.service;
+            var UserView = this.app.views.User;
+            var DialogView = this.app.views.Dialog;
+            var Contact = this.app.models.Contact;
+            var form = $('section:visible form');
+            var params;
 
             if (validate(form, this)) {
                 UserView.createSpinner();
@@ -269,19 +265,17 @@ define([
                                 }
                             });
                         });
-
                     });
                 });
             }
         },
 
         uploadAvatar: function() {
-            var QBApiCalls = this.app.service,
-                UserView = this.app.views.User,
-                DialogView = this.app.views.Dialog,
-                Attach = this.app.models.Attach,
-                custom_data,
-                self = this;
+            var QBApiCalls = this.app.service;
+            var UserView = this.app.views.User;
+            var DialogView = this.app.views.Dialog;
+            var Attach = this.app.models.Attach;
+            var customData;
 
             Attach.crop(tempParams.blob, {
                 w: 1000,
@@ -289,7 +283,7 @@ define([
             }, function(file) {
                 QBApiCalls.createBlob({
                     file: file,
-                    'public': true
+                    public: true
                 }, function(blob) {
                     self.contact.blob_id = blob.id;
                     self.contact.avatar_url = blob.path;
@@ -298,13 +292,13 @@ define([
                     DialogView.prepareDownloading();
                     DialogView.downloadDialogs();
 
-                    custom_data = JSON.stringify({
+                    customData = JSON.stringify({
                         avatar_url: blob.path
                     });
                     QBApiCalls.updateUser(self.contact.id, {
                         blob_id: blob.id,
-                        custom_data: custom_data
-                    }, function(res) {
+                        custom_data: customData
+                    }, function() {
 
                     });
                 });
@@ -312,13 +306,12 @@ define([
         },
 
         login: function() {
-            var QBApiCalls = this.app.service,
-                UserView = this.app.views.User,
-                DialogView = this.app.views.Dialog,
-                Contact = this.app.models.Contact,
-                form = $('section:visible form'),
-                self = this,
-                params;
+            var QBApiCalls = this.app.service;
+            var UserView = this.app.views.User;
+            var DialogView = this.app.views.Dialog;
+            var Contact = this.app.models.Contact;
+            var form = $('section:visible form');
+            var params;
 
             if (validate(form, this)) {
                 UserView.createSpinner();
@@ -347,8 +340,7 @@ define([
         },
 
         rememberMe: function() {
-            var storage = {},
-                self = this;
+            var storage = {};
 
             Object.keys(self.contact).forEach(function(prop) {
                 if (prop !== 'app') {
@@ -360,10 +352,9 @@ define([
         },
 
         forgot: function() {
-            var QBApiCalls = this.app.service,
-                UserView = this.app.views.User,
-                form = $('section:visible form'),
-                self = this;
+            var QBApiCalls = this.app.service;
+            var UserView = this.app.views.User;
+            var form = $('section:visible form');
 
             if (validate(form, this)) {
                 UserView.createSpinner();
@@ -371,19 +362,18 @@ define([
                 QBApiCalls.createSession({}, function() {
                     QBApiCalls.forgotPassword(tempParams.email, function() {
                         UserView.successSendEmailCallback();
-                        self._valid = false;
+                        self.valid = false;
                     });
                 });
             }
         },
 
         autologin: function(callback) {
-            var QBApiCalls = this.app.service,
-                UserView = this.app.views.User,
-                DialogView = this.app.views.Dialog,
-                Contact = this.app.models.Contact,
-                storage = JSON.parse(localStorage['QM.user']),
-                self = this;
+            var QBApiCalls = this.app.service;
+            var UserView = this.app.views.User;
+            var DialogView = this.app.views.Dialog;
+            var Contact = this.app.models.Contact;
+            var storage = JSON.parse(localStorage['QM.user']);
 
             UserView.createSpinner();
 
@@ -411,15 +401,14 @@ define([
         },
 
         logout: function() {
-            var self = this,
-                QBApiCalls = self.app.service;
+            var QBApiCalls = self.app.service;
 
             QBApiCalls.disconnectChat();
 
             QBApiCalls.logoutUser(function() {
                 localStorage.removeItem('QM.user');
                 self.contact = null;
-                self._valid = false;
+                self.valid = false;
 
                 localStorage.clear();
                 window.location.reload();
@@ -431,10 +420,11 @@ define([
     /* Private
     ---------------------------------------------------------------------- */
     function validate(form, user) {
-        var maxSize = QMCONFIG.maxLimitFile * 1024 * 1024,
-            file = form.find('input:file')[0],
-            fieldName, errName,
-            value, errMsg;
+        var maxSize = QMCONFIG.maxLimitFile * 1024 * 1024;
+        var file = form.find('input:file')[0];
+        var fieldName; var errName;
+        var value; var
+            errMsg;
 
         tempParams = {};
         form.find('input:not(:file, :checkbox)').each(function() {
@@ -446,12 +436,9 @@ define([
             value = this.value;
 
             if (this.checkValidity()) {
-
-                user._valid = true;
+                user.valid = true;
                 tempParams[fieldName] = value;
-
             } else {
-
                 if (this.validity.valueMissing) {
                     errMsg = errName + ' is required';
                 } else if (this.validity.typeMismatch) {
@@ -477,12 +464,10 @@ define([
 
                 fail(user, errMsg);
                 $(this).addClass('is-error').focus();
-
-                return false;
             }
         });
 
-        if (user._valid && file && file.files[0]) {
+        if (user.valid && file && file.files[0]) {
             file = file.files[0];
 
             if (file.type.indexOf('image/') === -1) {
@@ -499,11 +484,11 @@ define([
             }
         }
 
-        return user._valid;
+        return user.valid;
     }
 
     function fail(user, errMsg) {
-        user._valid = false;
+        user.valid = false;
         $('section:visible .text_error').addClass('is-error').text(errMsg);
         $('section:visible input:password').val('');
         $('section:visible .chroma-hash label').css('background-color', 'rgb(255, 255, 255)');
@@ -522,5 +507,4 @@ define([
     }
 
     return User;
-
 });

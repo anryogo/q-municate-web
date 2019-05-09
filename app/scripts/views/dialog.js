@@ -25,24 +25,23 @@ define([
     minEmoji,
     Ps
 ) {
-
     var self;
 
-    var User,
-        Dialog,
-        Message,
-        ContactList,
-        VoiceMessage,
-        Listeners,
-        errorDialogsLoadingID,
-        errorMessagesLoadingID,
-        UPDATE_PERIOD = 10000;
+    var User;
+    var Dialog;
+    var Message;
+    var ContactList;
+    var VoiceMessage;
+    var Listeners;
+    var errorDialogsLoadingID;
+    var errorMessagesLoadingID;
+    var UPDATE_PERIOD = 10000;
 
     var unreadDialogs = {};
 
-    var TITLE_NAME = 'Q-municate',
-        FAVICON_COUNTER = 'images/favicon_counter.png',
-        FAVICON = 'images/favicon.png';
+    var TITLE_NAME = 'Q-municate';
+    var FAVICON_COUNTER = 'images/favicon_counter.png';
+    var FAVICON = 'images/favicon.png';
 
     function DialogView(app) {
         self = this;
@@ -59,12 +58,13 @@ define([
     DialogView.prototype = {
 
         createDataSpinner: function(chat, groupchat, isAjaxDownloading) {
+            var spinnerBlock;
+
             this.removeDataSpinner();
 
-            var spinnerBlock;
             if (isAjaxDownloading) {
-                spinnerBlock = '<div class="message message_service msg_preloader">' +
-                    '<div class="popup-elem j-loading spinner_bounce is-empty is-ajaxDownload">';
+                spinnerBlock = '<div class="message message_service msg_preloader">'
+                    + '<div class="popup-elem j-loading spinner_bounce is-empty is-ajaxDownload">';
             } else if (groupchat) {
                 spinnerBlock = '<div class="popup-elem j-loading spinner_bounce is-creating">';
             } else {
@@ -106,11 +106,11 @@ define([
             self.app.models.SyncTabs.init(User.contact.id);
         },
 
-        getUnreadCounter: function(dialog_id) {
+        getUnreadCounter: function(dialogId) {
             var counter;
 
-            if (typeof unreadDialogs[dialog_id] === 'undefined') {
-                unreadDialogs[dialog_id] = true;
+            if (typeof unreadDialogs[dialogId] === 'undefined') {
+                unreadDialogs[dialogId] = true;
                 counter = Object.keys(unreadDialogs).length;
 
                 $('title').text('(' + counter + ') ' + TITLE_NAME);
@@ -119,11 +119,11 @@ define([
             }
         },
 
-        decUnreadCounter: function(dialog_id) {
+        decUnreadCounter: function(dialogId) {
             var counter;
 
-            if (typeof unreadDialogs[dialog_id] !== 'undefined') {
-                delete unreadDialogs[dialog_id];
+            if (typeof unreadDialogs[dialogId] !== 'undefined') {
+                delete unreadDialogs[dialogId];
                 counter = Object.keys(unreadDialogs).length;
 
                 if (counter > 0) {
@@ -147,29 +147,29 @@ define([
         },
 
         downloadDialogs: function(ids, skip) {
-            var ContactListView = this.app.views.ContactList,
-                hiddenDialogs = sessionStorage['QM.hiddenDialogs'] ? JSON.parse(sessionStorage['QM.hiddenDialogs']) : {},
-                parameter = !skip ? null : 'old_dialog',
-                dialogsCollection = Entities.Collections.dialogs,
-                activeId = Entities.active,
-                roster = ContactList.roster,
-                rosterIds = Object.keys(roster),
-                totalEntries,
-                localEntries,
-                occupants_ids,
-                notConfirmed,
-                private_id,
-                dialogId,
-                dialogs,
-                dialog,
-                chat;
+            var ContactListView = this.app.views.ContactList;
+            var hiddenDialogs = sessionStorage['QM.hiddenDialogs'] ? JSON.parse(sessionStorage['QM.hiddenDialogs']) : {};
+            var parameter = !skip ? null : 'old_dialog';
+            var dialogsCollection = Entities.Collections.dialogs;
+            var activeId = Entities.active;
+            var roster = ContactList.roster;
+            var rosterIds = Object.keys(roster);
+            var totalEntries;
+            var localEntries;
+            var occupantsIds;
+            var notConfirmed;
+            var privateId;
+            var dialogId;
+            var dialogs;
+            var dialog;
+            var chat;
 
             self.removeDataSpinner();
             self.createDataSpinner();
 
             Dialog.download({
-                'sort_desc': 'last_message_date_sent',
-                'skip': skip || 0
+                sort_desc: 'last_message_date_sent',
+                skip: skip || 0
             }, function(error, result) {
                 if (error) {
                     self.removeDataSpinner();
@@ -178,22 +178,22 @@ define([
                         self.downloadDialogs(ids, skip);
                     }, UPDATE_PERIOD);
 
-                    return false;
-                } else {
-                    clearTimeout(errorDialogsLoadingID);
+                    return;
                 }
+                clearTimeout(errorDialogsLoadingID);
+
 
                 dialogs = result.items;
                 totalEntries = result.total_entries;
                 localEntries = result.limit + result.skip;
 
                 if (dialogs.length > 0) {
-                    occupants_ids = _.uniq(_.flatten(_.pluck(dialogs, 'occupants_ids'), true));
+                    occupantsIds = _.uniq(_.flatten(_.pluck(dialogs, 'occupants_ids'), true));
                     // updating of Contact List whereto are included all people
                     // with which maybe user will be to chat (there aren't only his friends)
-                    ContactList.add(occupants_ids, null, function() {
-                        for (var i = 0, len = dialogs.length; i < len; i++) {
-                            dialogId = Dialog.create(dialogs[i]);
+                    ContactList.add(occupantsIds, null, function() {
+                        dialogs.forEach(function(item) {
+                            dialogId = Dialog.create(item);
                             dialog = dialogsCollection.get(dialogId);
 
                             // don't create a duplicate dialog in contact list
@@ -201,7 +201,7 @@ define([
                             if (chat[0] && dialog.get('unread_count')) {
                                 chat.find('.unread').text(dialog.get('unread_count'));
                                 self.getUnreadCounter(dialog.get('id'));
-                                continue;
+                                return;
                             }
 
                             if ((dialog.get('type') === 2) && !dialog.get('joined')) {
@@ -210,41 +210,38 @@ define([
                             }
 
                             // update hidden dialogs
-                            private_id = dialog.get('type') === 3 ? dialog.get('occupants_ids')[0] : null;
-                            hiddenDialogs[private_id] = dialog.get('id');
+                            privateId = dialog.get('type') === 3 ? dialog.get('occupants_ids')[0] : null;
+                            hiddenDialogs[privateId] = dialog.get('id');
                             ContactList.saveHiddenDialogs(hiddenDialogs);
 
                             // not show dialog if user has not confirmed this contact
                             notConfirmed = localStorage['QM.notConfirmed'] ? JSON.parse(localStorage['QM.notConfirmed']) : {};
-                            if (private_id && (!roster[private_id] ||
-                                (roster[private_id] && roster[private_id].subscription === 'none' &&
-                                !roster[private_id].ask && notConfirmed[private_id]))) {
-                                continue;
+                            if (privateId && (!roster[privateId]
+                                || (roster[privateId] && roster[privateId].subscription === 'none'
+                                    && !roster[privateId].ask && notConfirmed[privateId]))) {
+                                return;
                             }
 
                             self.addDialogItem(dialog, true, parameter);
-                        }
+                        });
 
-                        if ($('#requestsList').is('.is-hidden') &&
-                            $('#recentList').is('.is-hidden') &&
-                            $('#historyList').is('.is-hidden')) {
-
+                        if ($('#requestsList').is('.is-hidden')
+                            && $('#recentList').is('.is-hidden')
+                            && $('#historyList').is('.is-hidden')) {
                             $('#emptyList').removeClass('is-hidden');
                         }
-
                     });
-
                 } else if (!skip) {
                     $('#emptyList').removeClass('is-hidden');
                 }
 
                 // import FB friends
                 if (ids) {
-                    ContactList.getFBFriends(ids, function(new_ids) {
+                    ContactList.getFBFriends(ids, function(newIds) {
                         openPopup($('#popupImport'));
-                        for (var i = 0, len = new_ids.length; i < len; i++) {
-                            ContactListView.importFBFriend(new_ids[i]);
-                        }
+                        newIds.forEach(function(item) {
+                            ContactListView.importFBFriend(item);
+                        });
                     });
                 }
 
@@ -255,18 +252,18 @@ define([
                     self.downloadDialogs(ids, localEntries);
                 } else if (activeId) {
                     dialogsCollection.get(activeId)
-                                     .set({opened: false});
+                        .set({ opened: false });
                     dialogsCollection.selectDialog(activeId);
                 }
             });
         },
 
         showOldHistory: function(callback) {
-            var hiddenDialogs = $('#oldHistoryList ul').children('.j-dialogItem'),
-                visibleDialogs = $('#historyList ul'),
-                total = hiddenDialogs.length,
-                limit = total > 100 ? 100 : total,
-                offListener = false;
+            var hiddenDialogs = $('#oldHistoryList ul').children('.j-dialogItem');
+            var visibleDialogs = $('#historyList ul');
+            var total = hiddenDialogs.length;
+            var limit = total > 100 ? 100 : total;
+            var offListener = false;
 
             if (total === limit) {
                 offListener = true;
@@ -277,17 +274,16 @@ define([
         },
 
         getAllUsers: function(rosterIds) {
-            var QBApiCalls = this.app.service,
-                Contact = this.app.models.Contact,
-                ContactList = this.app.models.ContactList,
-                params = {
-                    filter: {
-                        field: 'id',
-                        param: 'in',
-                        value: rosterIds
-                    },
-                    per_page: 100
-                };
+            var QBApiCalls = this.app.service;
+            var Contact = this.app.models.Contact;
+            var params = {
+                filter: {
+                    field: 'id',
+                    param: 'in',
+                    value: rosterIds
+                },
+                per_page: 100
+            };
 
             QBApiCalls.listUsers(params, function(users) {
                 users.items.forEach(function(qbUser) {
@@ -310,7 +306,7 @@ define([
 
         hideDialogs: function() {
             $('.j-aside_list_item').addClass('is-hidden');
-            $('.j-list').each(function(index, element){
+            $('.j-list').each(function(index, element) {
                 $(element).html('');
             });
         },
@@ -318,70 +314,74 @@ define([
         addDialogItem: function(dialog, isDownload, parameter) {
             if (!dialog) {
                 Helpers.log('Dialog is undefined');
-                return false;
+                return;
             }
 
-            var contacts = ContactList.contacts,
-                roster = ContactList.roster,
-                last_message_date_sent = dialog.get('last_message_date_sent'),
-                occupants_ids = dialog.get('occupants_ids'),
-                unread_count = dialog.get('unread_count'),
-                room_photo = dialog.get('room_photo'),
-                room_name = dialog.get('room_name'),
-                dialog_type = dialog.get('type'),
-                dialog_id =  dialog.get('id'),
-                lastTime = Helpers.getTime(last_message_date_sent, true),
-                lastMessage = minEmoji(Helpers.Messages.parser(dialog.get('last_message'))),
-                defaultAvatar = private_id ? QMCONFIG.defAvatar.url : QMCONFIG.defAvatar.group_url,
-                startOfCurrentDay,
-                private_id,
-                status,
-                icon,
-                name,
-                html;
+            /* eslint-disable vars-on-top */
+            var privateId;
+            var contacts = ContactList.contacts;
+            var roster = ContactList.roster;
+            var lastMessageDateSent = dialog.get('last_message_date_sent');
+            var occupantsIds = dialog.get('occupants_ids');
+            var unreadCount = dialog.get('unread_count');
+            var roomPhoto = dialog.get('room_photo');
+            var roomName = dialog.get('room_name');
+            var dialogType = dialog.get('type');
+            var dialogId = dialog.get('id');
+            var lastTime = Helpers.getTime(lastMessageDateSent, true);
+            var lastMessage = minEmoji(Helpers.Messages.parser(dialog.get('last_message')));
+            var defaultAvatar = privateId ? QMCONFIG.defAvatar.url : QMCONFIG.defAvatar.group_url;
+            var startOfCurrentDay;
+            var status;
+            var icon;
+            var name;
+            var html;
+            var $dialogItem;
+            /* eslint-enable vars-on-top */
 
-            private_id = dialog_type === 3 ? occupants_ids[0] : null;
+            privateId = dialogType === 3 ? occupantsIds[0] : null;
 
             try {
-                icon = (private_id && contacts[private_id]) ? contacts[private_id].avatar_url : (room_photo || defaultAvatar);
-                name = (private_id && contacts[private_id]) ? contacts[private_id].full_name : room_name;
-                status = roster[private_id] ? roster[private_id] : null;
+                /* eslint-disable max-len */
+                icon = (privateId && contacts[privateId]) ? contacts[privateId].avatar_url : (roomPhoto || defaultAvatar);
+                name = (privateId && contacts[privateId]) ? contacts[privateId].full_name : roomName;
+                /* eslint-enable max-len */
+                status = roster[privateId] ? roster[privateId] : null;
             } catch (error) {
-                console.error(error);
+                throw error;
             }
 
-            html  = '<li class="list-item dialog-item j-dialogItem presence-listener" data-dialog="' + dialog_id + '" data-id="' + private_id + '">';
+            html = '<li class="list-item dialog-item j-dialogItem presence-listener" data-dialog="' + dialogId + '" data-id="' + privateId + '">';
             html += '<div class="contact l-flexbox" href="#">';
             html += '<div class="l-flexbox_inline">';
-            html += '<div class="contact-avatar avatar profileUserAvatar j-avatar" style="background-image: url(' + icon + ')" data-id="' + private_id + '"></div>';
-            html += '<div class="dialog_body"><span class="name name_dialog profileUserName" data-id="' + private_id + '">' + name + '</span>';
+            html += '<div class="contact-avatar avatar profileUserAvatar j-avatar" style="background-image: url(' + icon + ')" data-id="' + privateId + '"></div>';
+            html += '<div class="dialog_body"><span class="name name_dialog profileUserName" data-id="' + privateId + '">' + name + '</span>';
             html += '<span class="last_message_preview j-lastMessagePreview">' + lastMessage + '</span></div></div>';
 
-            if (dialog_type === 3) {
+            if (dialogType === 3) {
                 html += getStatus(status);
             } else {
                 html += '<span class="status"></span>';
             }
 
             html += '<span class="last_time_preview j-lastTimePreview">' + lastTime + '</span>';
-            html += '<span class="unread">' + unread_count + '</span>';
+            html += '<span class="unread">' + unreadCount + '</span>';
             html += '</a></li>';
 
             startOfCurrentDay = new Date();
             startOfCurrentDay.setHours(0, 0, 0, 0);
 
             // remove duplicate and replace to newest
-            var $dialogItem = $('.j-dialogItem[data-dialog="'+dialog_id+'"]');
+            $dialogItem = $('.j-dialogItem[data-dialog="' + dialogId + '"]');
 
             if ($dialogItem.length) {
                 $dialogItem.remove();
             }
 
             // checking if this dialog is recent OR no
-            if (!last_message_date_sent ||
-                (new Date(last_message_date_sent * 1000) > startOfCurrentDay) ||
-                parameter === 'new_dialog') {
-
+            if (!lastMessageDateSent
+                || (new Date(lastMessageDateSent * 1000) > startOfCurrentDay)
+                || parameter === 'new_dialog') {
                 if (isDownload) {
                     $('#recentList').removeClass('is-hidden').find('ul').append(html);
                 } else if (!$('#searchList').is(':visible')) {
@@ -396,66 +396,67 @@ define([
             }
 
             $('#emptyList').addClass('is-hidden');
-            if (unread_count) {
-                self.getUnreadCounter(dialog_id);
+            if (unreadCount) {
+                self.getUnreadCounter(dialogId);
             }
 
             if (icon !== defaultAvatar) {
                 self.validateAvatar({
-                    privateId: private_id,
-                    dialogId: dialog_id,
+                    privateId: privateId,
+                    dialogId: dialogId,
                     iconURL: icon
                 });
             }
         },
 
-
         htmlBuild: function(elemOrId, messages) {
             Entities.Collections.dialogs.saveDraft();
 
-            var QBApiCalls = this.app.service,
-                contacts = ContactList.contacts,
-                dialogs = Entities.Collections.dialogs,
-                roster = ContactList.roster,
-                $dialog = (typeof elemOrId === 'object') ? elemOrId :
-                    $('.j-dialogItem[data-dialog="'+ elemOrId + '"]'),
-                dialog_id = $dialog.data('dialog'),
-                user_id = $dialog.data('id'),
-                dialog = dialogs.get(dialog_id),
-                user = contacts[user_id],
-                readBadge = 'QM.' + User.contact.id + '_readBadge',
-                unreadCount = Number($dialog.find('.unread').text()),
-                occupants_ids = dialog.get('occupants_ids'),
-                $chatWrap = $('.j-chatWrap'),
-                $chatView = $('.chatView'),
-                $selected = $('.is-selected'),
-                isBlocked,
-                isCall,
-                location,
-                status,
-                html,
-                icon,
-                name,
-                jid;
+            /* eslint-disable vars-on-top */
+            var QBApiCalls = this.app.service;
+            var contacts = ContactList.contacts;
+            var dialogs = Entities.Collections.dialogs;
+            var roster = ContactList.roster;
+            var $dialog = (typeof elemOrId === 'object') ? elemOrId
+                : $('.j-dialogItem[data-dialog="' + elemOrId + '"]');
+            var dialogId = $dialog.data('dialog');
+            var userId = $dialog.data('id');
+            var dialog = dialogs.get(dialogId);
+            var user = contacts[userId];
+            var readBadge = 'QM.' + User.contact.id + '_readBadge';
+            var unreadCount = Number($dialog.find('.unread').text());
+            var occupantsIds = dialog.get('occupants_ids');
+            var $chatWrap = $('.j-chatWrap');
+            var $chatView = $('.chatView');
+            var $selected = $('.is-selected');
+            var isBlocked;
+            var isCall;
+            var location;
+            var status;
+            var html;
+            var icon;
+            var name;
+            var jid;
+            /* eslint-enable vars-on-top */
 
             // remove the private dialog with deleted user
-            if (user_id && !user) {
-                QBApiCalls.getUser(user_id, function(res) {
+            if (userId && !user) {
+                QBApiCalls.getUser(userId, function(res) {
                     if (!res.items.length) {
-                        self.deleteChat(dialog_id);
+                        self.deleteChat(dialogId);
                     }
                 });
 
-                return false;
+                return;
             }
 
-            Entities.active = dialog_id;
+            Entities.active = dialogId;
             isBlocked = $('.icon_videocall, .icon_audiocall').length;
             isCall = $dialog.find('.icon_videocall').length || $dialog.find('.icon_audiocall').length;
             jid = dialog.get('room_jid') || user.user_jid;
-            icon = user_id ? user.avatar_url : (dialog.get('room_photo') || QMCONFIG.defAvatar.group_url);
+            icon = userId ? user.avatar_url : (dialog.get('room_photo') || QMCONFIG.defAvatar.group_url);
             name = dialog.get('room_name') || user.full_name;
-            status = roster[user_id] ? roster[user_id] : null;
+            status = roster[userId] ? roster[userId] : null;
             location = (localStorage['QM.latitude'] && localStorage['QM.longitude']) ? 'btn_active' : '';
             Message.skip = 0;
 
@@ -478,21 +479,21 @@ define([
                 buildChat();
             }
 
-            textAreaScrollbar('#textarea_'+dialog_id);
-            messageScrollbar('#mCS_'+dialog_id);
+            textAreaScrollbar('#textarea_' + dialogId);
+            messageScrollbar('#mCS_' + dialogId);
 
-            self.showChatWithNewMessages(dialog_id, unreadCount, messages);
+            self.showChatWithNewMessages(dialogId, unreadCount, messages);
 
-            removeNewMessagesLabel($selected.data('dialog'), dialog_id);
+            removeNewMessagesLabel($selected.data('dialog'), dialogId);
 
             $selected.removeClass('is-selected');
             $dialog.addClass('is-selected')
-                   .find('.unread').text('');
+                .find('.unread').text('');
             self.decUnreadCounter(dialog.get('id'));
 
-            // set dialog_id to localStorage wich must bee read in all tabs for same user
+            // set dialogId to localStorage wich must bee read in all tabs for same user
             localStorage.removeItem(readBadge);
-            localStorage.setItem(readBadge, dialog_id);
+            localStorage.setItem(readBadge, dialogId);
 
 
             // reset recorder state
@@ -503,37 +504,42 @@ define([
             }
 
             function buildChat() {
-                new Entities.Models.Chat({
-                    'occupantsIds': occupants_ids,
-                    'status': getStatus(status),
-                    'dialog_id': dialog_id,
-                    'draft': dialog.get('draft'),
-                    'location': location,
-                    'type': dialog.get('type'),
-                    'user_id': user_id,
-                    'name': name,
-                    'icon': icon,
-                    'jid': jid
+                var id;
+
+                new Entities.Models.Chat({ // eslint-disable-line no-new
+                    occupantsIds: occupantsIds,
+                    status: getStatus(status),
+                    dialog_id: dialogId,
+                    draft: dialog.get('draft'),
+                    location: location,
+                    type: dialog.get('type'),
+                    user_id: userId,
+                    name: name,
+                    icon: icon,
+                    jid: jid
                 });
 
                 // build occupants of room
                 if (dialog.get('type') === 2) {
                     html = '<div class="chat-occupants">';
-                    for (var i = 0, len = occupants_ids.length, id; i < len; i++) {
-                        id = occupants_ids[i];
-                        if (!contacts[id]) continue;
-                        if (id != User.contact.id) {
+
+                    occupantsIds.forEach(function(item) {
+                        id = item;
+
+                        if (!contacts[id]) return;
+
+                        if (id !== User.contact.id) {
                             html += '<a class="occupant l-flexbox_inline presence-listener" data-id="' + id + '" href="#">';
                             html += getStatus(roster[id]);
                             html += '<span class="name name_occupant">' + contacts[id].full_name + '</span>';
                             html += '</a>';
                         }
-                    }
-                    html += '</div>';
+                    });
 
+                    html += '</div>';
                 }
 
-                $('.l-chat[data-dialog="' + dialog_id + '"] .j-chatOccupants').append($(html));
+                $('.l-chat[data-dialog="' + dialogId + '"] .j-chatOccupants').append($(html));
 
                 if (dialog.get('type') === 3 && (!status || status.subscription === 'none')) {
                     $('.l-chat:visible').addClass('is-request');
@@ -545,36 +551,42 @@ define([
             }
         },
 
-        createGroupChat: function(type, dialog_id) {
-            var contacts = ContactList.contacts,
-                new_members = $('#popupContacts .is-chosen'),
-                occupants_ids = $('#popupContacts').data('existing_ids') || [],
-                groupName = occupants_ids.length > 0 ? [User.contact.full_name, contacts[occupants_ids[0]].full_name] : [User.contact.full_name],
-                occupants_names = !type && occupants_ids.length > 0 ? [contacts[occupants_ids[0]].full_name] : [],
-                new_ids = [],
-                chat = $('.l-chat[data-dialog="' + dialog_id + '"]');
+        createGroupChat: function(type, dialogId) {
+            /* eslint-disable max-len */
+            var contacts = ContactList.contacts;
+            var newMembers = $('#popupContacts .is-chosen');
+            var occupantsIds = $('#popupContacts').data('existing_ids') || [];
+            var groupName = occupantsIds.length > 0 ? [User.contact.full_name, contacts[occupantsIds[0]].full_name] : [User.contact.full_name];
+            var occupantsNames = !type && occupantsIds.length > 0 ? [contacts[occupantsIds[0]].full_name] : [];
+            var newIds = [];
+            var name;
+            /* eslint-enable max-len */
 
-            for (var i = 0, len = new_members.length, name; i < len; i++) {
-                name = $(new_members[i]).find('.name').text();
+            newMembers.forEach(function(item) {
+                name = $(item).find('.name').text();
                 if (groupName.length < 3) groupName.push(name);
-                occupants_names.push(name);
-                occupants_ids.push($(new_members[i]).data('id').toString());
-                new_ids.push($(new_members[i]).data('id').toString());
-            }
+                occupantsNames.push(name);
+                occupantsIds.push($(item).data('id').toString());
+                newIds.push($(item).data('id').toString());
+            });
 
             groupName = groupName.join(', ');
-            occupants_names = occupants_names.join(', ');
-            occupants_ids = occupants_ids.join();
+            occupantsNames = occupantsNames.join(', ');
+            occupantsIds = occupantsIds.join();
 
             self.createDataSpinner(null, true);
             if (type) {
-                Dialog.updateGroup(occupants_names, {
-                    dialog_id: dialog_id,
-                    occupants_ids: occupants_ids,
-                    new_ids: new_ids
+                Dialog.updateGroup(occupantsNames, {
+                    dialog_id: dialogId,
+                    occupants_ids: occupantsIds,
+                    new_ids: newIds
                 }, function(dialog) {
+                    var dialogItem;
+                    var copyDialogItem;
+
                     self.removeDataSpinner();
-                    var dialogItem = $('.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="' + dialog.get('id') + '"]');
+                    dialogItem = $('.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="' + dialog.get('id') + '"]');
+
                     if (dialogItem.length > 0) {
                         copyDialogItem = dialogItem.clone();
                         dialogItem.remove();
@@ -587,23 +599,23 @@ define([
                     $('.is-overlay:not(.chat-occupants-wrap)').removeClass('is-overlay');
                 });
             } else {
-                Dialog.createGroup(occupants_names, {
+                Dialog.createGroup(occupantsNames, {
                     name: groupName,
-                    occupants_ids: occupants_ids,
+                    occupants_ids: occupantsIds,
                     type: 2
                 }, function(dialog) {
                     self.removeDataSpinner();
                     $('.is-overlay:not(.chat-occupants-wrap)').removeClass('is-overlay');
-                    $('[data-dialog="' + dialog_id + '"] .contact').click();
+                    $('[data-dialog="' + dialogId + '"] .contact').click();
                     $('.dialog-item[data-dialog="' + dialog.get('id') + '"]').find('.contact').click();
                 });
             }
         },
 
         deleteChat: function(dialogParam, sameUser) {
-            var dialogs = Entities.Collections.dialogs,
-                dialogId = (typeof dialogParam === 'string') ? dialogParam : dialogParam.data('dialog'),
-                dialog = dialogs.get(dialogId);
+            var dialogs = Entities.Collections.dialogs;
+            var dialogId = (typeof dialogParam === 'string') ? dialogParam : dialogParam.data('dialog');
+            var dialog = dialogs.get(dialogId);
 
             // reset recorder state
             VoiceMessage.resetRecord(dialogId);
@@ -616,10 +628,10 @@ define([
         },
 
         removeDialogItem: function(dialogId) {
-            var $dialogItem = $('.dialog-item[data-dialog="' + dialogId + '"]'),
-                $chat = $('.l-chat[data-dialog="' + dialogId + '"]'),
-                $dialogList = $dialogItem.parents('ul'),
-                $mediacall = $chat.find('.mediacall');
+            var $dialogItem = $('.dialog-item[data-dialog="' + dialogId + '"]');
+            var $chat = $('.l-chat[data-dialog="' + dialogId + '"]');
+            var $dialogList = $dialogItem.parents('ul');
+            var $mediacall = $chat.find('.mediacall');
 
             if ($mediacall.length > 0) {
                 $mediacall.find('.btn_hangup').click();
@@ -648,8 +660,8 @@ define([
         },
 
         removeForbiddenDialog: function(dialogId) {
-            var dialogs = Entities.Collections.dialogs,
-                $mediacall = $('.mediacall');
+            var dialogs = Entities.Collections.dialogs;
+            var $mediacall = $('.mediacall');
 
             if ($mediacall.length > 0) {
                 $mediacall.find('.btn_hangup').click();
@@ -664,16 +676,16 @@ define([
         },
 
         showChatWithNewMessages: function(dialogId, unreadCount, messages) {
-            var MessageView = this.app.views.Message,
-                lastReaded,
-                message,
-                count;
+            var MessageView = this.app.views.Message;
+            var lastReaded;
+            var message;
+            var count;
 
-            var MIN_STACK = QMCONFIG.stackMessages,
-                MAX_STACK = 100,
-                lessThenMinStack = unreadCount < MIN_STACK,
-                moreThenMinStack = unreadCount > (MIN_STACK - 1),
-                lessThenMaxStack = unreadCount < MAX_STACK;
+            var MIN_STACK = QMCONFIG.stackMessages;
+            var MAX_STACK = 100;
+            var lessThenMinStack = unreadCount < MIN_STACK;
+            var moreThenMinStack = unreadCount > (MIN_STACK - 1);
+            var lessThenMaxStack = unreadCount < MAX_STACK;
 
             if (lessThenMinStack) {
                 lastReaded = unreadCount;
@@ -691,7 +703,7 @@ define([
             if (messages) {
                 addItems(messages);
             } else {
-                messages = [];
+                messages = []; // eslint-disable-line no-param-reassign
 
                 Message.download(dialogId, function(response, error) {
                     if (error) {
@@ -722,34 +734,33 @@ define([
                 $history = $('section.l-chat-content').children('div:not(.spinner_bounce)');
                 $history.css('opacity', '0');
 
-                for (var i = 0, len = items.length; i < len; i++) {
-                    message = items[i];
-                    message.stack = Message.isStack(false, items[i], items[i + 1]);
+                items.forEach(function(item, index) {
+                    message = item;
+                    message.stack = Message.isStack(false, item, items[index + 1]);
 
                     if (unreadCount) {
-                        switch (i) {
-                            case (lastReaded - 1):
-                                message.stack = false;
-                                break;
-                            case lastReaded:
-                                setLabelForNewMessages(dialogId);
-                                break;
-                            default:
-                                break;
+                        switch (index) {
+                        case (lastReaded - 1):
+                            message.stack = false;
+                            break;
+                        case lastReaded:
+                            setLabelForNewMessages(dialogId);
+                            break;
+                        default:
+                            break;
                         }
                     }
 
                     MessageView.addItem(message, null, null);
-                }
+                });
 
-                setScrollToNewMessages('#mCS_'+dialogId);
+                setScrollToNewMessages('#mCS_' + dialogId);
 
                 setTimeout(function() {
                     self.removeDataSpinner();
                     $history.css('opacity', '1');
                 }, 150);
             }
-
         },
 
         validateAvatar: function(params) {
@@ -762,16 +773,18 @@ define([
             img.addEventListener('error', function() {
                 setTimeout(function() {
                     var avatar = document.querySelector('.j-dialogItem[data-dialog="' + params.dialogId + '"] .j-avatar');
+                    var user;
+                    var dialog;
 
                     avatar.style.backgroundImage = '';
 
                     if (params.privateId) {
-                        var user = ContactList.contacts[params.privateId];
+                        user = ContactList.contacts[params.privateId];
 
                         user.avatar_url = QMCONFIG.defAvatar.url;
                         avatar.classList.add('default_single_avatar');
                     } else {
-                        var dialog = Entities.Collections.dialogs.get(params.dialogId);
+                        dialog = Entities.Collections.dialogs.get(params.dialogId);
 
                         dialog.set('room_photo', QMCONFIG.defAvatar.group_url);
                         avatar.classList.add('default_group_avatar');
@@ -802,8 +815,8 @@ define([
                     ajaxDownloading(selector);
                 },
                 onTotalScroll: function() {
-                    var $currentDialog = $('.dialog-item.is-selected'),
-                        dialogId = $currentDialog.data('dialog');
+                    var $currentDialog = $('.dialog-item.is-selected');
+                    var dialogId = $currentDialog.data('dialog');
 
                     isBottom = Helpers.isBeginOfChat();
 
@@ -854,7 +867,7 @@ define([
             smoothscroll: false,
             enablemouselockapi: false,
             cursorwidth: '6px',
-            autohidemode: "scroll",
+            autohidemode: 'scroll',
             enabletranslate3d: false,
             enablekeyboard: false
         });
@@ -862,32 +875,31 @@ define([
 
     // ajax downloading of data through scroll
     function ajaxDownloading(selector) {
-        var MessageView = self.app.views.Message,
-            $chat = $('.j-chatItem:visible'),
-            dialogId = $chat.data('dialog'),
-            messages = $chat.find('.message'),
-            firstMsgId = messages.first().attr('id'),
-            count = messages.length,
-            message;
-
+        var MessageView = self.app.views.Message;
+        var $chat = $('.j-chatItem:visible');
+        var dialogId = $chat.data('dialog');
+        var $messages = $chat.find('.message');
+        var firstMsgId = $messages.first().attr('id');
+        var count = $messages.length;
+        var message;
 
         Message.download(dialogId, function(messages, error) {
-            for (var i = 0, len = messages.length; i < len; i++) {
+            messages.forEach(function(item, index) {
                 if (error && error.code === 403) {
                     self.removeForbiddenDialog(dialogId);
 
-                    return false;
+                    return;
                 }
 
-                message = Message.create(messages[i], 'ajax');
-                message.stack = Message.isStack(false, messages[i], messages[i + 1]);
+                message = Message.create(item, 'ajax');
+                message.stack = Message.isStack(false, item, messages[index + 1]);
 
                 MessageView.addItem(message, true, null);
 
-                if ((i + 1) === len) {
-                    $(selector).mCustomScrollbar('scrollTo', '#'+firstMsgId);
+                if ((index + 1) === messages.length) {
+                    $(selector).mCustomScrollbar('scrollTo', '#' + firstMsgId);
                 }
-            }
+            });
         }, count, 'ajax');
     }
 
@@ -910,17 +922,17 @@ define([
     }
 
     function setLabelForNewMessages(dialogId) {
-        var $chatContainer = $('.l-chat[data-dialog="' + dialogId + '"]').find('.l-chat-content .mCSB_container'),
-            $newMessages = $('<div class="new_messages j-newMessages" data-dialog="' + dialogId + '">' +
-                '<span class="newMessages">New messages</span></div>');
+        var $chatContainer = $('.l-chat[data-dialog="' + dialogId + '"]').find('.l-chat-content .mCSB_container');
+        var $newMessages = $('<div class="new_messages j-newMessages" data-dialog="' + dialogId + '">'
+                + '<span class="newMessages">New messages</span></div>');
 
         $chatContainer.prepend($newMessages);
     }
 
     function setScrollToNewMessages(selector) {
-        var $chat = $('.j-chatItem:visible'),
-            isBottom = Helpers.isBeginOfChat(),
-            isScrollDragger = $chat.find('.mCSB_draggerContainer').length;
+        var $chat = $('.j-chatItem:visible');
+        var isBottom = Helpers.isBeginOfChat();
+        var isScrollDragger = $chat.find('.mCSB_draggerContainer').length;
 
         if ($('.j-newMessages').length) {
             scrollToThrArea('.j-newMessages');
@@ -957,5 +969,4 @@ define([
     }
 
     return DialogView;
-
 });

@@ -1,5 +1,5 @@
 /* Custom Reset CSS based on Eric Meyer's style
-----------------------------------------------------------------*/
+---------------------------------------------------------------- */
 a,
 abbr,
 acronym,
@@ -87,28 +87,33 @@ video {
     font-size: 100%;
     vertical-align: baseline;
 }
+
 body {
     line-height: 1;
 }
+
 nav,
 ul {
     list-style: none;
 }
+
 blockquote,
 q {
     quotes: none;
 }
-blockquote:after,
-blockquote:before,
-q:after,
-q:before {
-    content: '';
+
+blockquote::after,
+blockquote::before,
+q::after,
+q::before {
     content: none;
 }
+
 table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+
 button,
 input,
 select,
@@ -118,12 +123,15 @@ textarea {
     outline: 0;
     font-size: 100%;
 }
+
 button::-moz-focus-inner {
     border: 0;
 }
+
 a {
     outline: 0;
 }
+
 * {
     box-sizing: border-box;
 }
