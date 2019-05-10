@@ -1,6 +1,16 @@
 {
-    "extends": "stylelint-config-standard",
+    "extends": "stylelint-config-standard-scss",
+    "plugins": [
+        "stylelint-order"
+    ],
     "rules": {
-        "indentation": 4
+        "indentation": 4,
+
+        "order/order": [
+            "dollar-variables",
+            "declarations",
+            "rules",
+            "at-rules"
+        ]
     }
 }

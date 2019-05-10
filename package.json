@@ -97,7 +97,9 @@
     "requirejs": "^2.3.6",
     "rimraf": "^2.6.3",
     "stylelint": "^10.0.1",
-    "stylelint-config-standard": "^18.3.0",
+    "stylelint-config-standard-scss": "^1.1.0",
+    "stylelint-order": "^3.0.0",
+    "stylelint-scss": "^3.6.1",
     "uglify-js": "^3.5.9"
   }
 }
