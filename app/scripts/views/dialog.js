@@ -14,7 +14,8 @@ define([
     'minEmoji',
     'perfectscrollbar',
     'mCustomScrollbar',
-    'nicescroll'
+    'nicescroll',
+    'mousewheel'
 ], function(
     $,
     _,

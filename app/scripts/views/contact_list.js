@@ -11,7 +11,8 @@ define([
     'Helpers',
     'QMHtml',
     'underscore',
-    'mCustomScrollbar'
+    'mCustomScrollbar',
+    'mousewheel'
 ], function(
     $,
     QMCONFIG,
