@@ -1,4 +1,7 @@
-@import "base";
-@import "layouts";
-@import "modules";
-@import "states";
+@import 'core/_variables';
+@import 'core/_reset';
+@import 'core/base';
+@import 'core/layouts';
+@import 'modules/_modules';
+@import 'modules/_extensions';
+@import 'core/states';

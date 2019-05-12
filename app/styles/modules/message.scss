@@ -1,6 +1,5 @@
-/* message */
 .message {
-    font-family: Roboto, sans-serif;
+    font-family: $fontRoboto;
     padding: 8px 24px 8px 24px;
 }
 
@@ -11,13 +10,34 @@
 .new_messages {
     padding: 8px 24px 8px 24px;
     text-align: center;
-    border-top: 1px solid #f2f4f5;
+    border-top: 1px solid $color_wild_sand_approx;
     font: 500 13px Roboto, sans-serif;
-    color: #6ea9d1;
+    color: $color_glacier_approx;
+}
+
+.message-author {
+    margin-bottom: 4px;
+    max-width: 400px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    text-align: left;
+    color: $color_slate_gray_approx;
 }
 
 .message_service {
     padding: 8px 24px 8px 24px;
+
+    &:last-of-type {
+        .btn_request_again {
+            display: inline-block;
+        }
+    }
+
+    .message-author {
+        margin-bottom: 0;
+        line-height: 20px;
+    }
 }
 
 .message.msg_preloader {
@@ -28,21 +48,17 @@
     border: none;
 }
 
-.message_service:last-of-type .btn_request_again {
-    display: inline-block;
-}
-
 article.message[data-status="typing"] {
     height: 100%;
     line-height: 100%;
     padding: 9px;
     border: none;
-}
 
-article.message[data-status="typing"] > div {
-    display: inline-block;
-    margin-left: 5px;
-    color: #b2b2b2;
+    > div {
+        display: inline-block;
+        margin-left: 5px;
+        color: $color_nobel_approx;
+    }
 }
 
 .message-avatar.avatar {
@@ -66,44 +82,51 @@ article.message[data-status="typing"] > div {
     margin-top: 10px;
     font-size: 16px;
     line-height: 20px;
-}
 
-.message-container:first-child {
-    margin-top: 0;
+    &:first-child {
+        margin-top: 0;
+    }
 }
 
 .message-content {
     padding-left: 15px;
     width: 460px;
-    color: #333;
+    color: $color_mine_shaft_approx;
     word-wrap: break-word;
 }
 
-.message_attach .message-content {
-    width: 460px;
+.message_attach {
+    .message-content {
+        width: 460px;
+    }
 }
 
-.message-author {
-    margin-bottom: 4px;
-    max-width: 400px;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 20px;
-    text-align: left;
-    color: #778594;
+.message-time {
+    display: inline-block;
+    vertical-align: top;
+    width: 120px;
+    text-align: right;
+    opacity: 0.8;
+    color: $color_gravel_approx;
+
+    a {
+        font-size: 12px;
+        color: $color_denim_approx;
+    }
 }
 
-.message_service .message-author {
-    margin-bottom: 0;
-    line-height: 20px;
-}
+.message_attach_row {
+    .message-author {
+        line-height: 37px;
+    }
 
-.message_attach_row .message-author {
-    line-height: 37px;
+    .message-time {
+        line-height: 28px;
+    }
 }
 
 .message-error {
-    color: #c03d3d;
+    color: $color_mojo_approx;
 }
 
 .message-body {
@@ -111,21 +134,38 @@ article.message[data-status="typing"] > div {
     font-size: 14px;
     line-height: 1.43;
     text-align: left;
-    color: #4a4a4a;
+    color: $color_gravel_approx;
     position: relative;
     width: 100%;
-}
 
-.message-body p {
-    margin-bottom: 10px;
-}
+    p {
+        margin-bottom: 10px;
 
-.message-body p:last-of-type {
-    margin-bottom: 0;
-}
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+    }
 
-.message-body a {
-    color: #0d70b3;
+    a {
+        color: $color_denim_approx;
+    }
+
+    .og_block {
+        color: $black;
+        display: flex;
+        justify-content: space-around;
+        flex-direction: column;
+        flex-wrap: wrap;
+        width: 100%;
+        height: 80px;
+        border-left: 3px solid $color_malachite_approx;
+        margin: 4px 0;
+
+        &:hover {
+            opacity: 1;
+            background-color: $color_romance_approx;
+        }
+    }
 }
 
 .message-content.indent {
@@ -138,27 +178,9 @@ article.message[data-status="typing"] > div {
     width: 120px;
     height: 14px;
     line-height: 14px;
-    font-family: Roboto, sans-serif;
+    font-family: $fontRoboto;
     font-size: 12px;
-    color: #4a4a4a;
-}
-
-.message-time {
-    display: inline-block;
-    vertical-align: top;
-    width: 120px;
-    text-align: right;
-    opacity: 0.8;
-    color: #4a4a4a;
-}
-
-.message-time a {
-    font-size: 12px;
-    color: #0d70b3;
-}
-
-.message_attach_row .message-time {
-    line-height: 28px;
+    color: $color_gravel_approx;
 }
 
 .message-status {
@@ -167,10 +189,19 @@ article.message[data-status="typing"] > div {
     width: 120px;
     text-align: right;
     opacity: 0.8;
-    color: #4a4a4a;
+    color: $color_gravel_approx;
 }
 
-.info_indent,
+.info_indent {
+    position: absolute;
+    vertical-align: top;
+    width: 15px;
+    height: 15px;
+    text-align: right;
+    top: 0;
+    left: 120px;
+}
+
 .message-geo {
     position: absolute;
     vertical-align: top;
@@ -182,17 +213,22 @@ article.message[data-status="typing"] > div {
 }
 
 .message-geo.with-geo {
-    background: url('../images/ic_location_sm.svg') 50% 25% no-repeat;
+    background: $urlIcnLocationSm 50% 25% no-repeat;
     cursor: pointer;
 }
 
-.message-avatar.request-button_pending,
-.message-avatar.request-button_cancel,
+.message-avatar.request-button_pending {
+    margin: 0 6px;
+}
+
+.message-avatar.request-button_cancel {
+    margin: 0 6px;
+}
+
 .message-avatar.request-button_ok {
     margin: 0 6px;
 }
 
-/* preview */
 .preview {
     width: 380px;
     height: 215px;
@@ -200,40 +236,42 @@ article.message[data-status="typing"] > div {
     cursor: pointer;
     overflow: hidden;
     position: relative;
-}
 
-.preview:hover {
-    opacity: 0.6;
+    &:hover {
+        opacity: 0.6;
+    }
 }
 
 .preview-video {
     position: relative;
     width: 180px;
     height: 125px;
-    background: #333;
+    background: $color_mine_shaft_approx;
+
+    &::before {
+        content: "\e001";
+        position: absolute;
+        margin: auto auto auto 48%;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        border-top: 20px solid transparent;
+        border-bottom: 20px solid transparent;
+        border-left: 20px solid $color_celeste_approx;
+    }
 }
 
-.preview-video::before {
-    content: "\e001";
-    position: absolute;
-    margin: auto auto auto 48%;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 0;
-    border-top: 20px solid transparent;
-    border-bottom: 20px solid transparent;
-    border-left: 20px solid #ccc;
-}
-
-.preview-photo img {
-    max-width: 380px;
-    height: 100%;
-    transform: translate(0, -50%);
-    position: absolute;
-    top: 50%;
+.preview-photo {
+    img {
+        max-width: 380px;
+        height: 100%;
+        transform: translate(0, -50%);
+        position: absolute;
+        top: 50%;
+    }
 }
 
 .attachment {
@@ -248,39 +286,22 @@ article.message[data-status="typing"] > div {
 
 .scaleAvatar {
     cursor: pointer;
-}
 
-.scaleAvatar:hover {
-    opacity: 0.6;
+    &:hover {
+        opacity: 0.6;
+    }
 }
 
 .changePic {
-    color: #0d70b3;
+    color: $color_denim_approx;
     cursor: pointer;
     margin-left: 20px;
     width: 120px;
     text-align: right;
-}
 
-.changePic:hover {
-    opacity: 0;
-}
-// OpenGraph information
-.message-body .og_block {
-    color: #000;
-    display: flex;
-    justify-content: space-around;
-    flex-direction: column;
-    flex-wrap: wrap;
-    width: 100%;
-    height: 80px;
-    border-left: 3px solid #1cba48;
-    margin: 4px 0;
-}
-
-.message-body .og_block:hover {
-    opacity: 1;
-    background-color: #fdfdfd;
+    &:hover {
+        opacity: 0;
+    }
 }
 
 .og_title {
@@ -319,25 +340,25 @@ article.message[data-status="typing"] > div {
     justify-content: center;
     align-items: flex-start;
     order: 2;
-}
 
-.og_image > img {
-    max-height: 80px;
-    max-width: 100%;
+    > img {
+        max-height: 80px;
+        max-width: 100%;
+    }
 }
 
 .image_preview {
     height: 150px;
     padding-left: 10px;
-    border-left: 3px solid #1cba48;
+    border-left: 3px solid $color_malachite_approx;
     margin-bottom: 4px;
     display: flex;
     align-items: center;
-}
 
-.image_preview > img {
-    max-height: 100%;
-    max-width: 100%;
+    > img {
+        max-height: 100%;
+        max-width: 100%;
+    }
 }
 
 .mCSB_scrollTools.mCSB_scrollTools_vertical {
@@ -349,7 +370,7 @@ article.message[data-status="typing"] > div {
 }
 
 .video_player {
-    background-color: #000;
+    background-color: $black;
     width: 400px;
     height: 225px;
 }
@@ -370,5 +391,5 @@ article.message[data-status="typing"] > div {
     left: 178px;
     width: 45px;
     height: 45px;
-    background: url('../images/ic-play-video.svg') no-repeat center;
+    background: $urlIcnPlayVideo no-repeat center;
 }
