@@ -39,10 +39,8 @@ input.input_email[type=email] {
             border-bottom: 2px solid $color_malachite_approx;
             box-shadow: inset 0 99px 0 0 $white;
 
-            + {
-                label {
-                    color: $color_malachite_approx;
-                }
+            + label {
+                color: $color_malachite_approx;
             }
         }
     }
@@ -66,10 +64,8 @@ input.input_pass[type=password] {
             border-bottom: 2px solid $color_malachite_approx;
             box-shadow: inset 0 99px 0 0 $white;
 
-            + {
-                label {
-                    color: $color_malachite_approx;
-                }
+            + label {
+                color: $color_malachite_approx;
             }
         }
     }
@@ -93,10 +89,8 @@ input.input_tel[type=tel] {
             border-bottom: 2px solid $color_malachite_approx;
             box-shadow: inset 0 99px 0 0 $white;
 
-            + {
-                label {
-                    color: $color_malachite_approx;
-                }
+            + label {
+                color: $color_malachite_approx;
             }
         }
     }
@@ -120,10 +114,8 @@ input.input_text[type=text] {
             border-bottom: 2px solid $color_malachite_approx;
             box-shadow: inset 0 99px 0 0 $white;
 
-            + {
-                label {
-                    color: $color_malachite_approx;
-                }
+            + label {
+                color: $color_malachite_approx;
             }
         }
     }
@@ -136,7 +128,7 @@ input.form-input-search.without_M[type=search] {
     padding: 5px 16px 5px 10px;
     font-size: 15px;
     line-height: 20px;
-    border: none;
+    border: 0;
     border-radius: 4px;
     background-color: $color_wild_sand_approx;
     background-image: $urlIcnSearch;
@@ -152,7 +144,7 @@ input.form-input-search.without_M[type=search] {
             padding: 5px 16px 5px 10px;
             font-size: 15px;
             line-height: 20px;
-            border: none;
+            border: 0;
             border-radius: 4px;
             background-color: $color_wild_sand_approx;
             background-repeat: no-repeat;
@@ -220,7 +212,7 @@ input.form-input-search.without_M[type=search] {
     vertical-align: middle;
 }
 
-.form-checkbox[type="checkbox"] {
+.form-checkbox[type='checkbox'] {
     &:checked {
         position: relative;
         left: initial;
@@ -278,8 +270,8 @@ input.without_M[type=time],
 input.without_M[type=url],
 textarea.without_M.materialize-textarea {
     background-color: transparent;
-    border: none;
-    border-bottom: none;
+    border: 0;
+    border-bottom: 0;
     border-radius: initial;
     outline: none;
     height: auto;
@@ -293,7 +285,7 @@ textarea.without_M.materialize-textarea {
 
     &:focus {
         &:not([readonly]) {
-            border-bottom: none;
+            border-bottom: 0;
             outline: 0;
             box-shadow: none;
         }
