@@ -1,25 +1,15 @@
-/* list */
 .list-item {
     height: 60px;
-    background: #fff;
+    background: $white;
     cursor: pointer;
-}
 
-.list-item:hover {
-    background: #f2f4f5;
-}
+    &:hover {
+        background: $color_wild_sand_approx;
+    }
 
-.list-actions .list-item {
-    width: 125px;
-    height: 32px;
-}
-
-.list-actions .list-item:last-child {
-    border-bottom: 0;
-}
-
-#requestsList .list-item:hover {
-    background: #fff;
+    .icon-active {
+        display: none;
+    }
 }
 
 .list-actions {
@@ -27,10 +17,26 @@
     position: absolute;
     left: 50%;
     transform: translate(-50%, 0);
-    -webkit-transform: translate(-50%, 0);
     top: 100%;
-    border: 1px solid #f2f4f5;
-    box-shadow: 0 0 10px 3px rgba(240, 240, 240, 1);
+    border: 1px solid $color_wild_sand_approx;
+    box-shadow: 0 0 10px 3px $color_gallery_approx;
+
+    .list-item {
+        width: 125px;
+        height: 32px;
+
+        &:last-child {
+            border-bottom: 0;
+        }
+    }
+}
+
+#requestsList {
+    .list-item {
+        &:hover {
+            background: $white;
+        }
+    }
 }
 
 .list-actions_contacts {
@@ -59,36 +65,48 @@
     padding: 0 10px;
     font-size: 15px;
     line-height: 32px;
-    color: #4a4a4a;
-    font-family: Roboto, sans-serif;
-}
+    color: $color_gravel_approx;
+    font-family: $fontRoboto;
 
-.list-actions-action:hover {
-    opacity: 1;
+    &:hover {
+        opacity: 1;
+    }
 }
 
 .list_contacts {
     height: calc(100% - 60px - 60px - 37px);
-
-    /* 37px - spinner_bounce height */
 }
 
-.popup-content .list_contacts {
-    height: 100%;
+.popup-content {
+    .list_contacts {
+        height: 100%;
+    }
 }
 
-/* hover icons */
-.header-links-item .icon-active,
-.list-item .icon-active {
-    display: none;
+.header-links-item {
+    .icon-active {
+        display: none;
+    }
+
+    &:hover {
+        .icon-normal {
+            display: none;
+        }
+
+        .icon-active {
+            display: inline-block;
+        }
+    }
 }
 
-.header-links-item:hover .icon-normal,
-.send-request:hover .icon-normal {
-    display: none;
-}
+.send-request {
+    &:hover {
+        .icon-normal {
+            display: none;
+        }
 
-.header-links-item:hover .icon-active,
-.send-request:hover .icon-active {
-    display: inline-block;
+        .icon-active {
+            display: inline-block;
+        }
+    }
 }

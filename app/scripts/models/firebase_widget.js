@@ -48,7 +48,7 @@ define([
             }
         });
 
-        widget.firebasePhoneNumberForm();
+        widget.createFirebasePhoneNumberForm();
     };
 
     FirebaseWidget.init = function() {
@@ -62,7 +62,7 @@ define([
         firebase.auth()
             .signInWithPhoneNumber(widget.fullPhoneNumber, widget.recaptchaVerifier)
             .then(function(confirmationResult) {
-                widget.firebaseDigitsNumberForm();
+                widget.createFirebaseDigitsNumberForm();
                 widget.confirmationResult = confirmationResult;
             }).catch(function(error) {
                 Helpers.log('Error:', error);
@@ -234,13 +234,13 @@ define([
         }
     });
 
-    FirebaseWidget.prototype.firebasePhoneNumberForm = function() {
+    FirebaseWidget.prototype.createFirebasePhoneNumberForm = function() {
         widget.closeWidget();
         widget.show();
         new widget.firebasePhoneNumberForm(); // eslint-disable-line no-new, new-cap
     };
 
-    FirebaseWidget.prototype.firebaseDigitsNumberForm = function() {
+    FirebaseWidget.prototype.createFirebaseDigitsNumberForm = function() {
         widget.closeWidget();
         widget.show();
         new widget.firebaseDigitsNumberForm(); // eslint-disable-line no-new, new-cap

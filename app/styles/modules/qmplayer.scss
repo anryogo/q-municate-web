@@ -1,4 +1,3 @@
-/* QMPlayer */
 .qm_audio_player {
     width: 380px;
     height: 36px;
@@ -30,17 +29,17 @@
 }
 
 .qm_player_control.is-playing {
-    background-image: url("../images/pause-ic.svg");
+    background-image: $urlIcnPause;
 }
 
 .qm_player_control.is-paused {
-    background-image: url("../images/play-ic.svg");
+    background-image: $urlIcnPlay;
 }
 
 .qm_player_filler {
     width: 50%;
     height: 100%;
-    background-color: #dfe3e5;
+    background-color: $color_mercury_approx;
     position: absolute;
     right: 0;
     top: 0;
@@ -54,14 +53,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #eff1f2;
+    background-color: $color_porcelain_approx;
     overflow: hidden;
     border-radius: 0 36px 36px 0;
 }
 
 .qm_player_font {
-    color: #778594;
-    font-family: Roboto, sans-serif;
+    color: $color_slate_gray_approx;
+    font-family: $fontRoboto;
     font-size: 14px;
     font-weight: 500;
 }
@@ -90,7 +89,7 @@
     left: 0;
     height: 100%;
     width: 0;
-    background-color: #dfe3e5;
+    background-color: $color_mercury_approx;
     z-index: 1;
 }
 
@@ -105,7 +104,7 @@
 
 a.qm_player_download {
     margin-left: 17px;
-    color: #778594;
+    color: $color_slate_gray_approx;
     text-decoration: underline;
     font-weight: 400;
 }

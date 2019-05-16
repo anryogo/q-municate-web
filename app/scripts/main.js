@@ -36,6 +36,7 @@ require.config({
         progressbar: '../vendor/progressbar/progressbar.min',
         loadImage: '../vendor/blueimp-load-image/load-image',
         mCustomScrollbar: '../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar',
+        mousewheel: '../vendor/jquery-mousewheel/jquery.mousewheel.min',
         timeago: '../vendor/jquery-timeago/jquery.timeago',
         minEmoji: '../vendor/emoji/js/minEmoji',
         initTelInput: '../vendor/intl-tel-input/js/intlTelInput.min',

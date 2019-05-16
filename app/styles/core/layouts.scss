@@ -1,70 +1,38 @@
-/* Flexbox
--------------------------------------------------- */
 .l-flexbox {
-    display: -webkit-flex;
-
-    /* For Safari 6.1+ */
-    display: -ms-flexbox;
-
-    /* For IE10 */
     display: flex;
-    -webkit-align-items: center;
-    -ms-flex-align: center;
     align-items: center;
 }
 
 .l-flexbox_inline {
-    display: -webkit-inline-flex;
-
-    /* For Safari 6.1+ */
-    display: -ms-inline-flexbox;
-
-    /* For IE10 */
     display: inline-flex;
-    -webkit-align-items: center;
-    -ms-flex-align: center;
     align-items: center;
     width: 100%;
 }
 
 .l-flexbox_column {
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
     flex-direction: column;
 }
 
 .l-flexbox_flexcenter {
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
     justify-content: center;
 }
 
 .l-flexbox_flexend {
-    -webkit-justify-content: flex-end;
-    -ms-flex-pack: end;
     justify-content: flex-end;
 }
 
 .l-flexbox_flexbetween {
-    -webkit-justify-content: space-between;
-    -ms-flex-pack: justify;
     justify-content: space-between;
 }
 
 .l-flexbox_flexwrap {
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
 }
 
 .l-flexbox_alignstretch {
-    -webkit-align-items: stretch;
-    -ms-flex-align: stretch;
     align-items: stretch;
 }
 
-/* Layouts
--------------------------------------------------- */
 .l-wrapper {
     display: flex;
     justify-content: center;
@@ -87,13 +55,12 @@
     width: 416px;
     height: 488px;
     border-radius: 4px;
-    background-color: #fff;
+    background-color: $white;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
     position: relative;
     top: calc(50% - 40px);
     left: 50%;
     transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
 }
 
 .l-welcome_container.reset_pas {
@@ -115,29 +82,29 @@
     width: 80px;
     height: 80px;
     margin: 0 auto;
-    background: url('../images/qm-logo.svg') 50% no-repeat;
+    background: $urlQmLogo 50% no-repeat;
 }
 
 .l-welcome_text_logo {
     width: 283px;
     height: 49px;
     margin: 35px auto 0;
-    font-family: "Roboto", sans-serif;
+    font-family: $fontRoboto;
     text-transform: uppercase;
     font-size: 42px;
     font-weight: 300;
     letter-spacing: 3.7px;
-    color: #6e6e6e;
+    color: $color_dove_gray_approx;
 }
 
 .l-welcome_text_description {
     margin: 6px auto 0;
     width: 110px;
     height: 19px;
-    font-family: "Roboto", sans-serif;
+    font-family: $fontRoboto;
     font-size: 16px;
     font-weight: normal;
-    color: #00bf28;
+    color: $color_malachite_approx;
 }
 
 .l-welcome_logo_login {
@@ -146,7 +113,7 @@
     position: absolute;
     top: 50px;
     left: 56px;
-    background: url('../images/qm-logo.svg') 50% no-repeat;
+    background: $urlQmLogo 50% no-repeat;
     background-size: cover;
 }
 
@@ -156,12 +123,12 @@
     position: absolute;
     top: 51px;
     left: 118px;
-    font-family: "Roboto", sans-serif;
+    font-family: $fontRoboto;
     text-transform: uppercase;
     font-size: 22px;
     font-weight: 300;
     letter-spacing: 2px;
-    color: #6e6e6e;
+    color: $color_dove_gray_approx;
 }
 
 .l-welcome_text_login {
@@ -170,10 +137,10 @@
     position: absolute;
     top: 80px;
     left: 118px;
-    font-family: "Roboto", sans-serif;
+    font-family: $fontRoboto;
     font-size: 14px;
     font-weight: normal;
-    color: #959595;
+    color: $color_mountain_mist_approx;
 }
 
 .l-form {
@@ -195,7 +162,6 @@
     top: 75%;
     left: 50%;
     transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
 }
 
 .l-welcome_links {
@@ -208,11 +174,13 @@
     bottom: -40px;
 }
 
-.l-welcome_footer_logo a {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    width: 110px;
+.l-welcome_footer_logo {
+    a {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 110px;
+    }
 }
 
 .l-welcome_header_forgot {
@@ -221,15 +189,15 @@
 
 .l-container {
     height: calc(100% - 40px);
-    background: #fff;
-    border-left: 1px solid #dadfe1;
-    border-right: 1px solid #dadfe1;
+    background: $white;
+    border-left: 1px solid $color_geyser_approx;
+    border-right: 1px solid $color_geyser_approx;
     border-top: 0;
 }
 
 .l-header {
     z-index: 2;
-    background-color: #fff;
+    background-color: $white;
     position: relative;
     height: 50px;
     padding: 0 12px;
@@ -241,14 +209,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
 
-.l-header-logo .l-header-logo-text {
-    text-transform: uppercase;
-    font-family: "Roboto", sans-serif;
-    font-size: 18px;
-    letter-spacing: 3px;
-    color: #778594;
+    .l-header-logo-text {
+        text-transform: uppercase;
+        font-family: $fontRoboto;
+        font-size: 18px;
+        letter-spacing: 3px;
+        color: $color_slate_gray_approx;
+    }
 }
 
 .l-content {
@@ -260,7 +228,7 @@
     position: relative;
     width: 330px;
     height: 100%;
-    border-right: 1px solid #dadfe1;
+    border-right: 1px solid $color_geyser_approx;
 }
 
 .l-search {
@@ -268,7 +236,7 @@
     justify-content: space-between;
     align-items: center;
     z-index: 1;
-    background-color: #fff;
+    background-color: $white;
     height: 56px;
     padding: 12px;
 }
@@ -280,13 +248,13 @@
 
 .l-list-header {
     padding: 0 15px;
-    background: #f2f4f5;
+    background: $color_wild_sand_approx;
 }
 
 .l-list-header-title {
     font-size: 14px;
     line-height: 25px;
-    color: #999;
+    color: $color_mountain_mist_approx;
     text-transform: uppercase;
 }
 
@@ -312,8 +280,8 @@
 
 .l-footer {
     z-index: 2;
-    background-color: #fff;
-    border-top: 1px solid #dadfe1;
+    background-color: $white;
+    border-top: 1px solid $color_geyser_approx;
     position: relative;
     height: 40px;
     padding: 0 20px;
@@ -325,33 +293,21 @@
     width: 130px;
     text-align: right;
     font-size: 14px;
-    color: #999;
+    color: $color_mountain_mist_approx;
 }
 
 .welcom-app-version {
     text-align: right;
     font-size: 14px;
-    color: #999;
+    color: $color_mountain_mist_approx;
 }
 
-/* Chats
--------------------------------------------------- */
-.chatView,
-.l-chat {
+.chatView {
     height: 100%;
 }
 
-.l-chat_group {
-    position: relative;
-}
-
-.l-chat-header {
-    z-index: 1;
-    position: relative;
-    height: 50px;
-    padding: 0 20px;
-    background: #f8f8f8;
-    border-bottom: 1px solid #dadfe1;
+.l-chat {
+    height: 100%;
 }
 
 .l-chat-content {
@@ -360,25 +316,40 @@
     overflow-y: auto;
 }
 
-.l-chat_group .l-chat-content {
-    height: calc(100% - 140px);
+.l-chat_group {
+    position: relative;
+
+    .l-chat-content {
+        height: calc(100% - 140px);
+    }
+
+    .l-chat-content_min {
+        margin-top: 94px;
+        height: calc(100% - 234px);
+    }
 }
 
-.is-request .l-chat-content {
-    height: calc(100% - 50px);
+.l-chat-header {
+    z-index: 1;
+    position: relative;
+    height: 50px;
+    padding: 0 20px;
+    background: $color_desert_storm_approx;
+    border-bottom: 1px solid $color_geyser_approx;
 }
 
-.l-chat_group .l-chat-content_min {
-    margin-top: 94px;
-    height: calc(100% - 234px);
+.is-request {
+    .l-chat-content {
+        height: calc(100% - 50px);
+    }
 }
 
 .l-chat-footer {
     z-index: 1;
-    background-color: #fff;
+    background-color: $white;
     height: 90px;
     padding: 0 5px 5px;
-    border-top: 1px solid #dadfe1;
+    border-top: 1px solid $color_geyser_approx;
     position: relative;
 }
 
@@ -399,15 +370,14 @@
     display: inline-flex;
     justify-content: space-around;
     vertical-align: top;
-    text-align: -moz-left;
     text-align: center;
     height: 33px;
     width: 168px;
     position: relative;
-}
 
-.l-input-menu .l-input-buttons {
-    display: block;
-    height: 100%;
-    cursor: pointer;
+    .l-input-buttons {
+        display: block;
+        height: 100%;
+        cursor: pointer;
+    }
 }

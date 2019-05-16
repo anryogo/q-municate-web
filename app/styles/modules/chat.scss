@@ -1,6 +1,7 @@
-/* chat */
-.groupTitle > * {
-    cursor: pointer;
+.groupTitle {
+    > * {
+        cursor: pointer;
+    }
 }
 
 .chat-title {
@@ -8,14 +9,15 @@
     height: 40px;
 }
 
-.l-chat_group .chat-title {
-    max-width: 540px;
-    line-height: 40px;
-    position: relative;
-    z-index: 1;
+.l-chat_group {
+    .chat-title {
+        max-width: 540px;
+        line-height: 40px;
+        position: relative;
+        z-index: 1;
+    }
 }
 
-/* occupants */
 .chat-occupants-wrap {
     position: absolute;
     top: 50px;
@@ -23,8 +25,8 @@
     width: 100%;
     height: 93px;
     padding: 13px 16px 13px 10px;
-    background: #f8f8f8;
-    border-bottom: 1px solid #f2f4f5;
+    background: $color_desert_storm_approx;
+    border-bottom: 1px solid $color_wild_sand_approx;
     visibility: hidden;
     opacity: 0;
     transition: all 0.1s;
@@ -40,15 +42,13 @@
     height: 66px;
 }
 
-/* pencil */
 .pencil {
     width: 18px;
     height: 17px;
     margin-left: 8px;
-    background: url('../images/icon-pencil.svg') no-repeat center;
+    background: $urlIcnPencil no-repeat center;
 }
 
-/* triangle */
 .triangle {
     position: relative;
     margin-left: 8px;
@@ -57,20 +57,20 @@
 
 .triangle_up {
     bottom: 2px;
-    border-bottom: 7px solid #959595;
+    border-bottom: 7px solid $color_mountain_mist_approx;
 }
 
 .triangle_down {
     top: 4px;
-    border-top: 7px solid #959595;
+    border-top: 7px solid $color_mountain_mist_approx;
 }
 
 .default_group_avatar {
-    background: url('../images/ava-group.svg') no-repeat center;
+    background: $urlAvaGroup no-repeat center;
     background-size: contain;
 }
 
 .default_single_avatar {
-    background: url('../images/ava-single.svg') no-repeat center;
+    background: $urlAvaSingle no-repeat center;
     background-size: contain;
 }

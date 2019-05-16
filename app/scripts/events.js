@@ -12,7 +12,8 @@ define([
     'LocationView',
     'minEmoji',
     'perfectscrollbar',
-    'mCustomScrollbar'
+    'mCustomScrollbar',
+    'mousewheel'
 ], function(
     $,
     QMCONFIG,

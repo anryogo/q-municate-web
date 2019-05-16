@@ -1,30 +1,37 @@
-/* text */
 .text {
     display: block;
-    font-family: "Roboto", sans-serif;
+    font-family: $fontRoboto;
     font-size: 14px;
     font-weight: normal;
     text-align: center;
 }
 
-.l-sidebar .text,
-.popup .text {
-    font-size: 16px;
-    line-height: 22px;
+.l-sidebar {
+    .text {
+        font-size: 16px;
+        line-height: 22px;
+    }
+}
+
+.popup {
+    .text {
+        font-size: 16px;
+        line-height: 22px;
+    }
 }
 
 .text_welcome {
-    color: #3d5b99;
+    color: $color_azure_approx;
     font-size: 2.2vh;
     text-transform: uppercase;
 }
 
 .text_error {
-    font-family: "Roboto", sans-serif;
+    font-family: $fontRoboto;
     font-size: 12px;
     font-weight: normal;
     text-align: center;
-    color: #c03d3d;
+    color: $color_mojo_approx;
     position: absolute;
     top: 120px;
     opacity: 0;
@@ -38,6 +45,10 @@
     margin-bottom: 2.5vh;
     font-size: 1.4vh;
     line-height: 2vh;
+
+    a {
+        color: $color_mountain_mist_approx;
+    }
 }
 
 .text_mid {
@@ -45,73 +56,99 @@
     margin: 0 auto;
     width: 11px;
     height: 14px;
-    font-family: "Roboto", sans-serif;
+    font-family: $fontRoboto;
     font-size: 12px;
     font-weight: normal;
     text-align: center;
-    color: #959595;
+    color: $color_mountain_mist_approx;
+}
+
+a.firebasePhone {
+    &:focus {
+        text-decoration: underline;
+        opacity: 1;
+    }
+
+    &:hover {
+        text-decoration: underline;
+        opacity: 1;
+    }
 }
 
 .text_digits {
-    color: #959595;
+    color: $color_mountain_mist_approx;
     margin-bottom: 34px;
+
+    a.firebasePhone {
+        color: $color_mariner_approx;
+    }
 }
 
-.text_signup a {
-    color: #999;
-}
-
-.text_digits a.firebasePhone {
-    color: #2c74c7;
-}
-
-a.firebasePhone:focus,
-a.firebasePhone:hover {
-    text-decoration: underline;
-    opacity: 1;
-}
-
-.firebasePhone.not_allowed,
-.firebasePhone.not_allowed:focus,
-.firebasePhone.not_allowed:hover,
-.l-btn_login_fb.not_allowed,
-.l-btn_login_fb.not_allowed:focus,
-.l-btn_login_fb.not_allowed:hover {
+.firebasePhone.not_allowed {
     opacity: 0.4;
     text-transform: initial;
+
+    &:focus {
+        opacity: 0.4;
+        text-transform: initial;
+    }
+
+    &:hover {
+        opacity: 0.4;
+        text-transform: initial;
+    }
+}
+
+.l-btn_login_fb.not_allowed {
+    opacity: 0.4;
+    text-transform: initial;
+
+    &:focus {
+        opacity: 0.4;
+        text-transform: initial;
+    }
+
+    &:hover {
+        opacity: 0.4;
+        text-transform: initial;
+    }
 }
 
 .text_login {
-    font-family: "Roboto", sans-serif;
+    font-family: $fontRoboto;
     font-size: 11px;
     font-weight: normal;
-    color: #959595;
-}
+    color: $color_mountain_mist_approx;
 
-.text_login:focus,
-.text_login:hover {
-    text-decoration: underline;
-    opacity: 1;
+    &:focus {
+        text-decoration: underline;
+        opacity: 1;
+    }
+
+    &:hover {
+        text-decoration: underline;
+        opacity: 1;
+    }
 }
 
 .text_forgot_black {
     display: inline-block;
     height: 25px;
-    font-family: "Roboto", sans-serif;
+    font-family: $fontRoboto;
     font-size: 22px;
     font-weight: normal;
-    color: #1f1f1f;
+    color: $color_log_cabin_approx;
     vertical-align: bottom;
 }
 
 .text_forgot {
     width: 304px;
     height: 38px;
-    font-family: "Roboto", sans-serif;
+    font-family: $fontRoboto;
     font-size: 13px;
     font-weight: normal;
     line-height: 1.46;
-    color: #6e6e6e;
+    color: $color_dove_gray_approx;
     text-align: left;
     margin-bottom: 18px;
 }

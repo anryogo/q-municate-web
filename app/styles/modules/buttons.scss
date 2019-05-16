@@ -1,16 +1,32 @@
-/* buttons */
-.btn,
-.btn:focus,
-.btn:hover {
-    color: #fff;
+.btn {
+    color: $white;
     text-align: center;
     box-shadow: none;
     line-height: 100%;
+
+    &:focus {
+        color: $white;
+        text-align: center;
+        box-shadow: none;
+        line-height: 100%;
+    }
+
+    &:hover {
+        color: $white;
+        text-align: center;
+        box-shadow: none;
+        line-height: 100%;
+    }
 }
 
-button:focus,
-button:hover {
-    background-color: initial;
+button {
+    &:focus {
+        background-color: initial;
+    }
+
+    &:hover {
+        background-color: initial;
+    }
 }
 
 .btn_form {
@@ -30,73 +46,98 @@ button:hover {
     height: 40px;
     margin: 0 auto;
     border-radius: 2px;
-    font-family: "Roboto", sans-serif;
+    font-family: $fontRoboto;
     font-size: 14px;
     font-weight: 500;
 }
 
 .l-welcome_btn_green {
     margin-top: 76px;
-    background-color: #28c849;
-    color: #fff;
+    background-color: $color_malachite_approx;
+    color: $white;
+
+    &:focus {
+        background-color: $color_sea_green_approx;
+        opacity: 1;
+    }
+
+    &:hover {
+        background-color: $color_sea_green_approx;
+        opacity: 1;
+    }
 }
 
 .l-welcome_btn_white {
     margin-top: 16px;
-    background-color: #fff;
-    color: #6e6e6e;
-}
+    background-color: $white;
+    color: $color_dove_gray_approx;
 
-.l-welcome_btn_white:focus,
-.l-welcome_btn_white:hover {
-    background-color: #eee;
-    color: #6e6e6e;
-    opacity: 1;
+    &:focus {
+        background-color: $color_gallery_approx;
+        color: $color_dove_gray_approx;
+        opacity: 1;
+    }
+
+    &:hover {
+        background-color: $color_gallery_approx;
+        color: $color_dove_gray_approx;
+        opacity: 1;
+    }
 }
 
 .l-btn_login {
     margin: 20px 0 9px;
-    background-color: #28c849;
-    color: #fff;
-}
+    background-color: $color_malachite_approx;
+    color: $white;
 
-.l-btn_login:focus,
-.l-btn_login:hover,
-.l-welcome_btn_green:focus,
-.l-welcome_btn_green:hover {
-    background-color: #26a640;
-    opacity: 1;
+    &:focus {
+        background-color: $color_sea_green_approx;
+        opacity: 1;
+    }
+
+    &:hover {
+        background-color: $color_sea_green_approx;
+        opacity: 1;
+    }
 }
 
 .l-btn_login_fb {
     margin: 9px 0 35px;
-    background-color: #4e70a8;
-    color: #fff;
-}
+    background-color: $color_san_marino_approx;
+    color: $white;
 
-.l-btn_login_fb:focus,
-.l-btn_login_fb:hover {
-    background-color: #445f8c;
-    opacity: 1;
+    &:focus {
+        background-color: $color_bismark_approx;
+        opacity: 1;
+    }
+
+    &:hover {
+        background-color: $color_bismark_approx;
+        opacity: 1;
+    }
 }
 
 .l-btn_reset {
     margin-top: 24px;
-    background-color: #28c849;
-    color: #fff;
-}
+    background-color: $color_malachite_approx;
+    color: $white;
 
-.l-btn_reset:focus,
-.l-btn_reset:hover {
-    background-color: #26a640;
-    opacity: 1;
+    &:focus {
+        background-color: $color_sea_green_approx;
+        opacity: 1;
+    }
+
+    &:hover {
+        background-color: $color_sea_green_approx;
+        opacity: 1;
+    }
 }
 
 .i-btn_icon_fb {
     display: inline-block;
     width: 18px;
     height: 18px;
-    background: url('../images/fb-logo.svg') no-repeat center;
+    background: $urlFbLogo no-repeat center;
     margin-right: 7px;
     vertical-align: middle;
 }
@@ -104,15 +145,15 @@ button:hover {
 .i-mini_logo {
     width: 22px;
     height: 22px;
-    background: url('../images/qmweb-launch-qblogo.svg') no-repeat center;
+    background: $urlLaunchQbLogo no-repeat center;
 }
 
 .by_QB {
     margin-left: 6px;
-    font-family: "Roboto", sans-serif;
+    font-family: $fontRoboto;
     font-size: 13px;
     font-weight: normal;
-    color: #959595;
+    color: $color_mountain_mist_approx;
 }
 
 .l-welcome_download {
@@ -129,43 +170,63 @@ button:hover {
 .i-appstore {
     width: 24px;
     height: 24px;
-    background: url('../images/ic-appstore.svg') no-repeat center;
+    background: $urlIcnAppstore no-repeat center;
 }
 
 .i-android {
     width: 24px;
     height: 24px;
-    background: url('../images/ic-android.svg') no-repeat center;
+    background: $urlIcnAndroid no-repeat center;
 }
 
 .i-back_login {
     display: inline-block;
     width: 24px;
     height: 24px;
-    background: url('../images/ic-arrow-back.svg') no-repeat center;
+    background: $urlIcnArrowBack no-repeat center;
     margin-right: 7px;
 }
 
-button.btn.btn_add,
-button.btn.btn_add:focus,
-button.btn.btn_add:hover {
+button.btn.btn_add {
     width: 300px;
     font-size: 19px;
     border-radius: 50px;
     height: 48px;
     min-height: 45px;
+
+    &:focus {
+        width: 300px;
+        font-size: 19px;
+        border-radius: 50px;
+        height: 48px;
+        min-height: 45px;
+    }
+
+    &:hover {
+        width: 300px;
+        font-size: 19px;
+        border-radius: 50px;
+        height: 48px;
+        min-height: 45px;
+    }
 }
 
-button.btn_invite,
-button.btn_invite:focus,
-button.btn_invite:hover {
+button.btn_invite {
     margin-bottom: 2vh;
-    background: #ff4945;
+    background: $color_sunset_orange_approx;
+
+    &:focus {
+        margin-bottom: 2vh;
+        background: $color_sunset_orange_approx;
+    }
+
+    &:hover {
+        margin-bottom: 2vh;
+        background: $color_sunset_orange_approx;
+    }
 }
 
-button.btn.btn_invite_contacts,
-button.btn.btn_invite_contacts:focus,
-button.btn.btn_invite_contacts:hover {
+button.btn.btn_invite_contacts {
     width: 300px;
     font-size: 20px;
     border-radius: 56px;
@@ -174,22 +235,62 @@ button.btn.btn_invite_contacts:hover {
     transition: initial;
     vertical-align: middle;
     text-transform: none;
+
+    &:focus {
+        width: 300px;
+        font-size: 20px;
+        border-radius: 56px;
+        height: 56px;
+        line-height: 56px;
+        transition: initial;
+        vertical-align: middle;
+        text-transform: none;
+    }
+
+    &:hover {
+        width: 300px;
+        font-size: 20px;
+        border-radius: 56px;
+        height: 56px;
+        line-height: 56px;
+        transition: initial;
+        vertical-align: middle;
+        text-transform: none;
+    }
 }
 
 .btn_share {
-    background: #3b5998;
+    background: $color_azure_approx;
 }
 
-button.btn.btn_search,
-button.btn.btn_search:focus,
-button.btn.btn_search:hover {
+button.btn.btn_search {
     display: block;
     width: 285px;
     margin: 20px auto 0;
     font-size: 16px;
     line-height: 40px;
-    background: #0d70b3;
+    background: $color_denim_approx;
     border-radius: 7px;
+
+    &:focus {
+        display: block;
+        width: 285px;
+        margin: 20px auto 0;
+        font-size: 16px;
+        line-height: 40px;
+        background: $color_denim_approx;
+        border-radius: 7px;
+    }
+
+    &:hover {
+        display: block;
+        width: 285px;
+        margin: 20px auto 0;
+        font-size: 16px;
+        line-height: 40px;
+        background: $color_denim_approx;
+        border-radius: 7px;
+    }
 }
 
 .btn_popup {
@@ -197,24 +298,41 @@ button.btn.btn_search:hover {
     font-size: 24px;
     height: 60px;
     line-height: 100%;
-    background: #0d70b3;
+    background: $color_denim_approx;
     text-transform: none;
     border-radius: 0;
+
+    &:active {
+        background-color: $color_denim_approx;
+    }
+
+    &:hover {
+        background-color: $color_denim_approx;
+    }
 }
 
-.btn_popup:active,
-.btn_popup:hover {
-    background-color: #0d70b3;
-}
-
-.btn.btn_popup.btn_popup_changepass.without_M,
-.btn.btn_popup.btn_popup_changepass.without_M:focus,
-.btn.btn_popup.btn_popup_changepass.without_M:hover {
+.btn.btn_popup.btn_popup_changepass.without_M {
     display: block;
     width: 100%;
     height: 100%;
-    background: #0d70b3;
+    background: $color_denim_approx;
     margin: 0 auto;
+
+    &:focus {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: $color_denim_approx;
+        margin: 0 auto;
+    }
+
+    &:hover {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: $color_denim_approx;
+        margin: 0 auto;
+    }
 }
 
 .btn_chat {
@@ -223,10 +341,10 @@ button.btn.btn_search:hover {
     max-height: 25px;
     display: inline-block;
     vertical-align: bottom;
-}
 
-.btn_chat:last-child {
-    margin-right: 0;
+    &:last-child {
+        margin-right: 0;
+    }
 }
 
 .btn_chat_videocall {
@@ -234,8 +352,10 @@ button.btn.btn_search:hover {
     top: -2px;
 }
 
-.btn_sendlocation[data-balloon-length="small"]::after {
-    width: 110px;
+.btn_sendlocation[data-balloon-length="small"] {
+    &::after {
+        width: 110px;
+    }
 }
 
 .btn_message {
@@ -250,40 +370,40 @@ button.btn.btn_search:hover {
 .btn_sendlocation {
     position: relative;
     width: 24px;
-    background: url('../images/ic-hidden-location.svg') 50% no-repeat;
+    background: $urlIcnHiddenLocation 50% no-repeat;
     background-size: contain;
 }
 
 .btn_sendlocation.btn_active {
-    background: url('../images/ic-active-location.svg') 50% no-repeat;
+    background: $urlIcnActiveLocation 50% no-repeat;
 }
 
 .btn_input_smile {
     position: relative;
     width: 20px;
-    background: url('../images/ic_smile.svg') 50% no-repeat;
+    background: $urlIcnSmile 50% no-repeat;
     background-size: contain;
 }
 
 .btn_input_smile.is-active {
-    background: url('../images/ic_smile_active.svg') 50% no-repeat;
+    background: $urlIcnSmileActive 50% no-repeat;
 }
 
 .btn_input_location {
     position: relative;
     width: 20px;
-    background: url('../images/ic_send_location.svg') 50% no-repeat;
+    background: $urlIcnSendLocation 50% no-repeat;
     background-size: contain;
 }
 
 .btn_input_location.is-active {
-    background: url('../images/ic_send_location_active.svg') 50% no-repeat;
+    background: $urlIcnSendLocationActive 50% no-repeat;
 }
 
 .btn_input_attach {
     position: relative;
     width: 20px;
-    background: url('../images/ic_attach.svg') 50% no-repeat;
+    background: $urlIcnAttach 50% no-repeat;
     background-size: contain;
 }
 
@@ -295,7 +415,7 @@ button.btn.btn_search:hover {
     display: block;
     width: 26px;
     height: 26px;
-    background: url(../images/ic-send.svg) 50% no-repeat;
+    background: $urlIcnSend 50% no-repeat;
     background-size: contain;
 }
 
@@ -306,21 +426,17 @@ button.btn.btn_search:hover {
     width: 40px;
     height: 40px;
     transform: translate(-50%);
-    -webkit-transform: translate(-50%);
-    -moz-transform: translate(-50%);
-    -o-transform: translate(-50%);
-    -ms-transform: translate(-50%);
     opacity: 0.3;
-    background-image: url('../images/scrolltobottom.svg');
+    background-image: $urlScrollToBottom;
     background-repeat: no-repeat;
     background-size: contain;
     background-position: 50%;
     display: none;
     cursor: pointer;
-}
 
-.btn_to_bottom:hover {
-    opacity: 0.4;
+    &:hover {
+        opacity: 0.4;
+    }
 }
 
 .btn_request_again {
@@ -331,26 +447,29 @@ button.btn.btn_search:hover {
     padding: 5px 10px;
     font-size: 14px;
     font-weight: 600;
-    font-family: "Roboto", sans-serif;
-    color: #4a4a4a;
+    font-family: $fontRoboto;
+    color: $color_gravel_approx;
     line-height: 19px;
-    background: #f2f4f5;
-    border: 1px solid #f2f4f5;
+    background: $color_wild_sand_approx;
+    border: 1px solid $color_wild_sand_approx;
     border-radius: 5px;
     text-transform: none;
-}
 
-.btn_request_again:focus,
-.btn_request_again:hover {
-    background: #f2f4f5;
-    color: #333;
+    &:focus {
+        background: $color_wild_sand_approx;
+        color: $color_mine_shaft_approx;
+    }
+
+    &:hover {
+        background: $color_wild_sand_approx;
+        color: $color_mine_shaft_approx;
+    }
 }
 
 .btn_request_again_delete {
     margin-left: 0;
 }
 
-/* button icons */
 .btn-icon {
     margin-right: 2vh;
     vertical-align: text-bottom;
@@ -362,7 +481,7 @@ button.btn.btn_search:hover {
     display: inline-block;
     margin: 0 2vh 0.6vh 0;
     vertical-align: middle;
-    background: url('../images/icon-fb.svg') 50% no-repeat;
+    background: $urlIcnFb 50% no-repeat;
 }
 
 .btn-icon_fb_header {
@@ -376,7 +495,7 @@ button.btn.btn_search:hover {
     width: 27px;
     height: 100%;
     margin-right: 10px;
-    background: url(../images/icon-invite.svg?1464359307) no-repeat center;
+    background: $urlIcnInvite no-repeat center;
     vertical-align: middle;
 }
 
@@ -395,15 +514,7 @@ button.btn.btn_search:hover {
     vertical-align: text-top;
 }
 
-.btn-flat.without_M,
-.btn-flat.without_M:focus,
-.btn-flat.without_M:hover,
-.btn-large.without_M,
-.btn-large.without_M:focus,
-.btn-large.without_M:hover,
-.btn.without_M,
-.btn.without_M:focus,
-.btn.without_M:hover {
+.btn-flat.without_M {
     border: none;
     border-radius: initial;
     height: auto;
@@ -413,6 +524,102 @@ button.btn.btn_search:hover {
     text-transform: none;
     vertical-align: initial;
     -webkit-tap-highlight-color: initial;
+
+    &:focus {
+        border: none;
+        border-radius: initial;
+        height: auto;
+        line-height: initial;
+        outline: 0;
+        padding: initial;
+        text-transform: none;
+        vertical-align: initial;
+        -webkit-tap-highlight-color: initial;
+    }
+
+    &:hover {
+        border: none;
+        border-radius: initial;
+        height: auto;
+        line-height: initial;
+        outline: 0;
+        padding: initial;
+        text-transform: none;
+        vertical-align: initial;
+        -webkit-tap-highlight-color: initial;
+    }
+}
+
+.btn-large.without_M {
+    border: none;
+    border-radius: initial;
+    height: auto;
+    line-height: initial;
+    outline: 0;
+    padding: initial;
+    text-transform: none;
+    vertical-align: initial;
+    -webkit-tap-highlight-color: initial;
+
+    &:focus {
+        border: none;
+        border-radius: initial;
+        height: auto;
+        line-height: initial;
+        outline: 0;
+        padding: initial;
+        text-transform: none;
+        vertical-align: initial;
+        -webkit-tap-highlight-color: initial;
+    }
+
+    &:hover {
+        border: none;
+        border-radius: initial;
+        height: auto;
+        line-height: initial;
+        outline: 0;
+        padding: initial;
+        text-transform: none;
+        vertical-align: initial;
+        -webkit-tap-highlight-color: initial;
+    }
+}
+
+.btn.without_M {
+    border: none;
+    border-radius: initial;
+    height: auto;
+    line-height: initial;
+    outline: 0;
+    padding: initial;
+    text-transform: none;
+    vertical-align: initial;
+    -webkit-tap-highlight-color: initial;
+
+    &:focus {
+        border: none;
+        border-radius: initial;
+        height: auto;
+        line-height: initial;
+        outline: 0;
+        padding: initial;
+        text-transform: none;
+        vertical-align: initial;
+        -webkit-tap-highlight-color: initial;
+    }
+
+    &:hover {
+        border: none;
+        border-radius: initial;
+        height: auto;
+        line-height: initial;
+        outline: 0;
+        padding: initial;
+        text-transform: none;
+        vertical-align: initial;
+        -webkit-tap-highlight-color: initial;
+    }
 }
 
 .users-nav-btns {
@@ -431,16 +638,16 @@ button.btn.btn_search:hover {
 }
 
 .users-nav-contacts {
-    background: url(../images/ic_group.svg) 50% no-repeat;
+    background: $urlIcnGroup 50% no-repeat;
     background-size: contain;
 }
 
 .users-nav-profile {
-    background: url(../images/ic_menu.svg) 50% no-repeat;
+    background: $urlIcnMenu 50% no-repeat;
     background-size: contain;
 }
 
 .users-nav-share {
-    background: url(../images/icon-fb_header.svg) 50% no-repeat;
+    background: $urlIcnFbHeader 50% no-repeat;
     background-size: 18px 18px;
 }

@@ -1,0 +1,214 @@
+.mCS-autoHide {
+    > .mCustomScrollBox {
+        ~ {
+            .mCSB_scrollTools {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.mCSB_container {
+    overflow: visible;
+}
+
+.download {
+    position: absolute;
+    top: 30px;
+    right: 25px;
+    width: 145px;
+    height: 110px;
+}
+
+.download-app {
+    display: block;
+
+    &:first-child {
+        margin-bottom: 7px;
+    }
+
+    img {
+        width: 145px;
+    }
+}
+
+.footer-links-item {
+    display: inline-block;
+    margin-right: 30px;
+    font-size: 14px;
+
+    a {
+        color: $color_mountain_mist_approx;
+    }
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.footer-apps {
+    a {
+        display: block;
+    }
+}
+
+.header-links {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    right: 0;
+}
+
+.header-links-item {
+    height: 100%;
+    border-right: 1px solid $color_gallery_approx;
+    list-style: none;
+
+    &:last-child {
+        border-right: 0;
+    }
+
+    &:hover {
+        background: $color_wild_sand_approx;
+    }
+
+    > a {
+        display: block;
+        height: 100%;
+        padding: 10px 10px;
+        font-size: 18px;
+        line-height: 50px;
+        color: $color_mine_shaft_approx;
+    }
+
+    &:nth-child(1) > a:hover {
+        color: $color_azure_approx;
+        opacity: 1;
+    }
+
+    &:nth-child(2) > a:hover {
+        color: $color_malachite_approx;
+        opacity: 1;
+    }
+
+    &:nth-child(3) > a:hover {
+        opacity: 1;
+    }
+}
+
+.footer-links_welcome {
+    .footer-links-item {
+        margin-right: 3vh;
+        font-size: 1.8vh;
+    }
+}
+
+.footer-apps-ios {
+    margin-right: 25px;
+}
+
+.cap-text {
+    margin-bottom: 8vh;
+    font-size: 5.5vh;
+    color: $color_storm_dust_approx;
+}
+
+.cap-text_contacts {
+    margin-bottom: 35px;
+    font-size: 40px;
+    line-height: 50px;
+    text-align: center;
+    color: $color_dove_gray_approx;
+}
+
+.cap-anybody {
+    width: 30.2vh;
+    height: 32vh;
+    margin-bottom: 5vh;
+}
+
+.chat_popover {
+    position: absolute;
+    bottom: 40px;
+    right: 10px;
+    visibility: hidden;
+    opacity: 0;
+    background: $white;
+    border: solid 1px $color_wild_sand_approx;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 3px $color_mercury_approx;
+    transition: opacity 0.4s, bottom 0.6s;
+    z-index: 3;
+}
+
+.chat_popover.is-active {
+    bottom: 102px;
+    visibility: visible;
+    opacity: 1;
+}
+
+.coner {
+    overflow: hidden;
+    position: absolute;
+    height: 12px;
+    width: 24px;
+    bottom: -12px;
+}
+
+.popover_smile {
+    width: 215px;
+    height: 240px;
+
+    .coner {
+        right: 112px;
+    }
+}
+
+.icon_coner {
+    background: $white;
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    border: solid $color_wild_sand_approx;
+    border-width: 0 1px 1px 0;
+    border-radius: 2px;
+    position: relative;
+    top: -9px;
+    left: 3px;
+    transform: rotate(45deg);
+    box-shadow: 0 0 10px 3px $color_mercury_approx;
+}
+
+.popover_gmap {
+    width: 462px;
+    height: 350px;
+    padding: 5px;
+
+    .coner {
+        right: 80px;
+    }
+}
+
+.no-connection {
+    position: absolute;
+    top: 23px;
+    left: 300px;
+    padding: 0 20px;
+    font-size: 12px;
+    line-height: 32px;
+    color: $color_storm_dust_approx;
+    background: $color_wild_sand_approx;
+    border-radius: 20px;
+}
+
+.popover {
+    z-index: 3;
+}
+
+.popup {
+    z-index: 3;
+}
+
+.popups {
+    z-index: 3;
+}

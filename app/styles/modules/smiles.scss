@@ -1,6 +1,6 @@
 .smiles-tabs {
     height: 38px;
-    border-bottom: 1px solid #f2f4f5;
+    border-bottom: 1px solid $color_wild_sand_approx;
 }
 
 .smiles-tab {
@@ -9,45 +9,45 @@
 }
 
 .smiles-tab_people {
-    background: url('../images/smiles-group/people.svg') no-repeat center;
+    background: $urlSmilesPeople no-repeat center;
     border-top-left-radius: 5px;
 }
 
 .smiles-tab_nature {
-    background: url('../images/smiles-group/nature.svg') no-repeat center;
+    background: $urlSmilesNature no-repeat center;
 }
 
 .smiles-tab_objects {
-    background: url('../images/smiles-group/objects.svg') no-repeat center;
+    background: $urlSmilesObjects no-repeat center;
 }
 
 .smiles-tab_places {
-    background: url('../images/smiles-group/places.svg') no-repeat center;
+    background: $urlSmilesPlaces no-repeat center;
 }
 
 .smiles-tab_symbols {
-    background: url('../images/smiles-group/symbols.svg') no-repeat center;
+    background: $urlSmilesSymbols no-repeat center;
 }
 
 .smiles-tab_people.is-actived {
-    background: url('../images/smiles-group/people_active.svg') no-repeat center, #17d04b;
+    background: $urlSmilesPeopleActive no-repeat center, $color_malachite_approx;
     border-top-left-radius: 5px;
 }
 
 .smiles-tab_nature.is-actived {
-    background: url('../images/smiles-group/nature_active.svg') no-repeat center, #17d04b;
+    background: $urlSmilesNatureActive no-repeat center, $color_malachite_approx;
 }
 
 .smiles-tab_objects.is-actived {
-    background: url('../images/smiles-group/objects_active.svg') no-repeat center, #17d04b;
+    background: $urlSmilesObjectsActive no-repeat center, $color_malachite_approx;
 }
 
 .smiles-tab_places.is-actived {
-    background: url('../images/smiles-group/places_active.svg') no-repeat center, #17d04b;
+    background: $urlSmilesPlacesActive no-repeat center, $color_malachite_approx;
 }
 
 .smiles-tab_symbols.is-actived {
-    background: url('../images/smiles-group/symbols_active.svg') no-repeat center, #17d04b;
+    background: $urlSmilesSymbolsActive no-repeat center, $color_malachite_approx;
 }
 
 .smiles-wrap {
@@ -55,22 +55,22 @@
     position: relative;
 }
 
-.smiles-group {
-    height: 100%;
-}
-
 .emoji {
     width: 20px;
 }
 
-.smiles-group .emoji {
-    width: 30px;
-    padding: 5px;
-}
+.smiles-group {
+    height: 100%;
 
-.smiles-group .emoji:hover {
-    background: #cecece;
-    cursor: pointer;
+    .emoji {
+        width: 30px;
+        padding: 5px;
+
+        &:hover {
+            background: $color_celeste_approx;
+            cursor: pointer;
+        }
+    }
 }
 
 .em_wrap {
@@ -79,7 +79,6 @@
     height: 33px;
 }
 
-/* emoji plugin */
 .em {
     width: 20px;
     height: 20px;
@@ -89,9 +88,28 @@
     cursor: text;
 }
 
-.message-body .em,
-.textarea .em,
-.last_message_preview .em,
+.message-body {
+    .em {
+        margin: 0;
+        vertical-align: top;
+        cursor: text;
+    }
+}
+
+.last_message_preview {
+    .em {
+        margin: 0;
+        vertical-align: top;
+        cursor: text;
+    }
+}
+
+.textarea .em {
+    margin: 0;
+    vertical-align: top;
+    cursor: text;
+}
+
 .textarea .em:hover {
     margin: 0;
     vertical-align: top;
