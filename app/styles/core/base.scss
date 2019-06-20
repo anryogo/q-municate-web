@@ -54,7 +54,7 @@ input {
     }
 }
 
-input[type="file"] {
+input[type='file'] {
     border: 0;
     cursor: pointer;
 
@@ -73,7 +73,7 @@ textarea {
     }
 }
 
-[contenteditable="true"] {
+[contenteditable='true'] {
     &:focus {
         outline: 0;
         border-color: $color_malachite_approx;
@@ -81,7 +81,7 @@ textarea {
     }
 }
 
-h2[contenteditable="true"] {
+h2[contenteditable='true'] {
     &:focus {
         padding: 3px;
         background: $white;
@@ -128,7 +128,7 @@ h6 {
     margin: 0;
 }
 
-div[contenteditable="true"] {
+div[contenteditable='true'] {
     white-space: pre-wrap;
 
     &:empty {
@@ -144,13 +144,13 @@ div[contenteditable="true"] {
 
         &:empty {
             &::before {
-                content: "";
+                content: '';
             }
         }
     }
 }
 
-input[type="search"] {
+input[type='search'] {
     &::-webkit-search-cancel-button {
         appearance: none;
         margin: -6px 4px 0;

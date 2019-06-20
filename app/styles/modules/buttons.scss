@@ -352,7 +352,7 @@ button.btn.btn_search {
     top: -2px;
 }
 
-.btn_sendlocation[data-balloon-length="small"] {
+.btn_sendlocation[data-balloon-length='small'] {
     &::after {
         width: 110px;
     }
@@ -515,7 +515,7 @@ button.btn.btn_search {
 }
 
 .btn-flat.without_M {
-    border: none;
+    border: 0;
     border-radius: initial;
     height: auto;
     line-height: initial;
@@ -523,10 +523,9 @@ button.btn.btn_search {
     padding: initial;
     text-transform: none;
     vertical-align: initial;
-    -webkit-tap-highlight-color: initial;
 
     &:focus {
-        border: none;
+        border: 0;
         border-radius: initial;
         height: auto;
         line-height: initial;
@@ -534,11 +533,10 @@ button.btn.btn_search {
         padding: initial;
         text-transform: none;
         vertical-align: initial;
-        -webkit-tap-highlight-color: initial;
     }
 
     &:hover {
-        border: none;
+        border: 0;
         border-radius: initial;
         height: auto;
         line-height: initial;
@@ -546,12 +544,11 @@ button.btn.btn_search {
         padding: initial;
         text-transform: none;
         vertical-align: initial;
-        -webkit-tap-highlight-color: initial;
     }
 }
 
 .btn-large.without_M {
-    border: none;
+    border: 0;
     border-radius: initial;
     height: auto;
     line-height: initial;
@@ -559,10 +556,9 @@ button.btn.btn_search {
     padding: initial;
     text-transform: none;
     vertical-align: initial;
-    -webkit-tap-highlight-color: initial;
 
     &:focus {
-        border: none;
+        border: 0;
         border-radius: initial;
         height: auto;
         line-height: initial;
@@ -570,11 +566,10 @@ button.btn.btn_search {
         padding: initial;
         text-transform: none;
         vertical-align: initial;
-        -webkit-tap-highlight-color: initial;
     }
 
     &:hover {
-        border: none;
+        border: 0;
         border-radius: initial;
         height: auto;
         line-height: initial;
@@ -582,12 +577,11 @@ button.btn.btn_search {
         padding: initial;
         text-transform: none;
         vertical-align: initial;
-        -webkit-tap-highlight-color: initial;
     }
 }
 
 .btn.without_M {
-    border: none;
+    border: 0;
     border-radius: initial;
     height: auto;
     line-height: initial;
@@ -595,10 +589,9 @@ button.btn.btn_search {
     padding: initial;
     text-transform: none;
     vertical-align: initial;
-    -webkit-tap-highlight-color: initial;
 
     &:focus {
-        border: none;
+        border: 0;
         border-radius: initial;
         height: auto;
         line-height: initial;
@@ -606,11 +599,10 @@ button.btn.btn_search {
         padding: initial;
         text-transform: none;
         vertical-align: initial;
-        -webkit-tap-highlight-color: initial;
     }
 
     &:hover {
-        border: none;
+        border: 0;
         border-radius: initial;
         height: auto;
         line-height: initial;
@@ -618,7 +610,6 @@ button.btn.btn_search {
         padding: initial;
         text-transform: none;
         vertical-align: initial;
-        -webkit-tap-highlight-color: initial;
     }
 }
 

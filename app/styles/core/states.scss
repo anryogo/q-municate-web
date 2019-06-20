@@ -153,7 +153,7 @@ input.is-error {
 
 .is-contenteditable {
     &::before {
-        content: "";
+        content: '';
         line-height: normal;
     }
 }
