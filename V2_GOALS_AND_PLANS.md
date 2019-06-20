@@ -18,16 +18,18 @@
 4. ~~Remove grunt~~
 5. ~~Migrate bower components to vendor libs~~
 6. ~~Remove bower support~~
-7. ~~Add eslint and remove jshint configuration~~
-8. ~~Add stylelint configuration~~
-9. Add babel
-10. Update application code to ES2015+  syntax
-11. Set webpack
-12. Rewrite RequireJS modules to CommonJS modules
-13. Migrate the vendor libs to npm packages
-14. Update all dependencies to the latest versions
-15. Split the project architecture according to component approach
-16. Refactor components (try to remove the backbone artifacts and jquery, then leave only the simple native JS components)
+7. ~~Add stylelint configuration~~
+8. ~~Convert old css to scss syntax~~
+9. ~~Add autoprefixer~~
+10. ~~Add eslint and remove jshint configuration~~
+11. Add babel
+12. Convert js code to ES2015+ syntax
+13. Set webpack
+14. Rewrite RequireJS modules to CommonJS modules
+15. Migrate the vendor libs to npm packages
+16. Update all dependencies to the latest versions
+17. Split the project architecture according to component approach
+18. Refactor components (try to remove the backbone artifacts and jquery, then leave only the simple native JS components)
 
 **PHASE 2 (React app)**
 
