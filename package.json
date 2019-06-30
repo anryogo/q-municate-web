@@ -22,7 +22,9 @@
     "compile:js": "npm-run-all bundle concat:js",
     "sass": "node-sass app/styles/main.scss app/.tmp/build.css --source-map true",
     "postcss": "postcss app/.tmp/build.css -u autoprefixer -r",
+    "prebundle": "babel app/scripts -d app/__scripts__",
     "bundle": "cross-os requirejs",
+    "postbundle": "rimraf app/__scripts__",
     "concat:css": "node scripts/concat-css.js",
     "concat:js": "node scripts/concat-js.js",
     "server": "live-server app --host=localhost --port=9000 --open",
@@ -72,6 +74,9 @@
     "npm": ">=5.6.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
     "@songkick/injectassets": "^1.1.0",
     "autoprefixer": "^9.5.1",
     "clean-css-cli": "^4.3.0",

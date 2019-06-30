@@ -1,6 +1,6 @@
 ({
-    baseUrl: '../app/scripts',
-    mainConfigFile: '../app/scripts/main.js',
+    baseUrl: '../app/__scripts__',
+    mainConfigFile: '../app/__scripts__/main.js',
     name: 'main',
     optimize: 'none',
     out: '../app/.tmp/build.js',
