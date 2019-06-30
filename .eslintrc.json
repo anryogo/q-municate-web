@@ -1,17 +1,24 @@
 {
+    "parser": "babel-eslint",
     "extends": [
-        "airbnb-base/legacy",
+        "airbnb-base",
         "plugin:requirejs/recommended",
         "plugin:backbone/recommended"
     ],
     "env": {
         "browser": true,
-        "jquery": true
+        "jquery": true,
+        "amd": true,
+        "es6": true
     },
     "globals": {
         "FB": "readonly",
         "QB": "readonly",
         "firebase": "readonly"
+    },
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "script"
     },
     "plugins": [
         "optimize-regex",

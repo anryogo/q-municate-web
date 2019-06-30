@@ -79,6 +79,7 @@
     "@babel/preset-env": "^7.4.5",
     "@songkick/injectassets": "^1.1.0",
     "autoprefixer": "^9.5.1",
+    "babel-eslint": "^10.0.2",
     "clean-css-cli": "^4.3.0",
     "concat": "^1.0.3",
     "cpy-cli": "^2.0.0",
