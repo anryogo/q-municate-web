@@ -1,32 +1,32 @@
+'use strict';
+
 /**
  * QMPlayer
  */
 define([
     'underscore',
-    'backbone'
-], function(
+    'backbone',
+], (
     _,
-    Backbone
-) {
-    'use strict';
-
-    var QMPlayer = {};
+    Backbone,
+) => {
+    const QMPlayer = {};
 
     QMPlayer.Model = Backbone.Model.extend({
         defaults: {
             id: '',
             name: '',
             source: '',
-            duration: ''
+            duration: '',
         },
 
-        initialize: function() {
+        initialize() {
             this.buildView();
         },
 
-        buildView: function() {
+        buildView() {
             new QMPlayer.View({ model: this }); // eslint-disable-line no-new
-        }
+        },
     });
 
     QMPlayer.View = Backbone.View.extend({
@@ -34,35 +34,35 @@ define([
         className: 'qm_audio_player',
         template: _.template(document.querySelector('#QMPlayer').innerHTML),
 
-        initialize: function() {
-            var id = this.model.get('id');
+        initialize() {
+            const id = this.model.get('id');
 
             this.render(id);
             this.start(id);
         },
 
-        render: function(id) {
-            var qmplayerTpl = this.template(this.model.toJSON());
+        render(id) {
+            const qmplayerTpl = this.template(this.model.toJSON());
 
             this.el.innerHTML = qmplayerTpl;
-            document.querySelector('#audio_player_' + id).innerHTML = qmplayerTpl;
+            document.querySelector(`#audio_player_${id}`).innerHTML = qmplayerTpl;
 
             return this;
         },
 
-        start: function(id) {
+        start(id) {
             QMPlayer.init(id);
-        }
+        },
     });
 
     QMPlayer.init = function(id) {
-        var audioEl = document.querySelector('#audio_' + id);
-        var controlEl = document.querySelector('#qm_player_control_' + id);
-        var setterEl = document.querySelector('#qm_player_setter_' + id);
-        var progressEl = document.querySelector('#qm_player_progress_' + id);
-        var timeEl = document.querySelector('#qm_player_time_' + id);
-        var fullLength = document.querySelector('#qm_player_wrap_' + id).offsetWidth;
-        var durationTime;
+        const audioEl = document.querySelector(`#audio_${id}`);
+        const controlEl = document.querySelector(`#qm_player_control_${id}`);
+        const setterEl = document.querySelector(`#qm_player_setter_${id}`);
+        const progressEl = document.querySelector(`#qm_player_progress_${id}`);
+        const timeEl = document.querySelector(`#qm_player_time_${id}`);
+        const fullLength = document.querySelector(`#qm_player_wrap_${id}`).offsetWidth;
+        let durationTime;
 
         setterEl.onclick = function(e) {
             audioEl.currentTime = audioEl.duration * (e.offsetX / fullLength);
@@ -89,28 +89,28 @@ define([
 
         audioEl.oncanplay = function() {
             durationTime = setTime(audioEl.duration);
-            timeEl.innerHTML = '00:00 / ' + durationTime;
+            timeEl.innerHTML = `00:00 / ${durationTime}`;
         };
 
         audioEl.ontimeupdate = function() {
-            var currentTime = setTime(audioEl.currentTime);
-            var length = Math.round(fullLength * (audioEl.currentTime / audioEl.duration));
+            const currentTime = setTime(audioEl.currentTime);
+            const length = Math.round(fullLength * (audioEl.currentTime / audioEl.duration));
 
-            timeEl.innerHTML = currentTime + ' / ' + durationTime;
+            timeEl.innerHTML = `${currentTime} / ${durationTime}`;
 
-            progressEl.style.width = length + 'px';
+            progressEl.style.width = `${length}px`;
         };
 
         function setTime(time) {
-            var min;
-            var sec;
+            let min;
+            let sec;
 
             min = Math.floor(time / 60);
-            min = min >= 10 ? min : '0' + min;
+            min = min >= 10 ? min : `0${min}`;
             sec = Math.floor(time % 60);
-            sec = sec >= 10 ? sec : '0' + sec;
+            sec = sec >= 10 ? sec : `0${sec}`;
 
-            return (min + ':' + sec);
+            return (`${min}:${sec}`);
         }
     };
 

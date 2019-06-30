@@ -1,18 +1,18 @@
+'use strict';
+
 /**
  * AudioRecorder
  */
 define([
     'config',
     'Helpers',
-    'QBMediaRecorder'
-], function(
+    'QBMediaRecorder',
+], (
     QMCONFIG,
     Helpers,
-    QBMediaRecorder
-) {
-    'use strict';
-
-    var self;
+    QBMediaRecorder,
+) => {
+    let self;
 
     function VoiceMessage(app) {
         this.app = app;
@@ -29,14 +29,14 @@ define([
             title: undefined,
             control: undefined,
             cancel: undefined,
-            progress: undefined
+            progress: undefined,
         };
 
         self.init();
     }
 
     VoiceMessage.prototype = {
-        init: function() {
+        init() {
             self.supported = false;
 
             if (Helpers.isIE11orEdge()) return;
@@ -47,17 +47,17 @@ define([
             }
         },
 
-        initRecorder: function() {
-            var options = {
-                onstart: function() {
+        initRecorder() {
+            const options = {
+                onstart() {
                     self.startTimer();
                 },
-                onstop: function(blob) {
+                onstop(blob) {
                     self.stopTimer();
                     self.blob = blob;
                 },
                 mimeType: 'audio/mp3',
-                workerPath: '../workers/qbAudioRecorderWorker.js'
+                workerPath: '../workers/qbAudioRecorderWorker.js',
             };
 
             self.ui.chat = document.getElementById('workspaceWrap');
@@ -73,58 +73,58 @@ define([
             Helpers.log('Recorder is ready to use');
         },
 
-        blockRecorder: function(message) {
-            var recorders = document.getElementsByClassName('j-btn_audio_record');
-            var error = message || ' (unsupported)';
-            var recorder;
+        blockRecorder(message) {
+            const recorders = document.getElementsByClassName('j-btn_audio_record');
+            const error = message || ' (unsupported)';
+            let recorder;
 
             if (recorders.length) {
-                recorders.forEach(function(item) {
+                recorders.forEach((item) => {
                     recorder = item;
 
                     recorder.disabled = true;
                     recorder.classList.remove('is-active');
                     recorder.classList.add('is-unavailable');
                     recorder.setAttribute('data-balloon-length', 'medium');
-                    recorder.setAttribute('data-balloon', 'Recorder unavailable' + error);
+                    recorder.setAttribute('data-balloon', `Recorder unavailable${error}`);
                 });
             }
 
-            Helpers.log('Recorder unavailable' + error);
+            Helpers.log(`Recorder unavailable${error}`);
         },
 
-        startStream: function(callback) {
+        startStream(callback) {
             navigator.mediaDevices.getUserMedia({
-                audio: true
-            }).then(function(stream) {
+                audio: true,
+            }).then((stream) => {
                 self.stream = stream;
                 callback();
-            }).catch(function(err) {
+            }).catch((err) => {
                 self.resetRecord();
                 self.blockRecorder('(microphone wasn\'t found)');
                 throw err;
             });
         },
 
-        stopStream: function() {
+        stopStream() {
             if (!self.stream) {
                 return;
             }
 
-            self.stream.getTracks().forEach(function(track) {
+            self.stream.getTracks().forEach((track) => {
                 track.stop();
             });
         },
 
-        startTimer: function() {
-            var step = 0;
-            var time = 0;
-            var min;
-            var sec;
+        startTimer() {
+            let step = 0;
+            let time = 0;
+            let min;
+            let sec;
 
             self.ui.progress.classList.add('is-active');
 
-            self.timerID = setInterval(function() {
+            self.timerID = setInterval(() => {
                 step += 1;
 
                 self.ui.title.innerHTML = timerValue();
@@ -138,25 +138,25 @@ define([
                 time += 1;
 
                 min = Math.floor(time / 60);
-                min = min >= 10 ? min : '0' + min;
+                min = min >= 10 ? min : `0${min}`;
                 sec = Math.floor(time % 60);
-                sec = sec >= 10 ? sec : '0' + sec;
+                sec = sec >= 10 ? sec : `0${sec}`;
 
-                return min + ':' + sec;
+                return `${min}:${sec}`;
             }
         },
 
-        stopTimer: function() {
+        stopTimer() {
             clearInterval(self.timerID);
             self.timerID = undefined;
         },
 
-        initHandler: function() {
-            self.ui.chat.addEventListener('click', function(event) {
-                var target = event.target;
-                var controlElClassList = self.ui.control.classList;
-                var progressElClassList = self.ui.progress.classList;
-                var cancelElClassList = self.ui.cancel.classList;
+        initHandler() {
+            self.ui.chat.addEventListener('click', (event) => {
+                const { target } = event;
+                const controlElClassList = self.ui.control.classList;
+                const progressElClassList = self.ui.progress.classList;
+                const cancelElClassList = self.ui.cancel.classList;
 
                 // recorder's controls
                 if (target === self.ui.control || target === self.ui.title) {
@@ -202,35 +202,31 @@ define([
             });
         },
 
-        toggleActiveState: function(bool) {
-            var buttons = document.querySelectorAll('.j-footer_btn');
-            var textarea = document.querySelector('.j-textarea');
-            var contenteditable = !bool;
-            var opacityLevel = bool ? 0.4 : 1;
+        toggleActiveState(bool) {
+            const buttons = document.querySelectorAll('.j-footer_btn');
+            const textarea = document.querySelector('.j-textarea');
+            const contenteditable = !bool;
+            const opacityLevel = bool ? 0.4 : 1;
 
             // send recording state
             self.active = bool;
             // disable footer buttons
             textarea.setAttribute('contenteditable', contenteditable);
 
-            buttons.forEach(function(elem) {
+            buttons.forEach((elem) => {
                 elem.disabled = bool;
                 elem.style.opacity = opacityLevel;
             });
         },
 
-        resetRecord: function(dialogId) {
-            var popover;
-            var button;
-            var activeDialogId;
-
+        resetRecord(dialogId) {
             if (!self.supported) {
                 return;
             }
 
-            popover = document.getElementById('popoverRecord');
-            button = document.querySelector('.j-btn_audio_record');
-            activeDialogId = self.app.entities.active;
+            const popover = document.getElementById('popoverRecord');
+            const button = document.querySelector('.j-btn_audio_record');
+            const activeDialogId = self.app.entities.active;
 
             if ((dialogId && (dialogId !== activeDialogId)) || !button) {
                 return;
@@ -255,21 +251,21 @@ define([
             self.toggleActiveState(false);
         },
 
-        startRecord: function() {
+        startRecord() {
             self.blob = null;
-            self.startStream(function() {
+            self.startStream(() => {
                 self.recorder.start(self.stream);
                 self.toggleActiveState(true);
             });
         },
 
-        stopRecord: function() {
+        stopRecord() {
             self.recorder.stop();
             self.stopStream();
             self.stream = null;
         },
 
-        cancelRecord: function() {
+        cancelRecord() {
             if (self.stream) {
                 self.stopRecord();
             }
@@ -277,17 +273,15 @@ define([
             self.toggleActiveState(false);
         },
 
-        sendRecord: function() {
-            var recordedAudioFile;
-
+        sendRecord() {
             if (!self.blob) {
                 return;
             }
 
             // prepare file from blob object
-            recordedAudioFile = new File([self.blob], 'Voice message', {
+            const recordedAudioFile = new File([self.blob], 'Voice message', {
                 type: self.blob.type,
-                lastModified: Date.now()
+                lastModified: Date.now(),
             });
 
             // send file as attachment
@@ -295,7 +289,7 @@ define([
 
             self.blob = null;
             self.toggleActiveState(false);
-        }
+        },
     };
 
     return VoiceMessage;

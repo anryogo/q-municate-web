@@ -5,21 +5,21 @@ define([
     'jquery',
     'config',
     'Helpers',
-    'perfectscrollbar'
-], function(
+    'perfectscrollbar',
+], (
     _,
     $,
     QMCONFIG,
     Helpers,
-    Ps
-) {
-    var QB = window.QB;
+    Ps,
+) => {
+    const { QB } = window;
 
-    var self;
+    let self;
 
     function Listeners(app) {
-        var chatConnection = navigator.onLine;
-        var position = 0;
+        let chatConnection = navigator.onLine;
+        let position = 0;
 
         self = this;
         self.app = app;
@@ -50,8 +50,8 @@ define([
         };
 
         self.getChatViewPosition = function() {
-            var direction = '';
-            var value = 0;
+            let direction = '';
+            let value = 0;
 
             if (position < 0) {
                 direction = '-=';
@@ -67,7 +67,7 @@ define([
 
     Listeners.prototype = {
 
-        init: function() {
+        init() {
             window.addEventListener('online', self.onNetworkStatusListener);
             window.addEventListener('offline', self.onNetworkStatusListener);
 
@@ -76,10 +76,10 @@ define([
             document.addEventListener('fullscreenchange', self.onFullScreenChange);
         },
 
-        setQBHandlers: function() {
-            var ContactListView = self.app.views.ContactList;
-            var MessageView = self.app.views.Message;
-            var VideoChatView = self.app.views.VideoChat;
+        setQBHandlers() {
+            const ContactListView = self.app.views.ContactList;
+            const MessageView = self.app.views.Message;
+            const VideoChatView = self.app.views.VideoChat;
 
             QB.chat.onMessageListener = MessageView.onMessage;
             QB.chat.onMessageTypingListener = MessageView.onMessageTyping;
@@ -112,15 +112,15 @@ define([
             }
         },
 
-        listenToMediaElement: function(selector) {
+        listenToMediaElement(selector) {
             document.querySelector(selector).onplaying = function(event) {
                 // pause all media sources except started one
                 Helpers.pauseAllMedia(event.target);
             };
         },
 
-        listenToPsTotalEnd: function(onOrOff) {
-            var scroll = document.querySelector('.j-scrollbar_aside');
+        listenToPsTotalEnd(onOrOff) {
+            const scroll = document.querySelector('.j-scrollbar_aside');
 
             if (onOrOff) {
                 scroll.addEventListener('ps-y-reach-end', self.onNextDilogsList);
@@ -129,7 +129,7 @@ define([
             }
         },
 
-        onDisconnected: function() {
+        onDisconnected() {
             if (self.stateActive) {
                 self.updateDialogs(false);
                 self.setChatState(false);
@@ -137,33 +137,33 @@ define([
             }
         },
 
-        onReconnected: function() {
+        onReconnected() {
             self.updateDialogs(true);
             self.setChatState(true);
             switchToOnlineMode();
         },
 
-        onReconnectFailed: function() {
+        onReconnectFailed() {
             self.app.service.disconnectChat();
 
-            self.app.models.User.autologin(function() {
+            self.app.models.User.autologin(() => {
                 switchToOnlineMode();
             });
         },
 
-        onNetworkStatusListener: function() {
-            var condition = navigator.onLine ? 'online' : 'offline';
+        onNetworkStatusListener() {
+            const condition = navigator.onLine ? 'online' : 'offline';
 
             if (typeof self.onNetworkStatus === 'function' && condition) {
                 self.onNetworkStatus(condition);
             }
         },
 
-        onNextDilogsList: function() {
+        onNextDilogsList() {
             if (self.activePsListener) {
                 self.listenToPsTotalEnd(false);
 
-                self.app.views.Dialog.showOldHistory(function(stopListener) {
+                self.app.views.Dialog.showOldHistory((stopListener) => {
                     self.onUpdatePerfectScroll();
 
                     if (!stopListener) {
@@ -175,29 +175,29 @@ define([
             }
         },
 
-        onUpdatePerfectScroll: function() {
+        onUpdatePerfectScroll() {
             Ps.update(document.querySelector('.j-scrollbar_aside'));
         },
 
-        updateDialogs: function(reconnected) {
-            var DialogView = self.app.views.Dialog;
-            var dialogsCollection = self.app.entities.Collections.dialogs;
+        updateDialogs(reconnected) {
+            const DialogView = self.app.views.Dialog;
+            const dialogsCollection = self.app.entities.Collections.dialogs;
 
             if (reconnected) {
                 DialogView.downloadDialogs();
             } else {
-                dialogsCollection.forEach(function(dialog) {
+                dialogsCollection.forEach((dialog) => {
                     if (dialog.get('type') === 2) {
                         dialog.set({
                             joined: false,
-                            opened: false
+                            opened: false,
                         });
                     }
                 });
             }
         },
 
-        onNetworkStatus: function(status) {
+        onNetworkStatus(status) {
             if (self.getChatState()) {
                 if (status === 'online') {
                     self.updateDialogs(true);
@@ -208,15 +208,15 @@ define([
             }
         },
 
-        onFullScreenChange: function(event) {
-            var fullscreenElement = document.fullscreenElement
+        onFullScreenChange(event) {
+            const fullscreenElement = document.fullscreenElement
                                     || document.mozFullscreenElement
                                     || document.webkitFullscreenElement;
-            var fullscreenEnabled = document.fullscreenEnabled
+            const fullscreenEnabled = document.fullscreenEnabled
                                     || document.mozFullscreenEnabled
                                     || document.webkitFullscreenEnabled;
-            var isVideoElementTag = event.target.tagName === 'VIDEO';
-            var $scroll;
+            const isVideoElementTag = event.target.tagName === 'VIDEO';
+            let $scroll;
 
             if (fullscreenEnabled && isVideoElementTag) {
                 $scroll = $('.j-chatItem:visible').find('.j-scrollbar_message');
@@ -227,7 +227,7 @@ define([
                     $scroll.mCustomScrollbar('scrollTo', self.getChatViewPosition());
                 }
             }
-        }
+        },
     };
 
     return Listeners;

@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Q-municate chat application
  *
@@ -7,14 +9,14 @@
 define([
     'jquery',
     'config',
-    'Helpers'
-], function(
+    'Helpers',
+], (
     $,
     QMCONFIG,
-    Helpers
-) {
-    var curSession;
-    var self;
+    Helpers,
+) => {
+    let curSession;
+    let self;
 
     function VideoChat(app) {
         this.app = app;
@@ -23,15 +25,15 @@ define([
     }
 
     VideoChat.prototype.getUserMedia = function(options, callType, callback) {
-        var User = this.app.models.User;
-        var params = {
+        const { User } = this.app.models;
+        const params = {
             audio: true,
             video: callType === 'video',
             elemId: 'localStream',
             options: {
                 muted: true,
-                mirror: true
-            }
+                mirror: true,
+            },
         };
 
         if (!options.isCallee) {
@@ -40,19 +42,19 @@ define([
                     [options.opponentId],
                     QB.webrtc.CallType.VIDEO,
                     null,
-                    { bandwidth: 512 }
+                    { bandwidth: 512 },
                 );
             } else {
                 self.session = QB.webrtc.createNewSession(
                     [options.opponentId],
-                    QB.webrtc.CallType.AUDIO
+                    QB.webrtc.CallType.AUDIO,
                 );
             }
         }
 
         curSession = self.session;
 
-        curSession.getUserMedia(params, function(err, stream) {
+        curSession.getUserMedia(params, (err, stream) => {
             if (err) {
                 Helpers.log('Error', err);
                 if (!options.isCallee) {
@@ -64,7 +66,7 @@ define([
             } else {
                 Helpers.log('Stream', stream);
 
-                if (!$('.l-chat[data-dialog="' + options.dialogId + '"]').find('.mediacall')[0]) {
+                if (!$(`.l-chat[data-dialog="${options.dialogId}"]`).find('.mediacall')[0]) {
                     stream.stop({});
                     return;
                 }
@@ -85,21 +87,19 @@ define([
 
     // eslint-disable-next-line max-len
     VideoChat.prototype.sendMessage = function(userId, state, callDuration, dialogId, callType, isErrorMessage, sessionID) {
-        var jid = QB.chat.helpers.getUserJid(userId, QMCONFIG.qbAccount.appId);
-        var User = this.app.models.User;
-        var Message = this.app.models.Message;
-        var MessageView = this.app.views.Message;
-        var VideoChatView = this.app.views.VideoChat;
-        var DialogView = this.app.views.Dialog;
-        var time = Math.floor(Date.now() / 1000);
-        var $dialogItem = $('.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="' + dialogId + '"]');
-        var selected = $('[data-dialog = ' + dialogId + ']').is('.is-selected');
-        var unread = parseInt($dialogItem.length > 0
+        const jid = QB.chat.helpers.getUserJid(userId, QMCONFIG.qbAccount.appId);
+        const { User } = this.app.models;
+        const { Message } = this.app.models;
+        const MessageView = this.app.views.Message;
+        const VideoChatView = this.app.views.VideoChat;
+        const DialogView = this.app.views.Dialog;
+        const time = Math.floor(Date.now() / 1000);
+        const $dialogItem = $(`.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`);
+        const selected = $(`[data-dialog = ${dialogId}]`).is('.is-selected');
+        let unread = parseInt($dialogItem.length > 0
                 && $dialogItem.find('.unread').text().length > 0
             ? $dialogItem.find('.unread').text() : 0, 10);
-        var extension;
-        var message;
-        var msg;
+        let extension;
 
         if (!isErrorMessage) {
             extension = {
@@ -109,7 +109,7 @@ define([
                 callType: state === '2' ? (callType === 'video' ? '2' : '1') : (VideoChatView.type === 'video' ? '2' : '1'),
                 callState: state === '1' && !callDuration ? '2' : state,
                 caller: state === '2' ? userId : self.caller,
-                callee: state === '2' ? User.contact.id : self.callee
+                callee: state === '2' ? User.contact.id : self.callee,
             };
 
             if (callDuration) extension.callDuration = Helpers.getDuration(null, callDuration);
@@ -120,7 +120,7 @@ define([
                 callType: callType === 'video' ? '2' : '1',
                 callState: state,
                 caller: userId,
-                callee: User.contact.id
+                callee: User.contact.id,
             };
         }
 
@@ -128,7 +128,7 @@ define([
             extension.sessionID = sessionID;
         }
 
-        msg = {
+        const msg = {
             chat_dialog_id: dialogId,
             date_sent: time,
             sender_id: User.contact.id,
@@ -138,16 +138,16 @@ define([
             callee: extension.callee,
             callDuration: extension.callDuration || null,
             sessionID: extension.sessionID || null,
-            online: true
+            online: true,
         };
 
         msg.id = QB.chat.send(jid, {
             type: 'chat',
             body: 'Call notification',
-            extension: extension
+            extension,
         });
 
-        message = Message.create(msg);
+        const message = Message.create(msg);
         Helpers.log(message);
         MessageView.addItem(message, true, true);
 

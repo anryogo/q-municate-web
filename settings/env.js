@@ -1,11 +1,13 @@
-var path = require('path');
-var fse = require('fs-extra');
-var settings = require('./env/' + process.env.NODE_ENV);
+'use strict';
 
-var filePath = path.resolve('app/.tmp/', 'config.js');
-var content = 'define(' + JSON.stringify(settings) + ');';
+const path = require('path');
+const fse = require('fs-extra'); // eslint-disable-line
+const settings = require(`./env/${process.env.NODE_ENV}`); // eslint-disable-line
 
-fse.outputFile(filePath, content, function(err) {
+const filePath = path.resolve('app/.tmp/', 'config.js');
+const content = `define(${JSON.stringify(settings)});`;
+
+fse.outputFile(filePath, content, (err) => {
     if (err) {
         throw err;
     }

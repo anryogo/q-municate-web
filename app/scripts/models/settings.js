@@ -1,29 +1,29 @@
+'use strict';
+
 /*
  *
  * Q-MUNICATE settings models Module
  *
  */
-define([], function() {
-    'use strict';
-
+define([], () => {
     function Settings() {
-        var userId;
-        var options;
-        var self = this;
+        let userId;
+        let options;
+        const self = this;
 
         this.init = function(currentUserId) {
             userId = currentUserId;
             options = {
                 messages_notify: true,
                 calls_notify: true,
-                sounds_notify: true
+                sounds_notify: true,
             };
 
             sync();
         };
 
         this.set = function(params) {
-            Object.keys(params).forEach(function(key) {
+            Object.keys(params).forEach((key) => {
                 options[key] = params[key];
             });
         };
@@ -33,17 +33,17 @@ define([], function() {
         };
 
         this.save = function() {
-            localStorage.setItem('QM.settings-' + userId, JSON.stringify(options));
+            localStorage.setItem(`QM.settings-${userId}`, JSON.stringify(options));
         };
 
         function sync() {
-            if (!localStorage['QM.settings-' + userId]) {
+            if (!localStorage[`QM.settings-${userId}`]) {
                 self.save();
 
                 return;
             }
 
-            options = JSON.parse(localStorage['QM.settings-' + userId]);
+            options = JSON.parse(localStorage[`QM.settings-${userId}`]);
         }
     }
 

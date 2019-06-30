@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  *
  * Q-MUNICATE Location Module
@@ -6,29 +8,28 @@
 define([
     'googlemaps!',
     'gmaps',
-    'Helpers'
-], function(
+    'Helpers',
+], (
     googleMaps,
     GMaps,
-    Helpers
-) {
-    var Location;
-    var watchId;
+    Helpers,
+) => {
+    let watchId;
 
-    Location = {
+    const Location = {
 
-        getGeoCoordinates: function(watch, callback) {
+        getGeoCoordinates(watch, callback) {
             function success(pos) {
-                var geoCoords = {
+                const geoCoords = {
                     latitude: pos.coords.latitude,
-                    longitude: pos.coords.longitude
+                    longitude: pos.coords.longitude,
                 };
 
                 callback(geoCoords);
             }
 
             function fail(err) {
-                var error = 'ERROR(' + err.code + '): ' + err.message;
+                const error = `ERROR(${err.code}): ${err.message}`;
 
                 callback(null, error);
             }
@@ -40,31 +41,31 @@ define([
             }
         },
 
-        getStaticMapUrl: function(geoCoords, options) {
-            var params = {
+        getStaticMapUrl(geoCoords, options) {
+            const params = {
                 size: (options && options.size) || [200, 150],
                 lat: geoCoords.lat,
                 lng: geoCoords.lng,
                 zoom: (options && options.zoom) || 15,
                 markers: [{
                     lat: geoCoords.lat,
-                    lng: geoCoords.lng
-                }]
+                    lng: geoCoords.lng,
+                }],
             };
 
             return GMaps.staticMapURL(params);
         },
 
-        getMapUrl: function(geoCoords) {
-            return 'https://www.google.com/maps?q=' + geoCoords.lat + ',' + geoCoords.lng;
+        getMapUrl(geoCoords) {
+            return `https://www.google.com/maps?q=${geoCoords.lat},${geoCoords.lng}`;
         },
 
-        toggleGeoCoordinatesToLocalStorage: function(saveLocation, callback) {
-            var isCoords = !!((localStorage['QM.latitude'] && localStorage['QM.longitude']));
-            var $button = $('.j-send_location');
+        toggleGeoCoordinatesToLocalStorage(saveLocation, callback) {
+            const isCoords = !!((localStorage['QM.latitude'] && localStorage['QM.longitude']));
+            const $button = $('.j-send_location');
 
             if (saveLocation) {
-                this.getGeoCoordinates(true, function(res, err) {
+                this.getGeoCoordinates(true, (res, err) => {
                     if (err) {
                         Helpers.log(err);
 
@@ -87,7 +88,7 @@ define([
 
                         $button.addClass('btn_active');
 
-                        callback('Added coordinates to localStorage: latitude(' + res.latitude + '), longitude(' + res.longitude + ')');
+                        callback(`Added coordinates to localStorage: latitude(${res.latitude}), longitude(${res.longitude})`);
                     }
                 });
             } else {
@@ -102,26 +103,24 @@ define([
             }
         },
 
-        addMap: function($gmap) {
-            var mapCoords = {};
-            var isCoords;
-            var map;
+        addMap($gmap) {
+            const mapCoords = {};
 
             $gmap.prepend('<div id="map" class="open_map j-open_map"></div>');
 
-            isCoords = !!((localStorage['QM.latitude'] && localStorage['QM.longitude']));
+            const isCoords = !!((localStorage['QM.latitude'] && localStorage['QM.longitude']));
 
-            map = new GMaps({
+            const map = new GMaps({
                 div: '#map',
                 lat: isCoords ? localStorage['QM.latitude'] : 0,
                 lng: isCoords ? localStorage['QM.longitude'] : 0,
-                zoom: isCoords ? 15 : 1
+                zoom: isCoords ? 15 : 1,
             });
 
             $('#map img').addClass('gooImg');
 
             if (!isCoords) {
-                this.getGeoCoordinates(false, function(res) {
+                this.getGeoCoordinates(false, (res) => {
                     if (res) {
                         map.setZoom(15);
                         map.setCenter(res.latitude, res.longitude);
@@ -129,7 +128,7 @@ define([
                 });
             }
 
-            GMaps.on('click', map.map, function(event) {
+            GMaps.on('click', map.map, (event) => {
                 mapCoords.lat = event.latLng.lat();
                 mapCoords.lng = event.latLng.lng();
 
@@ -140,12 +139,12 @@ define([
                 map.addMarker({
                     lat: mapCoords.lat,
                     lng: mapCoords.lng,
-                    title: 'Marker'
+                    title: 'Marker',
                 });
 
                 $('.j-send_map').addClass('is-active');
             });
-        }
+        },
 
     };
 

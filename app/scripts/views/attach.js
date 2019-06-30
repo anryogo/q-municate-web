@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Q-municate chat application
  *
@@ -11,44 +13,46 @@ define([
     'QMHtml',
     'LocationView',
     'underscore',
-    'progressbar'
-], function(
+    'progressbar',
+], (
     $,
     QMCONFIG,
     Helpers,
     QMHtml,
     Location,
     _,
-    ProgressBar
-) {
-    var self;
+    ProgressBar,
+) => {
+    let self;
 
-    var User;
-    var Message;
-    var Attach;
+    let User;
+    let Message;
+    let Attach;
 
     function AttachView(app) {
         this.app = app;
 
+        /* eslint-disable prefer-destructuring */
         User = this.app.models.User;
         Message = this.app.models.Message;
         Attach = this.app.models.Attach;
         self = this;
+        /* eslint-enable prefer-destructuring */
     }
 
     AttachView.prototype = {
 
-        changeInput: function(objDom, recordedAudioFile) {
-            var file = recordedAudioFile || objDom[0].files[0];
-            var chat = $('.l-chat:visible .l-chat-content .mCSB_container');
-            var id = _.uniqueId();
-            var fileSize = file.size;
+        changeInput(objDom, recordedAudioFile) {
+            const file = recordedAudioFile || objDom[0].files[0];
+            const chat = $('.l-chat:visible .l-chat-content .mCSB_container');
+            const id = _.uniqueId();
+            const fileSize = file.size;
             // eslint-disable-next-line max-len
-            var fileSizeCrop = fileSize > (1024 * 1024) ? (fileSize / (1024 * 1024)).toFixed(1) : (fileSize / 1024).toFixed(1);
-            var fileSizeUnit = fileSize > (1024 * 1024) ? 'MB' : 'KB';
-            var metadata = readMetadata(file);
-            var errMsg;
-            var html;
+            const fileSizeCrop = fileSize > (1024 * 1024) ? (fileSize / (1024 * 1024)).toFixed(1) : (fileSize / 1024).toFixed(1);
+            const fileSizeUnit = fileSize > (1024 * 1024) ? 'MB' : 'KB';
+            const metadata = readMetadata(file);
+            let errMsg;
+            let html;
 
             if (file) {
                 errMsg = self.validateFile(file);
@@ -58,9 +62,9 @@ define([
                 } else {
                     html = QMHtml.Attach.attach({
                         fileName: file.name,
-                        fileSizeCrop: fileSizeCrop,
-                        fileSizeUnit: fileSizeUnit,
-                        id: id
+                        fileSizeCrop,
+                        fileSizeUnit,
+                        id,
                     });
                 }
 
@@ -75,8 +79,8 @@ define([
                 if (file.type.indexOf('image') > -1) {
                     Attach.crop(file, {
                         w: 1000,
-                        h: 1000
-                    }, function(blob) {
+                        h: 1000,
+                    }, (blob) => {
                         self.createProgressBar(id, fileSizeCrop, metadata, blob);
                     });
                 } else {
@@ -85,9 +89,9 @@ define([
             }
         },
 
-        pastErrorMessage: function(errMsg, objDom, chat) {
-            var html = QMHtml.Attach.error({
-                errMsg: errMsg
+        pastErrorMessage(errMsg, objDom, chat) {
+            const html = QMHtml.Attach.error({
+                errMsg,
             });
 
             chat.append(html);
@@ -101,15 +105,15 @@ define([
             return false;
         },
 
-        createProgressBar: function(id, fileSizeCrop, metadata, file) {
-            var progressBar = new ProgressBar('progress_' + id);
-            var dialogId = self.app.entities.active;
-            var $chatItem = $('.j-chatItem[data-dialog="' + dialogId + '"]');
-            var fileSize = file.size || metadata.size;
-            var percent = 5;
-            var isUpload = false;
-            var part;
-            var time;
+        createProgressBar(id, fileSizeCrop, metadata, file) {
+            const progressBar = new ProgressBar(`progress_${id}`);
+            const dialogId = self.app.entities.active;
+            const $chatItem = $(`.j-chatItem[data-dialog="${dialogId}"]`);
+            const fileSize = file.size || metadata.size;
+            let percent = 5;
+            let isUpload = false;
+            let part;
+            let time;
 
             if (fileSize <= 5 * 1024 * 1024) {
                 time = 50;
@@ -127,7 +131,7 @@ define([
 
             setPercent();
 
-            Attach.upload(file, function(blob) {
+            Attach.upload(file, (blob) => {
                 Helpers.log('Blob:', blob);
 
                 if (!blob.size) {
@@ -138,7 +142,7 @@ define([
 
                 isUpload = true;
 
-                if ($('#progress_' + id).length > 0) {
+                if ($(`#progress_${id}`).length > 0) {
                     setPercent();
                 }
             });
@@ -147,15 +151,15 @@ define([
                 if (isUpload) {
                     progressBar.setPercent(100);
                     part = fileSizeCrop;
-                    $('.attach-part_' + id).text(part);
+                    $(`.attach-part_${id}`).text(part);
 
-                    setTimeout(function() {
-                        $('.attach-part_' + id).parents('article').remove();
+                    setTimeout(() => {
+                        $(`.attach-part_${id}`).parents('article').remove();
                     }, 50);
                 } else {
                     progressBar.setPercent(percent);
                     part = (fileSizeCrop * percent / 100).toFixed(1);
-                    $('.attach-part_' + id).text(part);
+                    $(`.attach-part_${id}`).text(part);
                     percent += 5;
 
                     if (percent > 95) return;
@@ -165,46 +169,44 @@ define([
             }
         },
 
-        cancel: function(objDom) {
+        cancel(objDom) {
             objDom.parents('article').remove();
         },
 
-        sendMessage: function(chat, blob, metadata, mapCoords) {
-            var MessageView = this.app.views.Message;
-            var jid = chat.data('jid');
-            var id = chat.data('id');
-            var dialogId = chat.data('dialog');
-            var type = chat.is('.is-group') ? 'groupchat' : 'chat';
-            var time = Math.floor(Date.now() / 1000);
-            var dialogItem = type === 'groupchat' ? $('.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="' + dialogId + '"]') : $('.l-list-wrap section:not(#searchList) .dialog-item[data-id="' + id + '"]');
-            var locationIsActive = $('.j-send_location').hasClass('btn_active');
-            var copyDialogItem;
-            var lastMessage;
-            var message;
-            var attach;
-            var msg;
+        sendMessage(chat, blob, metadata, mapCoords) {
+            const MessageView = this.app.views.Message;
+            const jid = chat.data('jid');
+            const id = chat.data('id');
+            const dialogId = chat.data('dialog');
+            const type = chat.is('.is-group') ? 'groupchat' : 'chat';
+            const time = Math.floor(Date.now() / 1000);
+            const dialogItem = type === 'groupchat' ? $(`.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`) : $(`.l-list-wrap section:not(#searchList) .dialog-item[data-id="${id}"]`);
+            const locationIsActive = $('.j-send_location').hasClass('btn_active');
+            let copyDialogItem;
+            let lastMessage;
+            let attach;
 
             if (mapCoords) {
                 attach = {
                     type: 'location',
-                    data: mapCoords
+                    data: mapCoords,
                 };
             } else {
                 attach = Attach.create(blob, metadata);
             }
 
-            msg = {
-                type: type,
+            const msg = {
+                type,
                 body: getAttachmentText(),
                 extension: {
                     save_to_history: 1,
                     dialog_id: dialogId,
                     date_sent: time,
                     attachments: [
-                        attach
-                    ]
+                        attach,
+                    ],
                 },
-                markable: 1
+                markable: 1,
             };
 
             if (locationIsActive) {
@@ -214,7 +216,7 @@ define([
 
             msg.id = QB.chat.send(jid, msg);
 
-            message = Message.create({
+            const message = Message.create({
                 body: msg.body,
                 chat_dialog_id: dialogId,
                 date_sent: time,
@@ -223,7 +225,7 @@ define([
                 latitude: localStorage['QM.latitude'] || null,
                 longitude: localStorage['QM.longitude'] || null,
                 _id: msg.id,
-                online: true
+                online: true,
             });
 
             Helpers.log(message);
@@ -245,7 +247,7 @@ define([
             }
 
             function getAttachmentText() {
-                var text;
+                let text;
 
                 switch (attach.type) {
                 case 'location':
@@ -273,13 +275,12 @@ define([
             }
         },
 
-        validateFile: function(file) {
-            var errMsg;
-            var maxSize;
-            var fullType;
-            var type;
+        validateFile(file) {
+            let errMsg;
+            let maxSize;
+            let type;
 
-            fullType = file.type;
+            const fullType = file.type;
 
             if (file.type.indexOf('image/') === 0) {
                 type = 'image';
@@ -318,7 +319,7 @@ define([
             }
 
             return errMsg;
-        }
+        },
 
     };
 
@@ -329,12 +330,12 @@ define([
     }
 
     function readMetadata(file) {
-        var WINDOW_URL = window.URL || window.webkitURL;
-        var metadata = { size: file.size };
-        var image;
-        var audio;
-        var video;
-        var type;
+        const WINDOW_URL = window.URL || window.webkitURL;
+        const metadata = { size: file.size };
+        let image;
+        let audio;
+        let video;
+        let type;
 
         if (file.type.indexOf('image/') === 0) {
             type = 'image';

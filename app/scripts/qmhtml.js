@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  *
  * htmlQM Module
@@ -6,20 +8,20 @@
 define([
     'jquery',
     'underscore',
-    'Helpers'
-], function(
+    'Helpers',
+], (
     $,
     _,
-    Helpers
-) {
-    var QMHtml = {};
+    Helpers,
+) => {
+    const QMHtml = {};
 
     QMHtml.VideoChat = {
 
-        onCallTpl: function(params) {
-            return _.template('<div class="incoming-call l-flexbox l-flexbox_column l-flexbox_flexbetween">'
+        onCallTpl(params) {
+            return _.template(`${'<div class="incoming-call l-flexbox l-flexbox_column l-flexbox_flexbetween">'
                 + '<div class="incoming-call-info l-flexbox l-flexbox_column">'
-                + '<div class="message-avatar avatar info-avatar" style="background-image:url(' + params.userAvatar + ')"></div>'
+                + '<div class="message-avatar avatar info-avatar" style="background-image:url('}${params.userAvatar})"></div>`
                 + '<span class="info-notice"><%= callTypeUС %> Call from <%= userName %></span></div>'
                 + '<div class="incoming-call-controls l-flexbox l-flexbox_flexcenter">'
                 + '<button class="btn_decline" data-callType="<%= callType %>" data-dialog="<%= dialogId %>"'
@@ -29,7 +31,7 @@ define([
                 + '</div></div>')(params);
         },
 
-        buildTpl: function(params) {
+        buildTpl(params) {
             return _.template('<div class="mediacall l-flexbox">'
                 + '<video id="remoteStream" class="mediacall-remote-stream is-hidden"></video>'
                 + '<video id="localStream" class="mediacall-local mediacall-local-stream is-hidden"></video>'
@@ -53,10 +55,10 @@ define([
                 + '</div></div>')(params);
         },
 
-        showError: function() {
-            var isBottom = Helpers.isBeginOfChat();
-            var $chat = $('.l-chat:visible');
-            var $html = $('<article class="message message_service l-flexbox l-flexbox_alignstretch">'
+        showError() {
+            const isBottom = Helpers.isBeginOfChat();
+            const $chat = $('.l-chat:visible');
+            const $html = $('<article class="message message_service l-flexbox l-flexbox_alignstretch">'
                     + '<span class="message-avatar request-button_pending"></span>'
                     + '<div class="message-container-wrap">'
                     + '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">'
@@ -70,10 +72,10 @@ define([
             }
         },
 
-        noWebRTC: function() {
-            var isBottom = Helpers.isBeginOfChat();
-            var $chat = $('.l-chat:visible');
-            var $html = $('<article class="message message_service l-flexbox l-flexbox_alignstretch">'
+        noWebRTC() {
+            const isBottom = Helpers.isBeginOfChat();
+            const $chat = $('.l-chat:visible');
+            const $html = $('<article class="message message_service l-flexbox l-flexbox_alignstretch">'
                     + '<span class="message-avatar request-button_pending"></span>'
                     + '<div class="message-container-wrap">'
                     + '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">'
@@ -86,15 +88,15 @@ define([
             if (isBottom) {
                 $chat.find('.j-scrollbar_message').mCustomScrollbar('scrollTo', 'bottom');
             }
-        }
+        },
 
     };
 
     QMHtml.User = {
 
-        contactPopover: function(params, roster) {
-            var $html = $('<ul class="list-actions list-actions_contacts popover j-listActionsContacts"></ul>');
-            var htmlStr = '';
+        contactPopover(params, roster) {
+            const $html = $('<ul class="list-actions list-actions_contacts popover j-listActionsContacts"></ul>');
+            let htmlStr = '';
 
             if (params.dialogType === 3 && roster && roster.subscription !== 'none') {
                 htmlStr = '<li class="list-item"><a class="videoCall list-actions-action" data-id="<%=ids%>" href="#">Video call</a></li>'
@@ -114,9 +116,9 @@ define([
             return $html.append(_.template(htmlStr)(params));
         },
 
-        occupantPopover: function(params, roster) {
-            var $html = $('<ul class="list-actions list-actions_occupants popover j-listActionsContacts"></ul>');
-            var htmlStr = '';
+        occupantPopover(params, roster) {
+            const $html = $('<ul class="list-actions list-actions_occupants popover j-listActionsContacts"></ul>');
+            let htmlStr = '';
 
             if (!roster || (roster.subscription === 'none' && !roster.ask)) {
                 htmlStr = '<li class="list-item j-listItem" data-jid="<%=jid%>">'
@@ -134,11 +136,11 @@ define([
             return $html.append(_.template(htmlStr)(params));
         },
 
-        getControlButtonsForPopupDetails: function(roster) {
-            var $html = $('#popupDetails').find('.userDetails-controls');
-            var htmlStr = '';
-            var params = {
-                roster: 'ask_subscription'
+        getControlButtonsForPopupDetails(roster) {
+            const $html = $('#popupDetails').find('.userDetails-controls');
+            let htmlStr = '';
+            const params = {
+                roster: 'ask_subscription',
             };
 
             if (roster.subscription !== 'none' && roster.ask === null) {
@@ -162,29 +164,29 @@ define([
             $html.append(_.template(htmlStr)(params));
         },
 
-        profilePopover: function() {
+        profilePopover() {
             return $('<ul class="list-actions list-actions_profile popover">'
                 + '<li class="list-item"><a id="userProfile" class="list-actions-action" href="#">Profile</a></li>'
                 + '<li class="list-item"><a id="userSettings" class="list-actions-action" href="#">Settings</a></li>'
                 + '<li class="list-item"><a id="logout" class="list-actions-action" href="#">Log Out</a></li></ul>');
-        }
+        },
 
     };
 
     QMHtml.Messages = {
 
-        setMap: function(params) {
-            var htmlTemplate = _.template(
+        setMap(params) {
+            const htmlTemplate = _.template(
                 '<a class="open_map" href="<%=mapLink%>" target="_blank">'
-                + '</a>'
+                + '</a>',
             )(params);
 
-            $('article#' + params.id).find('.message-geo')
+            $(`article#${params.id}`).find('.message-geo')
                 .addClass('with-geo')
                 .append(htmlTemplate);
         },
 
-        urlPreview: function(params) {
+        urlPreview(params) {
             return _.template(
                 '<h4 class="og_title"><%=title%></h4>'
                     + '<span class="og_description"><%=description%></span>'
@@ -192,15 +194,15 @@ define([
                         + '<div class="og_image">'
                             + '<img src="<%=picture%>" alt="og_pic">'
                         + '</div>'
-                    + '<% } %>'
+                    + '<% } %>',
             )(params);
-        }
+        },
 
     };
 
     QMHtml.Attach = {
 
-        error: function(params) {
+        error(params) {
             return _.template('<article class="message message_service l-flexbox l-flexbox_alignstretch">'
                 + '<span class="message-avatar request-button_pending"></span>'
                 + '<div class="message-container-wrap">'
@@ -210,7 +212,7 @@ define([
                 + '</div></div></div></article>')(params);
         },
 
-        attach: function(params) {
+        attach(params) {
             return _.template(
                 '<article class="message message_service message_attach l-flexbox l-flexbox_alignstretch">'
                 + '<span class="message-avatar request-button_attach">'
@@ -224,9 +226,9 @@ define([
                 + '</span> of <%= fileSizeCrop %> <%= fileSizeUnit %></span>'
                 + '</div></h4></div>'
                 + '<time class="message-time"><a class="attach-cancel" href="#">Cancel</a></time>'
-                + '</div></div></article>'
+                + '</div></div></article>',
             )(params);
-        }
+        },
 
     };
 

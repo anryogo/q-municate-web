@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Q-municate chat application
  *
@@ -13,8 +15,8 @@ define([
     'models/person',
     'views/profile',
     'views/change_password',
-    'views/fb_import'
-], function(
+    'views/fb_import',
+], (
     $,
     _,
     QMCONFIG,
@@ -23,11 +25,11 @@ define([
     Person,
     ProfileView,
     ChangePassView,
-    FBImportView
-) {
-    var self;
-    var tempParams;
-    var isFacebookCalled;
+    FBImportView,
+) => {
+    let self;
+    let tempParams;
+    let isFacebookCalled;
 
     function User(app) {
         this.app = app;
@@ -38,33 +40,33 @@ define([
 
     User.prototype = {
 
-        initProfile: function() {
-            var currentUser = new Person(_.clone(self.contact), {
+        initProfile() {
+            const currentUser = new Person(_.clone(self.contact), {
                 app: self.app,
-                parse: true
+                parse: true,
             });
 
-            var profileView = new ProfileView({
-                model: currentUser
+            const profileView = new ProfileView({
+                model: currentUser,
             });
 
-            var changePassView = new ChangePassView({
-                model: currentUser
+            const changePassView = new ChangePassView({
+                model: currentUser,
             });
 
-            var fbImportView = new FBImportView();
+            const fbImportView = new FBImportView();
 
             self.app.views.Profile = profileView;
             self.app.views.ChangePass = changePassView;
             self.app.views.FBImport = fbImportView;
         },
 
-        reLogInFirebasePhone: function(callback) {
+        reLogInFirebasePhone(callback) {
             FirebaseWidget.init();
 
-            firebase.auth().onAuthStateChanged(function(user) {
+            firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    self.logInFirebasePhone(user, function(authParams) {
+                    self.logInFirebasePhone(user, (authParams) => {
                         callback(authParams);
                     });
                 } else {
@@ -73,14 +75,14 @@ define([
             });
         },
 
-        logInFirebasePhone: function(user, callback) {
-            user.getIdToken().then(function(idToken) {
-                var authParams = {
+        logInFirebasePhone(user, callback) {
+            user.getIdToken().then((idToken) => {
+                const authParams = {
                     provider: 'firebase_phone',
                     firebase_phone: {
                         access_token: idToken,
-                        project_id: QMCONFIG.firebase.projectId
-                    }
+                        project_id: QMCONFIG.firebase.projectId,
+                    },
                 };
 
                 self.providerConnect(authParams);
@@ -91,7 +93,7 @@ define([
             });
         },
 
-        logInFacebook: function() {
+        logInFacebook() {
             if (isFacebookCalled) {
                 return;
             }
@@ -100,7 +102,7 @@ define([
 
             // NOTE!! You should use FB.login method instead FB.getLoginStatus
             // and your browser won't block FB Login popup
-            FB.login(function(response) {
+            FB.login((response) => {
                 if (response.authResponse && response.status === 'connected') {
                     self.connectFB(response.authResponse.accessToken);
 
@@ -111,35 +113,35 @@ define([
                     Helpers.log('User cancelled login or did not fully authorize.');
                 }
             }, {
-                scope: QMCONFIG.fbAccount.scope
+                scope: QMCONFIG.fbAccount.scope,
             });
         },
 
-        connectFB: function(token) {
+        connectFB(token) {
             self.providerConnect({
                 provider: 'facebook',
-                keys: { token: token }
+                keys: { token },
             });
         },
 
-        providerConnect: function(params) {
-            var QBApiCalls = self.app.service;
-            var UserView = self.app.views.User;
-            var DialogView = self.app.views.Dialog;
-            var Contact = self.app.models.Contact;
+        providerConnect(params) {
+            const QBApiCalls = self.app.service;
+            const UserView = self.app.views.User;
+            const DialogView = self.app.views.Dialog;
+            const { Contact } = self.app.models;
 
             UserView.loginQB();
             UserView.createSpinner();
 
             if (params.provider === 'facebook') {
-                QBApiCalls.createSession(params, function(session) {
-                    QBApiCalls.getUser(session.user_id, function(user) {
+                QBApiCalls.createSession(params, (session) => {
+                    QBApiCalls.getUser(session.user_id, (user) => {
                         prepareChat(user, true);
                     });
                 });
             } else {
-                QBApiCalls.createSession({}, function() {
-                    QBApiCalls.loginUser(params, function(user) {
+                QBApiCalls.createSession({}, () => {
+                    QBApiCalls.loginUser(params, (user) => {
                         prepareChat(user);
                     });
                 });
@@ -153,7 +155,7 @@ define([
 
                 UserView.successFormCallback();
 
-                QBApiCalls.connectChat(self.contact.user_jid, function() {
+                QBApiCalls.connectChat(self.contact.user_jid, () => {
                     self.rememberMe();
                     DialogView.prepareDownloading();
                     DialogView.downloadDialogs();
@@ -169,14 +171,14 @@ define([
             }
         },
 
-        import: function(user) {
-            var DialogView = this.app.views.Dialog;
-            var isFriendsPermission = false;
+        import(user) {
+            const DialogView = this.app.views.Dialog;
+            let isFriendsPermission = false;
 
-            FB.api('/me/permissions', function(response) {
+            FB.api('/me/permissions', (response) => {
                 Helpers.log('FB Permissions', response);
 
-                response.data.forEach(function(item) {
+                response.data.forEach((item) => {
                     if (item.permission === 'user_friends' && item.status === 'granted') {
                         isFriendsPermission = true;
                     }
@@ -184,12 +186,12 @@ define([
 
                 if (isFriendsPermission) {
                     // import FB friends
-                    FB.api('/me/friends', function(res) {
-                        var ids = [];
+                    FB.api('/me/friends', (res) => {
+                        const ids = [];
 
                         Helpers.log('FB friends', res);
 
-                        res.data.forEach(function(item) {
+                        res.data.forEach((item) => {
                             ids.push(item.id);
                         });
 
@@ -207,9 +209,9 @@ define([
             });
         },
 
-        updateQBUser: function(user) {
-            var QBApiCalls = this.app.service;
-            var customData;
+        updateQBUser(user) {
+            const QBApiCalls = this.app.service;
+            let customData;
 
             try {
                 customData = JSON.parse(user.custom_data) || {};
@@ -220,19 +222,19 @@ define([
             customData.is_import = '1';
             customData = JSON.stringify(customData);
             QBApiCalls.updateUser(user.id, {
-                custom_data: customData
-            }, function() {
+                custom_data: customData,
+            }, () => {
 
             });
         },
 
-        signup: function() {
-            var QBApiCalls = this.app.service;
-            var UserView = this.app.views.User;
-            var DialogView = this.app.views.Dialog;
-            var Contact = this.app.models.Contact;
-            var form = $('section:visible form');
-            var params;
+        signup() {
+            const QBApiCalls = this.app.service;
+            const UserView = this.app.views.User;
+            const DialogView = this.app.views.Dialog;
+            const { Contact } = this.app.models;
+            const form = $('section:visible form');
+            let params;
 
             if (validate(form, this)) {
                 UserView.createSpinner();
@@ -241,22 +243,22 @@ define([
                     full_name: tempParams.full_name,
                     email: tempParams.email,
                     password: tempParams.password,
-                    tag_list: 'web'
+                    tag_list: 'web',
                 };
 
-                QBApiCalls.createSession({}, function() {
-                    QBApiCalls.createUser(params, function() {
+                QBApiCalls.createSession({}, () => {
+                    QBApiCalls.createUser(params, () => {
                         delete params.full_name;
                         delete params.tag_list;
 
-                        QBApiCalls.loginUser(params, function(user) {
+                        QBApiCalls.loginUser(params, (user) => {
                             self.contact = Contact.create(user);
 
                             Helpers.log('User', self);
 
                             UserView.successFormCallback();
 
-                            QBApiCalls.connectChat(self.contact.user_jid, function() {
+                            QBApiCalls.connectChat(self.contact.user_jid, () => {
                                 if (tempParams.blob) {
                                     self.uploadAvatar();
                                 } else {
@@ -270,21 +272,21 @@ define([
             }
         },
 
-        uploadAvatar: function() {
-            var QBApiCalls = this.app.service;
-            var UserView = this.app.views.User;
-            var DialogView = this.app.views.Dialog;
-            var Attach = this.app.models.Attach;
-            var customData;
+        uploadAvatar() {
+            const QBApiCalls = this.app.service;
+            const UserView = this.app.views.User;
+            const DialogView = this.app.views.Dialog;
+            const { Attach } = this.app.models;
+            let customData;
 
             Attach.crop(tempParams.blob, {
                 w: 1000,
-                h: 1000
-            }, function(file) {
+                h: 1000,
+            }, (file) => {
                 QBApiCalls.createBlob({
-                    file: file,
-                    public: true
-                }, function(blob) {
+                    file,
+                    public: true,
+                }, (blob) => {
                     self.contact.blob_id = blob.id;
                     self.contact.avatar_url = blob.path;
 
@@ -293,43 +295,43 @@ define([
                     DialogView.downloadDialogs();
 
                     customData = JSON.stringify({
-                        avatar_url: blob.path
+                        avatar_url: blob.path,
                     });
                     QBApiCalls.updateUser(self.contact.id, {
                         blob_id: blob.id,
-                        custom_data: customData
-                    }, function() {
+                        custom_data: customData,
+                    }, () => {
 
                     });
                 });
             });
         },
 
-        login: function() {
-            var QBApiCalls = this.app.service;
-            var UserView = this.app.views.User;
-            var DialogView = this.app.views.Dialog;
-            var Contact = this.app.models.Contact;
-            var form = $('section:visible form');
-            var params;
+        login() {
+            const QBApiCalls = this.app.service;
+            const UserView = this.app.views.User;
+            const DialogView = this.app.views.Dialog;
+            const { Contact } = this.app.models;
+            const form = $('section:visible form');
+            let params;
 
             if (validate(form, this)) {
                 UserView.createSpinner();
 
                 params = {
                     email: tempParams.email,
-                    password: tempParams.password
+                    password: tempParams.password,
                 };
 
-                QBApiCalls.createSession(params, function(session) {
-                    QBApiCalls.getUser(session.user_id, function(user) {
+                QBApiCalls.createSession(params, (session) => {
+                    QBApiCalls.getUser(session.user_id, (user) => {
                         self.contact = Contact.create(user);
 
                         Helpers.log('User', self);
 
                         UserView.successFormCallback();
 
-                        QBApiCalls.connectChat(self.contact.user_jid, function() {
+                        QBApiCalls.connectChat(self.contact.user_jid, () => {
                             self.rememberMe();
                             DialogView.prepareDownloading();
                             DialogView.downloadDialogs();
@@ -339,10 +341,10 @@ define([
             }
         },
 
-        rememberMe: function() {
-            var storage = {};
+        rememberMe() {
+            const storage = {};
 
-            Object.keys(self.contact).forEach(function(prop) {
+            Object.keys(self.contact).forEach((prop) => {
                 if (prop !== 'app') {
                     storage[prop] = self.contact[prop];
                 }
@@ -351,16 +353,16 @@ define([
             localStorage.setItem('QM.user', JSON.stringify(storage));
         },
 
-        forgot: function() {
-            var QBApiCalls = this.app.service;
-            var UserView = this.app.views.User;
-            var form = $('section:visible form');
+        forgot() {
+            const QBApiCalls = this.app.service;
+            const UserView = this.app.views.User;
+            const form = $('section:visible form');
 
             if (validate(form, this)) {
                 UserView.createSpinner();
 
-                QBApiCalls.createSession({}, function() {
-                    QBApiCalls.forgotPassword(tempParams.email, function() {
+                QBApiCalls.createSession({}, () => {
+                    QBApiCalls.forgotPassword(tempParams.email, () => {
                         UserView.successSendEmailCallback();
                         self.valid = false;
                     });
@@ -368,16 +370,16 @@ define([
             }
         },
 
-        autologin: function(callback) {
-            var QBApiCalls = this.app.service;
-            var UserView = this.app.views.User;
-            var DialogView = this.app.views.Dialog;
-            var Contact = this.app.models.Contact;
-            var storage = JSON.parse(localStorage['QM.user']);
+        autologin(callback) {
+            const QBApiCalls = this.app.service;
+            const UserView = this.app.views.User;
+            const DialogView = this.app.views.Dialog;
+            const { Contact } = this.app.models;
+            const storage = JSON.parse(localStorage['QM.user']);
 
             UserView.createSpinner();
 
-            QBApiCalls.getUser(storage.id, function(user) {
+            QBApiCalls.getUser(storage.id, (user) => {
                 if (user) {
                     self.contact = Contact.create(user);
                 } else {
@@ -388,7 +390,7 @@ define([
 
                 UserView.successFormCallback();
 
-                QBApiCalls.connectChat(self.contact.user_jid, function() {
+                QBApiCalls.connectChat(self.contact.user_jid, () => {
                     self.rememberMe();
                     DialogView.prepareDownloading();
                     DialogView.downloadDialogs();
@@ -400,12 +402,12 @@ define([
             });
         },
 
-        logout: function() {
-            var QBApiCalls = self.app.service;
+        logout() {
+            const QBApiCalls = self.app.service;
 
             QBApiCalls.disconnectChat();
 
-            QBApiCalls.logoutUser(function() {
+            QBApiCalls.logoutUser(() => {
                 localStorage.removeItem('QM.user');
                 self.contact = null;
                 self.valid = false;
@@ -413,34 +415,37 @@ define([
                 localStorage.clear();
                 window.location.reload();
             });
-        }
+        },
 
     };
 
     /* Private
     ---------------------------------------------------------------------- */
     function validate(form, user) {
-        var maxSize = QMCONFIG.maxLimitFile * 1024 * 1024;
-        var file = form.find('input:file')[0];
-        var fieldName; var errName;
-        var value; var
-            errMsg;
+        const maxSize = QMCONFIG.maxLimitFile * 1024 * 1024;
+        let file = form.find('input:file')[0];
+        let fieldName;
+        let errName;
+        let value;
+        let errMsg;
 
         tempParams = {};
         form.find('input:not(:file, :checkbox)').each(function() {
             // fix requeired pattern
             this.value = this.value.trim();
 
+            /* eslint-disable prefer-destructuring */
             fieldName = this.id.split('-')[1];
             errName = this.placeholder;
             value = this.value;
+            /* eslint-enable prefer-destructuring */
 
             if (this.checkValidity()) {
                 user.valid = true;
                 tempParams[fieldName] = value;
             } else {
                 if (this.validity.valueMissing) {
-                    errMsg = errName + ' is required';
+                    errMsg = `${errName} is required`;
                 } else if (this.validity.typeMismatch) {
                     this.value = '';
                     errMsg = QMCONFIG.errors.invalidEmail;
@@ -468,7 +473,7 @@ define([
         });
 
         if (user.valid && file && file.files[0]) {
-            file = file.files[0];
+            file = file.files[0]; // eslint-disable-line prefer-destructuring
 
             if (file.type.indexOf('image/') === -1) {
                 errMsg = QMCONFIG.errors.avatarType;
@@ -495,7 +500,7 @@ define([
     }
 
     function getImport(user) {
-        var isImport;
+        let isImport;
 
         try {
             isImport = JSON.parse(user.custom_data).is_import || null;

@@ -1,15 +1,17 @@
-var baseSettings = require('./base');
+'use strict';
 
-var settings = Object.assign({}, baseSettings, {
+const baseSettings = require('./base');
+
+const settings = Object.assign({}, baseSettings, {
     qbAccount: {
         appId: 76743,
         authKey: 'exCV7U-V4BY-t4X',
-        authSecret: '6zYUFGZFQFWmL3v'
+        authSecret: '6zYUFGZFQFWmL3v',
     },
 
     fbAccount: {
         appId: '870667166610487',
-        scope: 'email,user_friends'
+        scope: 'email,user_friends',
     },
 
     firebase: {
@@ -18,8 +20,8 @@ var settings = Object.assign({}, baseSettings, {
         databaseURL: 'https://q-municate-web.firebaseio.com',
         projectId: 'q-municate-web',
         storageBucket: 'q-municate-web.appspot.com',
-        messagingSenderId: '661916700459'
-    }
+        messagingSenderId: '661916700459',
+    },
 });
 
 module.exports = settings;

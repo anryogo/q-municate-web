@@ -1,16 +1,16 @@
+'use strict';
+
 /*
  *
  * Q-MUNICATE custom cursor models Module
  *
  */
-define([], function() {
-    'use strict';
-
+define([], () => {
     function Cursor() {
-        var self = this;
+        const self = this;
 
         this.setCursorAfterElement = function(el) {
-            var range = document.createRange();
+            const range = document.createRange();
 
             range.setStartAfter(el);
             range.setEndAfter(el);
@@ -19,11 +19,11 @@ define([], function() {
         };
 
         this.setCursorToEnd = function(el) {
-            var isSelectionAndRangeAvaible = typeof window.getSelection !== 'undefined'
+            const isSelectionAndRangeAvaible = typeof window.getSelection !== 'undefined'
                                              && typeof document.createRange !== 'undefined';
-            var isTextRangeAvaible = typeof document.body.createTextRange !== 'undefined';
-            var range;
-            var textRange;
+            const isTextRangeAvaible = typeof document.body.createTextRange !== 'undefined';
+            let range;
+            let textRange;
 
             el.focus();
 
@@ -43,9 +43,9 @@ define([], function() {
         };
 
         this.insertElement = function(element, newClassName) {
-            var sel;
-            var range;
-            var emoji;
+            let sel;
+            let range;
+            let emoji;
 
             if (window.getSelection) {
                 sel = window.getSelection();
@@ -62,8 +62,8 @@ define([], function() {
         };
 
         function getRange() {
-            var range;
-            var sel;
+            let range;
+            let sel;
 
             if (document.getSelection) {
                 sel = document.getSelection();
@@ -79,7 +79,7 @@ define([], function() {
         }
 
         function setRange(range) {
-            var sel;
+            let sel;
 
             if (document.getSelection) {
                 sel = window.getSelection();

@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Q-municate chat application
  *
@@ -6,26 +8,24 @@
  */
 define([
     'config',
-    'cryptojs'
-], function(
+    'cryptojs',
+], (
     QMCONFIG,
-    CryptoJS
-) {
+    CryptoJS,
+) => {
     function Session(app) {
         this.app = app;
     }
 
     Session.prototype = {
 
-        create: function(params) {
+        create(params) {
             this.token = params.token;
             this.expirationTime = params.expirationTime || null;
             this.authParams = params.authParams;
         },
 
-        update: function(params) {
-            var date;
-
+        update(params) {
             if (params.token) {
                 this.token = params.token;
             } else {
@@ -35,7 +35,8 @@ define([
 
                 if (params.date) {
                     // set QB session expiration through 5 minutes
-                    date = params.date;
+                    const { date } = params;
+
                     date.setMinutes(date.getMinutes() + 5);
                     this.expirationTime = date.toISOString();
                 }
@@ -43,12 +44,12 @@ define([
                 localStorage.setItem('QM.session', JSON.stringify({
                     token: this.token,
                     expirationTime: this.expirationTime,
-                    authParams: this.authParams
+                    authParams: this.authParams,
                 }));
             }
         },
 
-        destroy: function() {
+        destroy() {
             localStorage.removeItem('QM.session');
             this.token = null;
             this.expirationTime = null;
@@ -56,7 +57,7 @@ define([
         },
 
         // crypto methods for password
-        encrypt: function(params) {
+        encrypt(params) {
             if (params && params.password) {
                 params.password = CryptoJS.AES
                     .encrypt(params.password, QMCONFIG.qbAccount.authSecret)
@@ -65,14 +66,14 @@ define([
             return params;
         },
 
-        decrypt: function(params) {
+        decrypt(params) {
             if (params && params.password) {
                 params.password = CryptoJS.AES
                     .decrypt(params.password, QMCONFIG.qbAccount.authSecret)
                     .toString(CryptoJS.enc.Utf8);
             }
             return params;
-        }
+        },
 
     };
 

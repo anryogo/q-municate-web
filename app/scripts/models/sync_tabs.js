@@ -1,20 +1,20 @@
+'use strict';
+
 /*
  *
  * Q-MUNICATE sync tabs models Module
  *
  */
-define(['jquery'], function($) {
-    'use strict';
-
+define(['jquery'], ($) => {
     function SyncTabs(app) {
-        var self = this;
-        var curTab = 1;
-        var currentUserId;
-        var countTabs;
-        var mainTab;
-        var closedTab;
-        var logOutAll;
-        var readBadge;
+        const self = this;
+        let curTab = 1;
+        let currentUserId;
+        let countTabs;
+        let mainTab;
+        let closedTab;
+        let logOutAll;
+        let readBadge;
 
         this.app = app;
 
@@ -25,12 +25,12 @@ define(['jquery'], function($) {
             set();
 
             // enter to new page (listener)
-            $(window).focus(function() {
+            $(window).focus(() => {
                 localStorage.setItem(mainTab, curTab);
             });
 
             // is closed page (listener)
-            $(window).unload(function() {
+            $(window).unload(() => {
                 localStorage.setItem(closedTab, curTab); // informed about closed tab
 
                 // remove all info about sync tabs if current tab was the last one
@@ -42,7 +42,7 @@ define(['jquery'], function($) {
             });
 
             // localStorage listener
-            $(window).bind('storage', function(e) {
+            $(window).bind('storage', (e) => {
                 sync(e);
             });
         };
@@ -52,11 +52,11 @@ define(['jquery'], function($) {
         };
 
         function set() {
-            countTabs = 'QM.' + currentUserId + '_countTabs';
-            mainTab = 'QM.' + currentUserId + '_mainTab';
-            closedTab = 'QM.' + currentUserId + '_closedTab';
-            logOutAll = 'QM.' + currentUserId + '_logOut';
-            readBadge = 'QM.' + currentUserId + '_readBadge';
+            countTabs = `QM.${currentUserId}_countTabs`;
+            mainTab = `QM.${currentUserId}_mainTab`;
+            closedTab = `QM.${currentUserId}_closedTab`;
+            logOutAll = `QM.${currentUserId}_logOut`;
+            readBadge = `QM.${currentUserId}_readBadge`;
 
             if (localStorage[mainTab] && localStorage[countTabs]) {
                 curTab = +localStorage[countTabs] + 1; // set new order for current tab
@@ -69,8 +69,8 @@ define(['jquery'], function($) {
         }
 
         function sync(e) {
-            var key = e.originalEvent.key;
-            var newVal = e.originalEvent.newValue;
+            const { key } = e.originalEvent;
+            const newVal = e.originalEvent.newValue;
 
             // fire if has closed tab
             if (key === closedTab) {
@@ -87,7 +87,7 @@ define(['jquery'], function($) {
             }
 
             // fire if user's settings was changed
-            if (key === ('QM.settings-' + currentUserId)) {
+            if (key === (`QM.settings-${currentUserId}`)) {
                 self.app.views.Settings.setUp(currentUserId);
             }
 
@@ -104,7 +104,7 @@ define(['jquery'], function($) {
 
             // remove unread message count for opened chat in other tab
             if (key === readBadge && newVal !== null) {
-                $('.dialog-item[data-dialog="' + newVal + '"]').find('.unread').text('');
+                $(`.dialog-item[data-dialog="${newVal}"]`).find('.unread').text('');
                 self.app.views.Dialog.decUnreadCounter(newVal);
             }
         }

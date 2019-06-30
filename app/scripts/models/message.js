@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Q-municate chat application
  *
@@ -6,12 +8,12 @@
  */
 define([
     'config',
-    'Entities'
-], function(
+    'Entities',
+], (
     QMCONFIG,
-    Entities
-) {
-    var self;
+    Entities,
+) => {
+    let self;
 
     function Message(app) {
         this.app = app;
@@ -21,11 +23,11 @@ define([
 
     Message.prototype = {
 
-        download: function(dialogId, callback, count, isAjaxDownloading) {
-            var QBApiCalls = this.app.service;
-            var DialogView = this.app.views.Dialog;
-            var limitCount = QMCONFIG.stackMessages;
-            var skipCount;
+        download(dialogId, callback, count, isAjaxDownloading) {
+            const QBApiCalls = this.app.service;
+            const DialogView = this.app.views.Dialog;
+            let limitCount = QMCONFIG.stackMessages;
+            let skipCount;
 
             if (self.skip === count) {
                 return;
@@ -42,8 +44,8 @@ define([
                 chat_dialog_id: dialogId,
                 sort_desc: 'date_sent',
                 limit: limitCount,
-                skip: skipCount || 0
-            }, function(messages, error) {
+                skip: skipCount || 0,
+            }, (messages, error) => {
                 if (error) {
                     callback(null, error);
                     return;
@@ -58,9 +60,9 @@ define([
             });
         },
 
-        create: function(params, ajax) {
+        create(params, ajax) {
             /* eslint-disable max-len */
-            var message = {
+            const message = {
                 // eslint-disable-next-line no-underscore-dangle
                 id: (params.extension && params.extension.message_id) || params._id || params.id || null,
                 body: params.body || params.message || '',
@@ -93,7 +95,7 @@ define([
                 longitude: (params.extension && params.extension.longitude) || params.longitude || null,
                 stack: false,
                 online: params.online || false,
-                status: ((params.extension && params.extension.notification_type) || params.notification_type) ? '' : 'Not delivered yet'
+                status: ((params.extension && params.extension.notification_type) || params.notification_type) ? '' : 'Not delivered yet',
             };
             /* eslint-denable max-len */
 
@@ -101,7 +103,7 @@ define([
                 message.attachment.size = parseInt(message.attachment.size, 10);
             }
 
-            Object.keys(message).forEach(function(prop) {
+            Object.keys(message).forEach((prop) => {
                 if (message[prop] === null) {
                     delete message[prop];
                 }
@@ -114,11 +116,11 @@ define([
             return message;
         },
 
-        isStack: function(online, curMsg, prevMsg) {
-            var sameUser; var sameTime;
-            var stack = false;
-            var lastMessageSender;
-            var lastMessageDateSent;
+        isStack(online, curMsg, prevMsg) {
+            let sameUser; let sameTime;
+            let stack = false;
+            let lastMessageSender;
+            let lastMessageDateSent;
 
             if (prevMsg) {
                 if (online) {
@@ -139,7 +141,7 @@ define([
             }
 
             return stack;
-        }
+        },
 
     };
 

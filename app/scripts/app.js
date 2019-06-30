@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Q-municate chat application
  *
@@ -33,8 +35,8 @@ define([
     'Listeners',
     'VoiceMessage',
     'QMPlayer',
-    'FirebaseWidget'
-], function(
+    'FirebaseWidget',
+], (
     $,
     User,
     Session,
@@ -63,9 +65,9 @@ define([
     Listeners,
     VoiceMessage,
     QMPlayer,
-    FirebaseWidget
-) {
-    var IS_RELEASE_QB_ACCOUNT = 'QM.isReleaseQBAccount';
+    FirebaseWidget,
+) => {
+    const IS_RELEASE_QB_ACCOUNT = 'QM.isReleaseQBAccount';
 
     function QM() {
         this.listeners = new Listeners(this);
@@ -82,7 +84,7 @@ define([
             VideoChat: new VideoChat(this),
             Cursor: new Cursor(this),
             SyncTabs: new SyncTabs(this),
-            VoiceMessage: new VoiceMessage(this)
+            VoiceMessage: new VoiceMessage(this),
         };
 
         this.views = {
@@ -92,7 +94,7 @@ define([
             Message: new MessageView(this),
             Attach: new AttachView(this),
             ContactList: new ContactListView(this),
-            VideoChat: new VideoChatView(this)
+            VideoChat: new VideoChatView(this),
         };
 
         this.events = new Events(this);
@@ -106,8 +108,9 @@ define([
     }
 
     QM.prototype = {
-        init: function() {
-            var token;
+        init() {
+            let session;
+            let token;
 
             this.setHtml5Patterns();
             this.preloader();
@@ -117,7 +120,8 @@ define([
             if (localStorage['QM.session'] && localStorage['QM.user']
                 // new QB release account (13.02.2015)
                 && localStorage[IS_RELEASE_QB_ACCOUNT]) {
-                token = JSON.parse(localStorage['QM.session']).token;
+                session = JSON.parse(localStorage['QM.session']);
+                token = session && session.token;
                 this.service.init(token);
             } else if (localStorage[IS_RELEASE_QB_ACCOUNT]) {
                 this.service.init();
@@ -134,17 +138,17 @@ define([
             Helpers.log('App init', this);
         },
 
-        preloader: function() {
-            var spinner = $('#welcomePage .l-spinner');
+        preloader() {
+            const spinner = $('#welcomePage .l-spinner');
 
             spinner.addClass('is-hidden');
             spinner.prevAll().removeClass('is-hidden');
         },
 
-        setHtml5Patterns: function() {
+        setHtml5Patterns() {
             $('.pattern-name').attr('pattern', QMCONFIG.patterns.name);
             $('.pattern-pass').attr('pattern', QMCONFIG.patterns.password);
-        }
+        },
     };
 
     return QM;

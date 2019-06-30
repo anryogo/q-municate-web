@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Q-municate chat application
  *
@@ -5,30 +7,30 @@
  *
  */
 define([
-    'loadImage'
-], function(
-    loadImage
-) {
+    'loadImage',
+], (
+    loadImage,
+) => {
     function Attach(app) {
         this.app = app;
     }
 
     Attach.prototype = {
 
-        upload: function(file, callback) {
-            var self = this;
-            var QBApiCalls = self.app.service;
+        upload(file, callback) {
+            const self = this;
+            const QBApiCalls = self.app.service;
 
             QBApiCalls.createBlob({
-                file: file,
-                public: true
-            }, function(blob) {
+                file,
+                public: true,
+            }, (blob) => {
                 callback(blob);
             });
         },
 
-        create: function(blob, metadata) {
-            var type;
+        create(blob, metadata) {
+            let type;
 
             if (blob.content_type.indexOf('image/') === 0) {
                 type = 'image';
@@ -41,23 +43,23 @@ define([
             }
 
             return {
-                type: type,
+                type,
                 id: blob.uid,
                 name: blob.name,
                 size: blob.size || metadata.size,
                 'content-type': blob.content_type,
                 duration: metadata.duration,
                 height: metadata.height,
-                width: metadata.width
+                width: metadata.width,
             };
         },
 
-        crop: function(file, params, callback) {
+        crop(file, params, callback) {
             loadImage(
                 file,
-                function(img) {
-                    var attr = {
-                        crop: true
+                (img) => {
+                    const attr = {
+                        crop: true,
                     };
                     if (img.width > img.height) {
                         attr.maxWidth = params.w;
@@ -67,17 +69,17 @@ define([
 
                     loadImage(
                         file,
-                        function(canvas) {
-                            canvas.toBlob(function(blob) {
+                        (canvas) => {
+                            canvas.toBlob((blob) => {
                                 blob.name = file.name;
                                 callback(blob);
                             }, file.type);
                         },
-                        attr
+                        attr,
                     );
-                }
+                },
             );
-        }
+        },
 
     };
 

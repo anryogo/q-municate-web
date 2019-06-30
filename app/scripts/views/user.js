@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Q-municate chat application
  *
@@ -10,46 +12,49 @@ define([
     'Entities',
     'Helpers',
     'QMHtml',
-    'LocationView'
-], function(
+    'LocationView',
+], (
     $,
     QMCONFIG,
     Entities,
     Helpers,
     QMHtml,
-    Location
-) {
-    var User;
-    var ContactList;
-    var FBCallback = null;
-    var clearErrors;
-    var switchPage;
-    var switchOnWelcomePage;
-    var appearAnimation;
+    Location,
+) => {
+    let User;
+    let ContactList;
+    let FBCallback = null;
+    let clearErrors;
+    let switchPage;
+    let switchOnWelcomePage;
+    let appearAnimation;
 
     function UserView(app) {
         this.app = app;
+
+        /* eslint-disable prefer-destructuring */
         User = this.app.models.User;
         ContactList = this.app.models.ContactList;
+        /* eslint-enable prefer-destructuring */
     }
 
     UserView.prototype = {
 
-        signupQB: function() {
+        signupQB() {
             switchPage($('#signUpPage'));
         },
 
-        loginQB: function() {
+        loginQB() {
             switchPage($('#loginPage'));
         },
 
-        forgot: function() {
+        forgot() {
             switchPage($('#forgotPage'));
         },
 
-        logInFirebase: function(callback) {
+        logInFirebase(callback) {
             if (typeof callback === 'function') {
-                User.reLogInFirebasePhone(function(authParams) {
+                User.reLogInFirebasePhone((authParams) => {
                     callback(authParams);
                 });
             } else {
@@ -57,61 +62,61 @@ define([
             }
         },
 
-        logInFacebook: function() {
+        logInFacebook() {
             User.logInFacebook();
         },
 
-        connectFB: function(token) {
+        connectFB(token) {
             User.connectFB(token);
         },
 
-        signupForm: function() {
+        signupForm() {
             clearErrors();
             User.signup();
         },
 
-        loginForm: function() {
+        loginForm() {
             clearErrors();
             User.login();
         },
 
-        forgotForm: function() {
+        forgotForm() {
             clearErrors();
             User.forgot();
         },
 
-        resetForm: function() {
+        resetForm() {
             clearErrors();
             User.resetPass();
         },
 
-        autologin: function() {
+        autologin() {
             switchPage($('#loginPage'));
             User.autologin();
         },
 
-        createSpinner: function() {
+        createSpinner() {
             $('section:visible form').addClass('is-hidden').next('.l-spinner').removeClass('is-hidden');
         },
 
-        removeSpinner: function() {
+        removeSpinner() {
             $('section:visible form').removeClass('is-hidden').next('.l-spinner').addClass('is-hidden');
         },
 
 
-        successFormCallback: function() {
-            var $profileAvatar = $('#avatar-container');
+        successFormCallback() {
+            const $profileAvatar = $('#avatar-container');
 
             this.removeSpinner();
-            $profileAvatar.addClass('profileUserAvatar').css('background-image', 'url(' + User.contact.avatar_url + ')');
+            $profileAvatar.addClass('profileUserAvatar').css('background-image', `url(${User.contact.avatar_url})`);
             $profileAvatar.attr('data-id', User.contact.id);
             $profileAvatar.attr('data-name', User.contact.full_name);
             switchPage($('#mainPage'));
             this.app.views.Dialog.createDataSpinner();
         },
 
-        successSendEmailCallback: function() {
-            var alert = '<div class="j-success_callback note l-form l-flexbox l-flexbox_column">';
+        successSendEmailCallback() {
+            let alert = '<div class="j-success_callback note l-form l-flexbox l-flexbox_column">';
             alert += '<span class="text text_alert text_alert_success">Success!</span>';
             alert += '<span class="text">Please check your email and click a link in the letter in order to reset your password</span>';
             alert += '</div>';
@@ -120,9 +125,7 @@ define([
             $('section:visible form').addClass('is-hidden').after(alert);
         },
 
-        getFBStatus: function(cb) {
-            var callback;
-
+        getFBStatus(cb) {
             if (typeof FB === 'undefined') {
                 // Wait until FB SDK will be downloaded and then calling this function again
                 FBCallback = cb;
@@ -130,10 +133,10 @@ define([
                 return;
             }
 
-            callback = cb || FBCallback;
+            const callback = cb || FBCallback;
             FBCallback = null;
 
-            FB.getLoginStatus(function(response) {
+            FB.getLoginStatus((response) => {
                 Helpers.log('FB status response', response);
                 if (callback) {
                     // situation when you are recovering QB session via FB
@@ -141,7 +144,7 @@ define([
                     if (response.status === 'connected') {
                         callback(response.authResponse.accessToken);
                     } else {
-                        FB.login(function(res) {
+                        FB.login((res) => {
                             Helpers.log('FB authResponse', res);
                             if (res.status === 'connected') callback(res.authResponse.accessToken);
                         });
@@ -150,36 +153,24 @@ define([
             }, true);
         },
 
-        profilePopover: function(objDom) {
-            var html = QMHtml.User.profilePopover();
+        profilePopover(objDom) {
+            const html = QMHtml.User.profilePopover();
 
             objDom.after(html);
             appearAnimation();
         },
 
-        contactPopover: function(objDom) {
-            var ids = objDom.parent().data('id');
-            var dialogId = objDom.parent().data('dialog');
-            var roster = ContactList.roster;
-            var dialogs = Entities.Collections.dialogs;
-            var dialog = dialogs.get(dialogId).toJSON();
-            var htmlTpl;
-            var elemPosition;
-            var list;
-            var topListOffset;
-            var listHeigth;
-            var listViewPort;
-            var botListOffset;
-            var dropList;
-            var dropListElemCount;
-            var botElemPosition;
-            var elemPositionInList;
-
-            htmlTpl = QMHtml.User.contactPopover({
-                dialogId: dialogId,
+        contactPopover(objDom) {
+            const ids = objDom.parent().data('id');
+            const dialogId = objDom.parent().data('dialog');
+            const { roster } = ContactList;
+            const { dialogs } = Entities.Collections;
+            const dialog = dialogs.get(dialogId).toJSON();
+            const htmlTpl = QMHtml.User.contactPopover({
+                dialogId,
                 dialogType: dialog.type,
                 occupantsIds: dialog.occupants_ids,
-                ids: ids
+                ids,
             }, roster[ids]);
 
             objDom.after(htmlTpl)
@@ -187,18 +178,18 @@ define([
 
             appearAnimation();
 
-            elemPosition = objDom.offset().top;
-            list = document.querySelector('.j-scrollbar_aside');
-            topListOffset = list.offsetTop;
-            listHeigth = list.offsetHeight;
-            listViewPort = 0;
-            botListOffset = listHeigth + topListOffset;
-            dropList = objDom.next();
-            dropListElemCount = objDom.next().children().length;
-            botElemPosition = botListOffset - elemPosition;
-            elemPositionInList = elemPosition - topListOffset;
+            const elemPosition = objDom.offset().top;
+            const list = document.querySelector('.j-scrollbar_aside');
+            const topListOffset = list.offsetTop;
+            const listHeigth = list.offsetHeight;
+            let listViewPort = 0;
+            const botListOffset = listHeigth + topListOffset;
+            const dropList = objDom.next();
+            const dropListElemCount = objDom.next().children().length;
+            const botElemPosition = botListOffset - elemPosition;
+            const elemPositionInList = elemPosition - topListOffset;
 
-            $('.j-aside_list_item').each(function(index, element) {
+            $('.j-aside_list_item').each((index, element) => {
                 listViewPort += element.offsetHeight;
             });
 
@@ -208,18 +199,18 @@ define([
             }
 
             if (listViewPort <= 400) {
-                list.style.paddingBottom = (dropListElemCount * 40) + 'px';
+                list.style.paddingBottom = `${dropListElemCount * 40}px`;
             }
         },
 
-        occupantPopover: function(objDom, e) {
-            var id = objDom.data('id');
-            var jid = QB.chat.helpers.getUserJid(id, QMCONFIG.qbAccount.appId);
-            var roster = ContactList.roster;
-            var position = e.currentTarget.getBoundingClientRect();
-            var htmlTpl = QMHtml.User.occupantPopover({
-                id: id,
-                jid: jid
+        occupantPopover(objDom, e) {
+            const id = objDom.data('id');
+            const jid = QB.chat.helpers.getUserJid(id, QMCONFIG.qbAccount.appId);
+            const { roster } = ContactList;
+            const position = e.currentTarget.getBoundingClientRect();
+            const htmlTpl = QMHtml.User.occupantPopover({
+                id,
+                jid,
             }, roster[id]);
 
             $('body').append(htmlTpl);
@@ -230,21 +221,21 @@ define([
 
             $('.list-actions_occupants').offset({
                 top: (29 + position.top),
-                left: position.left
+                left: position.left,
             });
         },
 
-        buildDetails: function(userId) {
-            var popup = $('#popupDetails');
-            var contact = ContactList.contacts[userId];
-            var roster = ContactList.roster;
-            var chatStatus = roster[userId] ? roster[userId] : null;
+        buildDetails(userId) {
+            const popup = $('#popupDetails');
+            const contact = ContactList.contacts[userId];
+            const { roster } = ContactList;
+            const chatStatus = roster[userId] ? roster[userId] : null;
 
             if (navigator.userAgent.match(/Firefox/)) {
                 popup.find('.userDetails-controls button').css('padding', '0 12px');
             }
 
-            popup.find('.userDetails-avatar').attr('data-id', userId).css('background-image', 'url(' + contact.avatar_url + ')');
+            popup.find('.userDetails-avatar').attr('data-id', userId).css('background-image', `url(${contact.avatar_url})`);
             popup.find('.userDetails-filename').attr('data-id', userId).text(contact.full_name);
 
             popup.find('.userDetails-status').attr('data-id', userId).text(contact.status);
@@ -259,40 +250,40 @@ define([
 
             popup.find('.userDetails-field').attr('data-id', userId).html(
                 contact.phone
-                    ? '<span class="userDetails-label">Phone:</span><span class="userDetails-phone">' + contact.phone + '</span>'
-                    : ''
+                    ? `<span class="userDetails-label">Phone:</span><span class="userDetails-phone">${contact.phone}</span>`
+                    : '',
             );
 
             this.getNewProfile(userId);
         },
 
-        getNewProfile: function(userId) {
-            var QBApiCalls = this.app.service;
-            var Contact = this.app.models.Contact;
+        getNewProfile(userId) {
+            const QBApiCalls = this.app.service;
+            const { Contact } = this.app.models;
 
-            QBApiCalls.getUser(userId, function(user) {
-                var contact = Contact.create(user);
+            QBApiCalls.getUser(userId, (user) => {
+                const contact = Contact.create(user);
                 ContactList.contacts[contact.id] = contact;
 
-                $('.profileUserName[data-id="' + contact.id + '"]').text(contact.full_name);
-                $('.profileUserStatus[data-id="' + contact.id + '"]').text(contact.status);
+                $(`.profileUserName[data-id="${contact.id}"]`).text(contact.full_name);
+                $(`.profileUserStatus[data-id="${contact.id}"]`).text(contact.status);
                 if (contact.phone) {
-                    $('.profileUserPhone[data-id="' + contact.id + '"]').html(
-                        '<span class="userDetails-label">Phone:</span><span class="userDetails-phone">' + contact.phone + '</span>'
+                    $(`.profileUserPhone[data-id="${contact.id}"]`).html(
+                        `<span class="userDetails-label">Phone:</span><span class="userDetails-phone">${contact.phone}</span>`,
                     );
                 }
-                $('.profileUserAvatar[data-id="' + contact.id + '"]').css('background-image', 'url(' + contact.avatar_url + ')');
+                $(`.profileUserAvatar[data-id="${contact.id}"]`).css('background-image', `url(${contact.avatar_url})`);
 
-                localStorage.setItem('QM.contact-' + contact.id, JSON.stringify(contact));
+                localStorage.setItem(`QM.contact-${contact.id}`, JSON.stringify(contact));
             });
         },
 
-        logout: function() {
-            var DialogView = this.app.views.Dialog;
+        logout() {
+            const DialogView = this.app.views.Dialog;
 
             $('.mediacall .btn_hangup').click();
 
-            User.logout(function() {
+            User.logout(() => {
                 switchOnWelcomePage();
                 $('.j-capBox').removeClass('is-hidden');
                 $('.j-chatWrap').addClass('is-hidden');
@@ -303,18 +294,18 @@ define([
             });
         },
 
-        localSearch: function(form) {
-            var val = form.find('input[type="search"]').val().trim().toLowerCase();
-            var selected = $('#searchList li.is-selected').data('dialog');
-            var $notSearchLists = $('#recentList, #historyList, #requestsList');
+        localSearch(form) {
+            const val = form.find('input[type="search"]').val().trim().toLowerCase();
+            const selected = $('#searchList li.is-selected').data('dialog');
+            const $notSearchLists = $('#recentList, #historyList, #requestsList');
 
             if (val.length > 0) {
                 $('#searchList').removeClass('is-hidden').siblings('section').addClass('is-hidden');
                 $('#searchList ul').html('').add('#searchList .note').removeClass('is-hidden');
 
                 $('#recentList, #historyList, #oldHistoryList').find('.dialog-item').each(function() {
-                    var name = $(this).find('.name').text().toLowerCase();
-                    var li = $(this).clone();
+                    const name = $(this).find('.name').text().toLowerCase();
+                    const li = $(this).clone();
 
                     if (name.indexOf(val) > -1) {
                         $('#searchList ul').append(li);
@@ -328,14 +319,14 @@ define([
             } else {
                 $('#searchList').addClass('is-hidden');
                 $notSearchLists.each(function() {
-                    var $this = $(this);
+                    const $this = $(this);
 
                     if ($this.find('.list-item').length > 0) {
                         $this.removeClass('is-hidden');
                     }
 
                     if (selected) {
-                        $this.find('.list-item[data-dialog="' + selected + '"]').addClass('is-selected');
+                        $this.find(`.list-item[data-dialog="${selected}"]`).addClass('is-selected');
                     }
                 });
                 if ($('.l-list-wrap section:not(#searchList) .list-item').length === 0) {
@@ -344,17 +335,17 @@ define([
             }
         },
 
-        friendsSearch: function(form) {
-            var val = form.find('input[type="search"]').val().trim().toLowerCase();
-            var result = form.next();
+        friendsSearch(form) {
+            const val = form.find('input[type="search"]').val().trim().toLowerCase();
+            const result = form.next();
 
             result.find('ul').removeClass('is-hidden').siblings().addClass('is-hidden');
             result.find('ul li').removeClass('is-hidden');
 
             if (val.length > 0) {
                 result.find('ul li').each(function() {
-                    var name = $(this).find('.name').text().toLowerCase();
-                    var li = $(this);
+                    const name = $(this).find('.name').text().toLowerCase();
+                    const li = $(this);
 
                     if (name.indexOf(val) === -1) {
                         li.addClass('is-hidden');
@@ -365,7 +356,7 @@ define([
                     result.find('.note').removeClass('is-hidden').siblings().addClass('is-hidden');
                 }
             }
-        }
+        },
 
     };
 
@@ -385,7 +376,7 @@ define([
         page.find('input').val('');
         if (!page.is('#mainPage')) {
             page.find('form').removeClass('is-hidden').next('.l-form').remove(); // reset Forgot form after success sending of letter
-            page.find('input:file').prev().find('.avatar').css('background-image', 'url(' + QMCONFIG.defAvatar.url + ')')
+            page.find('input:file').prev().find('.avatar').css('background-image', `url(${QMCONFIG.defAvatar.url})`)
                 .siblings('span')
                 .text(QMCONFIG.defAvatar.caption);
             page.find('input:checkbox').prop('checked', false);
@@ -395,7 +386,7 @@ define([
                 localStorage.removeItem('QM.latitude');
                 localStorage.removeItem('QM.longitude');
 
-                Location.toggleGeoCoordinatesToLocalStorage(true, function(res, err) {
+                Location.toggleGeoCoordinatesToLocalStorage(true, (res, err) => {
                     Helpers.log('Location: ', err || res);
                 });
             }

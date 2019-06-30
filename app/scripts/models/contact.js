@@ -1,17 +1,19 @@
+'use strict';
+
 /*
  * Q-municate chat application
  *
  * Contact Module
  *
  */
-define(['config'], function(QMCONFIG) {
+define(['config'], (QMCONFIG) => {
     function Contact(app) {
         this.app = app;
     }
 
     Contact.prototype = {
 
-        create: function(qbUser) {
+        create(qbUser) {
             return {
                 id: qbUser.id,
                 full_name: qbUser.full_name || 'Unknown user',
@@ -25,16 +27,16 @@ define(['config'], function(QMCONFIG) {
                 status: qbUser.status || getStatus(qbUser) || '',
                 user_jid: qbUser.user_jid
                     || QB.chat.helpers.getUserJid(qbUser.id, QMCONFIG.qbAccount.appId),
-                custom_data: qbUser.custom_data || null
+                custom_data: qbUser.custom_data || null,
             };
-        }
+        },
 
     };
 
     /* Private
     ---------------------------------------------------------------------- */
     function getAvatar(contact) {
-        var avatar;
+        let avatar;
 
         if (contact.custom_data) {
             contact.avatar_url = JSON.parse(contact.custom_data).avatar_url;
@@ -43,7 +45,7 @@ define(['config'], function(QMCONFIG) {
         if (contact.avatar_url) {
             avatar = contact.avatar_url;
         } else if (contact.facebook_id) {
-            avatar = 'https://graph.facebook.com/v3.0/' + contact.facebook_id + '/picture?width=240&height=240';
+            avatar = `https://graph.facebook.com/v3.0/${contact.facebook_id}/picture?width=240&height=240`;
         } else {
             avatar = QMCONFIG.defAvatar.url;
         }

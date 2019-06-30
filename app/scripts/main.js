@@ -4,24 +4,24 @@ require.config({
     googlemaps: {
         params: {
             key: 'AIzaSyAhduIkJbVdtRm0Hz6XpkihGt8h_R8cZds',
-            libraries: 'geometry'
-        }
+            libraries: 'geometry',
+        },
     },
     baseUrl: 'scripts',
     shim: {
         gmaps: {
             deps: ['googlemaps'],
-            exports: 'GMaps'
+            exports: 'GMaps',
         },
         cryptojs: {
-            exports: 'CryptoJS'
+            exports: 'CryptoJS',
         },
         progressbar: {
-            exports: 'ProgressBar'
+            exports: 'ProgressBar',
         },
         minEmoji: {
-            exports: 'minEmoji'
-        }
+            exports: 'minEmoji',
+        },
     },
     paths: {
     // libs
@@ -85,11 +85,11 @@ require.config({
         // QM Player
         QMPlayer: 'views/qmplayer',
         // Voice Messages
-        VoiceMessage: 'voicemessage'
-    }
+        VoiceMessage: 'voicemessage',
+    },
 });
 
-require([
+require([ // eslint-disable-line import/no-dynamic-require
     'jquery',
     'config',
     'Helpers',
@@ -97,20 +97,20 @@ require([
     'MainModule',
     'backbone',
     'QBNotification',
-    'fetch' // the fetch polifil for IE 10+
-], function(
+    'fetch', // the fetch polifil for IE 10+
+], (
     $,
     QMCONFIG,
     Helpers,
     minEmoji,
     QM,
     Backbone,
-    QBNotification
-) {
-    var APP;
+    QBNotification,
+) => {
+    let APP;
 
     // Application initialization
-    $(function() {
+    $(() => {
     // set Q-MUNICATE version
         $('.j-appVersion').html('v. 1.15.0');
 
@@ -125,13 +125,13 @@ require([
         if (FB) {
             FB.init({
                 appId: QMCONFIG.fbAccount.appId,
-                version: 'v3.0'
+                version: 'v3.0',
             });
         }
 
         // emoji smiles run
         $('.smiles-group').each(function() {
-            var obj = $(this);
+            const obj = $(this);
             obj.html(minEmoji(obj.text(), true));
         });
 

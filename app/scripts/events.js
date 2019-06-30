@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Q-municate chat application
  *
@@ -13,44 +15,45 @@ define([
     'minEmoji',
     'perfectscrollbar',
     'mCustomScrollbar',
-    'mousewheel'
-], function(
+    'mousewheel',
+], (
     $,
     QMCONFIG,
     Helpers,
     QMHtml,
     Location,
     minEmoji,
-    Ps
-) {
-    var User;
-    var Dialog;
-    var Cursor;
-    var UserView;
-    var ContactList;
-    var ContactListView;
-    var DialogView;
-    var MessageView;
-    var AttachView;
-    var VideoChatView;
-    var SettingsView;
-    var VoiceMessage;
+    Ps,
+) => {
+    let User;
+    let Dialog;
+    let Cursor;
+    let UserView;
+    let ContactList;
+    let ContactListView;
+    let DialogView;
+    let MessageView;
+    let AttachView;
+    let VideoChatView;
+    let SettingsView;
+    let VoiceMessage;
 
-    var chatName;
-    var editedChatName;
-    var stopTyping;
-    var retryTyping;
-    var keyupSearch;
+    let chatName;
+    let editedChatName;
+    let stopTyping;
+    let retryTyping;
+    let keyupSearch;
 
-    var App;
+    let App;
 
-    var $workspace = $('.l-workspace-wrap');
-    var $body = $('body');
+    const $workspace = $('.l-workspace-wrap');
+    const $body = $('body');
 
     function Events(app) {
         App = app;
         this.app = app;
 
+        /* eslint-disable prefer-destructuring */
         Dialog = this.app.models.Dialog;
         Cursor = this.app.models.Cursor;
         User = this.app.models.User;
@@ -63,21 +66,19 @@ define([
         VideoChatView = this.app.views.VideoChat;
         SettingsView = this.app.views.Settings;
         VoiceMessage = this.app.models.VoiceMessage;
+        /* eslint-enable prefer-destructuring */
     }
 
     Events.prototype = {
 
-        init: function() {
+        init() {
             window.isQMAppActive = true;
 
-            $(window).focus(function() {
-                var dialogItem;
-                var dialogId;
-
+            $(window).focus(() => {
                 window.isQMAppActive = true;
 
-                dialogItem = $('.l-list-wrap section:not(#searchList) .is-selected');
-                dialogId = dialogItem[0] && dialogItem.data('dialog');
+                const dialogItem = $('.l-list-wrap section:not(#searchList) .is-selected');
+                const dialogId = dialogItem[0] && dialogItem.data('dialog');
 
                 if (dialogId) {
                     dialogItem.find('.unread').text('');
@@ -85,9 +86,9 @@ define([
                 }
             });
 
-            $(window).blur(function() {
-                var $chat = $('.l-chat:visible');
-                var $label = $('.l-chat:visible').find('.j-newMessages');
+            $(window).blur(() => {
+                const $chat = $('.l-chat:visible');
+                const $label = $('.l-chat:visible').find('.j-newMessages');
 
                 if ($chat.length && $label.length) {
                     $label.remove();
@@ -96,12 +97,12 @@ define([
                 window.isQMAppActive = false;
             });
 
-            $(document).on('click', function(event) {
+            $(document).on('click', (event) => {
                 clickBehaviour(event);
             });
 
-            $('.popups').on('click', function(event) {
-                var objDom = $(event.target);
+            $('.popups').on('click', (event) => {
+                const objDom = $(event.target);
 
                 if (objDom.is('.popups') && !objDom.find('.popup.is-overlay').is('.is-open')) {
                     closePopup();
@@ -115,13 +116,10 @@ define([
             /* User Profile
             ----------------------------------------------------- */
             $body.on('click', '.userDetails, .j-userMenu', function(event) {
-                var id;
-                var roster;
-
                 removePopover();
 
-                id = $(this).data('id');
-                roster = ContactList.roster[id];
+                const id = $(this).data('id');
+                const roster = ContactList.roster[id];
 
                 if (roster) {
                     QMHtml.User.getControlButtonsForPopupDetails(roster);
@@ -135,38 +133,38 @@ define([
                 return false;
             });
 
-            $body.on('click', '#userProfile', function(event) {
-                var profileView = App.views.Profile;
+            $body.on('click', '#userProfile', (event) => {
+                const profileView = App.views.Profile;
 
                 event.preventDefault();
                 removePopover();
                 profileView.render().openPopup();
             });
 
-            $body.on('click', '.btn_changePassword', function(event) {
-                var changePassView = App.views.ChangePass;
-                var profileView = App.views.Profile;
+            $body.on('click', '.btn_changePassword', (event) => {
+                const changePassView = App.views.ChangePass;
+                const profileView = App.views.Profile;
 
                 event.preventDefault();
                 profileView.$el.hide();
                 changePassView.render().openPopup();
             });
 
-            $body.on('click', '.btn_popup_changepass', function(event) {
-                var changePassView = App.views.ChangePass;
+            $body.on('click', '.btn_popup_changepass', (event) => {
+                const changePassView = App.views.ChangePass;
 
                 event.preventDefault();
                 changePassView.submitForm();
             });
 
             $body.on('click', '.btn_userProfile_connect', function() {
-                var profileView = App.views.Profile;
-                var btn = $(this);
+                const profileView = App.views.Profile;
+                const btn = $(this);
 
                 btn.prop('disabled', true);
 
                 FB.login(
-                    function(response) {
+                    (response) => {
                         Helpers.log('FB authResponse', response);
                         if (response.status === 'connected') {
                             profileView.addFBAccount(response.authResponse.userID);
@@ -174,22 +172,22 @@ define([
                             btn.prop('disabled', false);
                         }
                     }, {
-                        scope: QMCONFIG.fbAccount.scope
-                    }
+                        scope: QMCONFIG.fbAccount.scope,
+                    },
                 );
             });
 
             /* smiles
             ----------------------------------------------------- */
             $('.smiles-tab').on('click', function() {
-                var $self = $(this);
-                var smile = document.querySelector('.smiles-wrap');
-                var group = $self.data('group');
+                const $self = $(this);
+                const smile = document.querySelector('.smiles-wrap');
+                const group = $self.data('group');
 
                 $self.addClass('is-actived')
                     .siblings().removeClass('is-actived');
 
-                $('.smiles-group_' + group).removeClass('is-hidden')
+                $(`.smiles-group_${group}`).removeClass('is-hidden')
                     .siblings().addClass('is-hidden');
 
                 smile.scrollTop = 0;
@@ -201,7 +199,7 @@ define([
             Ps.initialize(document.querySelector('.smiles-wrap'), {
                 wheelSpeed: 1,
                 wheelPropagation: true,
-                minScrollbarLength: 20
+                minScrollbarLength: 20,
             });
 
             $workspace.on('click', '.j-em', function() {
@@ -212,8 +210,8 @@ define([
 
 
             $('.j-em_wrap').on('click', function(event) {
-                var target = $(this).children()[0];
-                var textarea = $('.l-chat:visible .textarea')[0];
+                const target = $(this).children()[0];
+                const textarea = $('.l-chat:visible .textarea')[0];
 
                 if (target === event.target) {
                     textarea.focus();
@@ -243,10 +241,10 @@ define([
             });
 
             $workspace.on('click', '.preview', function() {
-                var $self = $(this);
-                var name = $self.data('name');
-                var url = $self.data('url');
-                var attachType;
+                const $self = $(this);
+                const name = $self.data('name');
+                const url = $self.data('url');
+                let attachType;
 
                 if ($self.is('.preview-photo')) {
                     attachType = 'photo';
@@ -261,22 +259,22 @@ define([
 
             /* location
             ----------------------------------------------------- */
-            $workspace.on('click', '.j-send_location', function() {
+            $workspace.on('click', '.j-send_location', () => {
                 if (localStorage['QM.latitude'] && localStorage['QM.longitude']) {
-                    Location.toggleGeoCoordinatesToLocalStorage(false, function(res, err) {
+                    Location.toggleGeoCoordinatesToLocalStorage(false, (res, err) => {
                         Helpers.log(err || res);
                     });
                 } else {
-                    Location.toggleGeoCoordinatesToLocalStorage(true, function(res, err) {
+                    Location.toggleGeoCoordinatesToLocalStorage(true, (res, err) => {
                         Helpers.log(err || res);
                     });
                 }
             });
 
             $workspace.on('click', '.j-btn_input_location', function() {
-                var $self = $(this);
-                var $gmap = $('.j-popover_gmap');
-                var bool = $self.is('.is-active');
+                const $self = $(this);
+                const $gmap = $('.j-popover_gmap');
+                const bool = $self.is('.is-active');
 
                 removePopover();
 
@@ -288,8 +286,8 @@ define([
                 }
             });
 
-            $workspace.on('click', '.j-send_map', function() {
-                var localData = localStorage['QM.locationAttach'];
+            $workspace.on('click', '.j-send_map', () => {
+                const localData = localStorage['QM.locationAttach'];
 
                 if (localData) {
                     AttachView.sendMessage($('.l-chat:visible'), null, null, localData);
@@ -298,7 +296,7 @@ define([
                 }
             });
 
-            $body.on('keypress', function(e) {
+            $body.on('keypress', (e) => {
                 if ((e.keyCode === 13) && $('.j-open_map').length) {
                     $('.j-send_map').click();
                 }
@@ -306,7 +304,7 @@ define([
 
             /* user settings
             ----------------------------------------------------- */
-            $body.on('click', '#userSettings', function() {
+            $body.on('click', '#userSettings', () => {
                 removePopover();
                 $('.j-settings').addClass('is-overlay')
                     .parent('.j-overlay').addClass('is-overlay');
@@ -314,15 +312,15 @@ define([
                 return false;
             });
 
-            $body.on('click', '.j-close_settings', function() {
+            $body.on('click', '.j-close_settings', () => {
                 closePopup();
 
                 return false;
             });
 
             $('.j-toogle_settings').click(function() {
-                var $target = $(this).find('.j-setings_notify')[0];
-                var obj = {};
+                const $target = $(this).find('.j-setings_notify')[0];
+                const obj = {};
 
                 $target.checked = $target.checked !== true;
                 obj[$target.id] = $target.checked;
@@ -334,9 +332,9 @@ define([
 
             /* group chats
             ----------------------------------------------------- */
-            $workspace.on('click', '.j-triangle', function() {
-                var $chat = $('.l-chat:visible');
-                var $scroll = $chat.find('.j-scrollbar_message');
+            $workspace.on('click', '.j-triangle', () => {
+                const $chat = $('.l-chat:visible');
+                const $scroll = $chat.find('.j-scrollbar_message');
 
                 if ($chat.find('.triangle_up').is('.is-hidden')) {
                     $scroll.mCustomScrollbar('scrollTo', '-=94');
@@ -350,8 +348,8 @@ define([
             });
 
             $workspace.on('click', '.groupTitle .addToGroupChat', function(event) {
-                var $self = $(this);
-                var dialogId = $self.data('dialog');
+                const $self = $(this);
+                const dialogId = $self.data('dialog');
 
                 event.stopPropagation();
 
@@ -359,14 +357,14 @@ define([
                 ContactListView.addContactsToChat($self, 'add', dialogId);
             });
 
-            $workspace.on('click', '.groupTitle .leaveChat, .groupTitle .avatar', function(event) {
+            $workspace.on('click', '.groupTitle .leaveChat, .groupTitle .avatar', (event) => {
                 event.stopPropagation();
             });
 
             /* change the chat name
             ----------------------------------------------------- */
-            $workspace.on('mouseenter focus', '.groupTitle .name_chat', function() {
-                var $chat = $('.l-chat:visible');
+            $workspace.on('mouseenter focus', '.groupTitle .name_chat', () => {
+                const $chat = $('.l-chat:visible');
                 $chat.find('.triangle:visible').addClass('is-hover')
                     .siblings('.pencil').removeClass('is-hidden');
 
@@ -374,7 +372,7 @@ define([
             });
 
             $workspace.on('mouseleave', '.groupTitle .name_chat', function() {
-                var $chat = $('.l-chat:visible');
+                const $chat = $('.l-chat:visible');
 
                 if (!$(this).is('.is-focus')) {
                     $chat.find('.triangle.is-hover').removeClass('is-hover')
@@ -384,8 +382,8 @@ define([
                 return false;
             });
 
-            $(document.body).on('click', function() {
-                var $chat = $('.l-chat:visible');
+            $(document.body).on('click', () => {
+                const $chat = $('.l-chat:visible');
 
                 if ($chat.find('.groupTitle .name_chat').is('.is-focus')) {
                     $chat.find('.groupTitle .name_chat').removeClass('is-focus');
@@ -407,25 +405,25 @@ define([
             });
 
             $body.on('click', '.groupTitle .name_chat', function(event) {
-                var $self = $(this);
+                const $self = $(this);
 
                 event.stopPropagation();
 
                 $self.addClass('is-focus');
                 chatName = {
                     name: $self.text().trim(),
-                    created_at: Date.now()
+                    created_at: Date.now(),
                 };
                 removePopover();
             });
 
             $body.on('keypress', '.groupTitle .name_chat', function(event) {
-                var $self = $(this);
-                var code = event.keyCode;
+                const $self = $(this);
+                const code = event.keyCode;
 
                 editedChatName = {
                     name: $self.text().trim(),
-                    created_at: Date.now()
+                    created_at: Date.now(),
                 };
                 if (code === 13) {
                     $(document.body).click();
@@ -441,20 +439,20 @@ define([
             /* change the chat avatar
             ----------------------------------------------------- */
             $body.on('click', '.j-changePic', function() {
-                var dialogId = $(this).data('dialog');
+                const dialogId = $(this).data('dialog');
 
-                $('input:file[data-dialog="' + dialogId + '"]').click();
+                $(`input:file[data-dialog="${dialogId}"]`).click();
             });
 
             $workspace.on('change', '.groupTitle .avatar_file', function() {
-                var $chat = $('.l-chat:visible');
+                const $chat = $('.l-chat:visible');
 
-                Dialog.changeAvatar($chat.data('dialog'), $(this), function(avatar) {
+                Dialog.changeAvatar($chat.data('dialog'), $(this), (avatar) => {
                     if (!avatar) {
                         return;
                     }
 
-                    $chat.find('.avatar_chat').css('background-image', 'url(' + avatar + ')');
+                    $chat.find('.avatar_chat').css('background-image', `url(${avatar})`);
                     $('.j-popupAvatar .j-avatarPic').attr('src', avatar);
                 });
             });
@@ -501,12 +499,12 @@ define([
                 return false;
             });
 
-            $('#signupQB').on('click', function() {
+            $('#signupQB').on('click', () => {
                 Helpers.log('signup with QB');
                 UserView.signupQB();
             });
 
-            $('.j-login_QB').on('click', function() {
+            $('.j-login_QB').on('click', () => {
                 Helpers.log('login wih QB');
 
                 // removed class "active" (hotfix for input on qmdev.quickblox.com/qm.quickblox.com)
@@ -518,14 +516,14 @@ define([
 
             /* button "back"
             ----------------------------------------------------- */
-            $('.j-back_to_login_page').on('click', function() {
+            $('.j-back_to_login_page').on('click', () => {
                 UserView.loginQB();
                 $('.j-success_callback').remove();
             });
 
             /* signup page
             ----------------------------------------------------- */
-            $('#signupForm').on('click submit', function(event) {
+            $('#signupForm').on('click submit', (event) => {
                 Helpers.log('create user');
                 event.preventDefault();
                 UserView.signupForm();
@@ -533,13 +531,13 @@ define([
 
             /* login page
             ----------------------------------------------------- */
-            $('#forgot').on('click', function(event) {
+            $('#forgot').on('click', (event) => {
                 Helpers.log('forgot password');
                 event.preventDefault();
                 UserView.forgot();
             });
 
-            $('#loginForm').on('click submit', function(event) {
+            $('#loginForm').on('click submit', (event) => {
                 Helpers.log('authorize user');
                 event.preventDefault();
                 UserView.loginForm();
@@ -547,13 +545,13 @@ define([
 
             /* forgot and reset page
             ----------------------------------------------------- */
-            $('#forgotForm').on('click submit', function(event) {
+            $('#forgotForm').on('click submit', (event) => {
                 Helpers.log('send letter');
                 event.preventDefault();
                 UserView.forgotForm();
             });
 
-            $('#resetForm').on('click submit', function(event) {
+            $('#resetForm').on('click submit', (event) => {
                 Helpers.log('reset password');
                 event.preventDefault();
                 UserView.resetForm();
@@ -585,8 +583,8 @@ define([
             });
 
             $workspace.on('click', '.j-btn_input_smile', function() {
-                var $self = $(this);
-                var bool = $self.is('.is-active');
+                const $self = $(this);
+                const bool = $self.is('.is-active');
 
                 removePopover();
 
@@ -599,8 +597,8 @@ define([
             });
 
             $workspace.on('click', '.j-btn_audio_record', function() {
-                var $self = $(this);
-                var bool = $self.is('.is-active');
+                const $self = $(this);
+                const bool = $self.is('.is-active');
 
                 removePopover();
 
@@ -612,21 +610,19 @@ define([
 
             /* popups
             ----------------------------------------------------- */
-            $body.on('click', '#logout', function(event) {
+            $body.on('click', '#logout', (event) => {
                 event.preventDefault();
                 openPopup($('#popupLogout'));
             });
 
             // delete contact
             $body.on('click', '.j-deleteContact', function() {
-                var $that = $(this);
-                var parents;
-                var id;
+                const $that = $(this);
 
                 closePopup();
 
-                parents = $that.parents('.presence-listener');
-                id = parents.data('id') || $that.data('id');
+                const parents = $that.parents('.presence-listener');
+                const id = parents.data('id') || $that.data('id');
 
                 if (parents.is('.popup_details')) {
                     openPopup($('.j-popupDeleteContact'), id, null, true);
@@ -638,7 +634,7 @@ define([
             });
 
             $('.j-deleteContactConfirm').on('click', function() {
-                var id = $(this).parents('.j-popupDeleteContact').data('id');
+                const id = $(this).parents('.j-popupDeleteContact').data('id');
 
                 ContactListView.sendDelete(id, true);
                 Helpers.log('delete contact');
@@ -646,14 +642,12 @@ define([
 
             // delete chat
             $('.list, .l-workspace-wrap').on('click', '.j-deleteChat', function() {
-                var $self = $(this);
-                var parent;
-                var dialogId;
+                const $self = $(this);
 
                 closePopup();
 
-                parent = $self.parents('.presence-listener')[0] ? $self.parents('.presence-listener') : $self.parents('.is-group');
-                dialogId = parent.data('dialog');
+                const parent = $self.parents('.presence-listener')[0] ? $self.parents('.presence-listener') : $self.parents('.is-group');
+                const dialogId = parent.data('dialog');
 
                 openPopup($('.j-popupDeleteChat'), null, dialogId);
 
@@ -665,14 +659,14 @@ define([
                 DialogView.deleteChat($(this));
             });
 
-            $('#logoutConfirm').on('click', function() {
-                localStorage.setItem('QM.' + User.contact.id + '_logOut', true);
+            $('#logoutConfirm').on('click', () => {
+                localStorage.setItem(`QM.${User.contact.id}_logOut`, true);
                 UserView.logout();
             });
 
             $('.popup-control-button, .btn_popup_private').on('click', function(event) {
-                var $self = $(this);
-                var isProfile = $self.data('isprofile');
+                const $self = $(this);
+                const isProfile = $self.data('isprofile');
 
                 event.preventDefault();
 
@@ -685,15 +679,15 @@ define([
                 }
             });
 
-            $('.search').on('click', function() {
+            $('.search').on('click', () => {
                 Helpers.log('global search');
                 closePopup();
                 ContactListView.globalPopup();
             });
 
-            $('.btn_search').on('click', function(event) {
-                var localSearch = $('#searchContacts input');
-                var globalSearch = $('#globalSearch input');
+            $('.btn_search').on('click', (event) => {
+                const localSearch = $('#searchContacts input');
+                const globalSearch = $('#globalSearch input');
 
                 event.preventDefault();
 
@@ -702,8 +696,8 @@ define([
             });
 
             $('#mainPage').on('click', '.createGroupChat', function(event) {
-                var $self = $(this);
-                var isPrivate = $self.data('private');
+                const $self = $(this);
+                const isPrivate = $self.data('private');
 
                 event.preventDefault();
 
@@ -712,8 +706,8 @@ define([
             });
 
             $('.l-sidebar').on('click', '.addToGroupChat', function(event) {
-                var $self = $(this);
-                var dialogId = $self.data('dialog');
+                const $self = $(this);
+                const dialogId = $self.data('dialog');
 
                 event.preventDefault();
 
@@ -724,22 +718,22 @@ define([
             /* search
             ----------------------------------------------------- */
             $('.j-globalSearch').on('keyup search submit', function(event) {
-                var $self = $(this);
-                var code = event.keyCode;
-                var isText = $self.find('.form-input-search').val().length;
-                var $cleanButton = $self.find('.j-clean-button');
-                var isNoBtn = $cleanButton.is(':hidden');
+                const $self = $(this);
+                const code = event.keyCode;
+                const isText = $self.find('.form-input-search').val().length;
+                const $cleanButton = $self.find('.j-clean-button');
+                const isNoBtn = $cleanButton.is(':hidden');
 
                 if (code === 13) {
                     clearTimeout(keyupSearch);
                     startSearch();
                 } else if (keyupSearch === undefined) {
-                    keyupSearch = setTimeout(function() {
+                    keyupSearch = setTimeout(() => {
                         startSearch();
                     }, (code === 8) ? 0 : 1000);
                 } else {
                     clearTimeout(keyupSearch);
-                    keyupSearch = setTimeout(function() {
+                    keyupSearch = setTimeout(() => {
                         startSearch();
                     }, 1000);
                 }
@@ -759,13 +753,13 @@ define([
             });
 
             $('.localSearch').on('keyup search submit', function(event) {
-                var $self = $(this);
-                var scrollbar = document.querySelector('.j-scrollbar_aside');
-                var isText = $self.find('.form-input-search').val().length;
-                var $cleanButton = $self.find('.j-clean-button');
-                var isNoBtn = $cleanButton.is(':hidden');
-                var type = event.type;
-                var code = event.keyCode; // code=27 (Esc key), code=13 (Enter key)
+                const $self = $(this);
+                const scrollbar = document.querySelector('.j-scrollbar_aside');
+                const isText = $self.find('.form-input-search').val().length;
+                const $cleanButton = $self.find('.j-clean-button');
+                const isNoBtn = $cleanButton.is(':hidden');
+                const { type } = event;
+                const code = event.keyCode; // code=27 (Esc key), code=13 (Enter key)
 
                 if ((type === 'keyup' && code !== 27 && code !== 13) || (type === 'search')) {
                     if (this.id === 'searchContacts') {
@@ -787,8 +781,8 @@ define([
             });
 
             $('.j-clean-button').on('click', function() {
-                var $self = $(this);
-                var $form = $self.parent('form.formSearch');
+                const $self = $(this);
+                const $form = $self.parent('form.formSearch');
 
                 $self.hide();
                 $form.find('input.form-input-search').val('').focus();
@@ -807,7 +801,7 @@ define([
             /* subscriptions
             ----------------------------------------------------- */
             function sendRequest(el) {
-                var jid = $(el).parents('.j-listItem').data('jid');
+                const jid = $(el).parents('.j-listItem').data('jid');
 
                 ContactListView.sendSubscribe(jid);
                 Helpers.log('send subscribe');
@@ -818,7 +812,7 @@ define([
             });
 
             $workspace.on('click', '.j-requestAgain', function() {
-                var jid = $(this).parents('.j-chatItem').data('jid');
+                const jid = $(this).parents('.j-chatItem').data('jid');
 
                 ContactListView.sendSubscribe(jid, true);
                 Helpers.log('send subscribe');
@@ -829,14 +823,14 @@ define([
             });
 
             $('.list').on('click', '.j-requestConfirm', function() {
-                var jid = $(this).parents('.j-incomingContactRequest').data('jid');
+                const jid = $(this).parents('.j-incomingContactRequest').data('jid');
 
                 ContactListView.sendConfirm(jid, true);
                 Helpers.log('send confirm');
             });
 
             $('.list').on('click', '.j-requestCancel', function() {
-                var jid = $(this).parents('.j-incomingContactRequest').data('jid');
+                const jid = $(this).parents('.j-incomingContactRequest').data('jid');
 
                 ContactListView.sendReject(jid, true);
                 Helpers.log('send reject');
@@ -844,16 +838,15 @@ define([
 
             /* dialogs
             ----------------------------------------------------- */
-            $('.list').on('click', '.contact', function(event) {
+            $('.list').on('click', '.contact', (event) => {
                 if (event.target.tagName !== 'INPUT') {
                     event.preventDefault();
                 }
             });
 
             $('#popupContacts').on('click', '.contact', function() {
-                var obj = $(this).parent();
-                var popup = obj.parents('.popup');
-                var len;
+                const obj = $(this).parent();
+                const popup = obj.parents('.popup');
 
                 if (obj.is('.is-chosen')) {
                     obj.removeClass('is-chosen').find('input').prop('checked', false);
@@ -861,7 +854,8 @@ define([
                     obj.addClass('is-chosen').find('input').prop('checked', true);
                 }
 
-                len = obj.parent().find('li.is-chosen').length;
+                const len = obj.parent().find('li.is-chosen').length;
+
                 if (len === 1 && !popup.is('.is-addition')) {
                     popup.removeClass('not-selected');
                     popup.find('.btn_popup_private').removeClass('is-hidden').siblings().addClass('is-hidden');
@@ -886,23 +880,23 @@ define([
                 }
             });
 
-            $('#popupContacts .btn_popup_private').on('click', function() {
-                var id = $('#popupContacts .is-chosen').data('id');
-                var dialogItem = $('.j-dialogItem[data-id="' + id + '"]').find('.contact');
+            $('#popupContacts .btn_popup_private').on('click', () => {
+                const id = $('#popupContacts .is-chosen').data('id');
+                let dialogItem = $(`.j-dialogItem[data-id="${id}"]`).find('.contact');
 
                 if (dialogItem.length) {
                     dialogItem.click();
                 } else {
-                    Dialog.restorePrivateDialog(id, function() {
-                        dialogItem = $('.j-dialogItem[data-id="' + id + '"]').find('.contact');
+                    Dialog.restorePrivateDialog(id, () => {
+                        dialogItem = $(`.j-dialogItem[data-id="${id}"]`).find('.contact');
                         dialogItem.click();
                     });
                 }
             });
 
             $body.on('click', '.writeMessage', function(event) {
-                var id = $(this).data('id');
-                var dialogItem = $('.j-dialogItem[data-id="' + id + '"]').find('.contact');
+                const id = $(this).data('id');
+                let dialogItem = $(`.j-dialogItem[data-id="${id}"]`).find('.contact');
 
                 event.preventDefault();
 
@@ -911,25 +905,25 @@ define([
                 if (dialogItem.length) {
                     dialogItem.click();
                 } else {
-                    Dialog.restorePrivateDialog(id, function() {
-                        dialogItem = $('.j-dialogItem[data-id="' + id + '"]').find('.contact');
+                    Dialog.restorePrivateDialog(id, () => {
+                        dialogItem = $(`.j-dialogItem[data-id="${id}"]`).find('.contact');
                         dialogItem.click();
                     });
                 }
             });
 
-            $('#popupContacts .btn_popup_group').on('click', function() {
+            $('#popupContacts .btn_popup_group').on('click', () => {
                 DialogView.createGroupChat();
             });
 
             $('#popupContacts .btn_popup_add').on('click', function() {
-                var dialogId = $(this).parents('.popup').data('dialog');
+                const dialogId = $(this).parents('.popup').data('dialog');
                 DialogView.createGroupChat('add', dialogId);
             });
 
-            $workspace.on('click', '.j-btn_input_send', function() {
-                var $msg = $('.j-message:visible');
-                var isLoading = $('.j-loading').length;
+            $workspace.on('click', '.j-btn_input_send', () => {
+                const $msg = $('.j-message:visible');
+                const isLoading = $('.j-loading').length;
 
                 if (!isLoading) {
                     MessageView.sendMessage($msg);
@@ -945,18 +939,18 @@ define([
 
             // show message status on hover event
             $body.on('mouseenter', 'article.message.is-own', function() {
-                var $self = $(this);
-                var time = $self.find('.message-time');
-                var status = $self.find('.message-status');
+                const $self = $(this);
+                const time = $self.find('.message-time');
+                const status = $self.find('.message-status');
 
                 time.addClass('is-hidden');
                 status.removeClass('is-hidden');
             });
 
             $body.on('mouseleave', 'article.message.is-own', function() {
-                var $self = $(this);
-                var time = $self.find('.message-time');
-                var status = $self.find('.message-status');
+                const $self = $(this);
+                const time = $self.find('.message-time');
+                const status = $self.find('.message-status');
 
                 status.addClass('is-hidden');
                 time.removeClass('is-hidden');
@@ -965,8 +959,8 @@ define([
             /* A button for the scroll to the bottom of chat
             ------------------------------------------------------ */
             $body.on('click', '.j-refreshButton', function() {
-                var $this = $(this);
-                var dialogId = $this.data('dialog');
+                const $this = $(this);
+                const dialogId = $this.data('dialog');
 
                 if (dialogId.length) {
                     DialogView.htmlBuild(dialogId);
@@ -984,8 +978,8 @@ define([
                 $(this).hide();
             });
 
-            $workspace.on('click', '.j-videoPlayer', function(e) {
-                var video = e.target;
+            $workspace.on('click', '.j-videoPlayer', (e) => {
+                const video = e.target;
 
                 if (!video.dataset.source) return;
 
@@ -1006,13 +1000,13 @@ define([
 
             // send typing statuses with keyup event
             $workspace.on('keypress', '.j-message', function(event) {
-                var $self = $(this);
-                var isEnterKey = (event.keyCode === 13);
-                var shiftKey = event.shiftKey;
-                var $chat = $self.parents('.l-chat');
-                var jid = $chat.data('jid');
-                var isLoading = $chat.find('.j-loading').length;
-                var isEmpty = !$chat.find('.textarea').html().length;
+                const $self = $(this);
+                const isEnterKey = (event.keyCode === 13);
+                const { shiftKey } = event;
+                const $chat = $self.parents('.l-chat');
+                const jid = $chat.data('jid');
+                const isLoading = $chat.find('.j-loading').length;
+                const isEmpty = !$chat.find('.textarea').html().length;
 
                 if (isEnterKey && (isLoading || isEmpty)) {
                     return;
@@ -1046,26 +1040,24 @@ define([
                 }
             });
 
-            $(document).on('keypress', function(event) {
+            $(document).on('keypress', (event) => {
                 if (event.keyCode === 13 && $('.j-popover_record').hasClass('is-active')) {
                     $('.j-record_title').click();
                 }
             });
 
-            $workspace.on('click', '.j-message', function() {
+            $workspace.on('click', '.j-message', () => {
                 if ($('.j-popover_record').hasClass('is-active')) {
                     removePopover();
                 }
             });
 
-            $workspace.on('submit', '.j-message', function() {
-                return false;
-            });
+            $workspace.on('submit', '.j-message', () => false);
 
-            $workspace.on('keypress', '.j-message', function() {
-                var $textarea = $('.l-chat:visible .textarea');
-                var $emj = $textarea.find('.j-em');
-                var val = $textarea.text().trim();
+            $workspace.on('keypress', '.j-message', () => {
+                const $textarea = $('.l-chat:visible .textarea');
+                const $emj = $textarea.find('.j-em');
+                const val = $textarea.text().trim();
 
                 if (val.length || $emj.length) {
                     $textarea.addClass('contenteditable');
@@ -1075,17 +1067,17 @@ define([
                 }
             });
 
-            $body.on('paste', '.j-message', function(e) {
-                var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+            $body.on('paste', '.j-message', (e) => {
+                const text = (e.originalEvent || e).clipboardData.getData('text/plain');
                 document.execCommand('insertText', false, text);
 
                 return false;
             });
 
-            $('.j-home').on('click', function() {
-                var $selected = $('.is-selected');
-                var dialogId = $selected.data('dialog');
-                var $label = $('.j-newMessages[data-dialog="' + dialogId + '"]');
+            $('.j-home').on('click', () => {
+                const $selected = $('.is-selected');
+                const dialogId = $selected.data('dialog');
+                const $label = $(`.j-newMessages[data-dialog="${dialogId}"]`);
 
                 VoiceMessage.resetRecord();
 
@@ -1104,20 +1096,20 @@ define([
 
             /* temporary events
             ----------------------------------------------------- */
-            $('#share').on('click', function(event) {
+            $('#share').on('click', (event) => {
                 event.preventDefault();
             });
 
             // videocalls
             VideoChatView.init();
-        }
+        },
     };
 
     Events.intiAuthorizationInputs = function(el) {
-        var $input = el || $('.form-input');
+        const $input = el || $('.form-input');
 
         $input.on('focus', function() {
-            var $this = $(this);
+            const $this = $(this);
 
             if (!$this.val()) {
                 $this.next('label').addClass('active');
@@ -1127,7 +1119,7 @@ define([
         });
 
         $input.on('blur', function() {
-            var $this = $(this);
+            const $this = $(this);
 
             if (!$this.val()) {
                 $this.next('label').removeClass('active');
@@ -1145,23 +1137,23 @@ define([
             scrollInertia: 500,
             mouseWheel: {
                 scrollAmount: 'auto',
-                deltaFactor: 'auto'
+                deltaFactor: 'auto',
             },
-            live: true
+            live: true,
         });
     }
 
     // Checking if the target is not an object run popover
     function clickBehaviour(e) {
-        var objDom = $(e.target);
-        var selectors = '#profile, #profile *, .occupant, .occupant *, '
+        const objDom = $(e.target);
+        const selectors = '#profile, #profile *, .occupant, .occupant *, '
                 + '.j-btn_input_smile, .j-btn_input_smile *, .textarea, '
                 + '.textarea *, .j-popover_smile, .j-popover_smile *, '
                 + '.j-popover_gmap, .j-popover_gmap *, .j-btn_input_location, '
                 + '.j-btn_input_location *, '
                 + '.j-popover_record, .j-popover_record *, .j-btn_audio_record, '
                 + '.j-btn_audio_record *';
-        var googleImage = (objDom.context.src && objDom.context.src.indexOf('/maps.gstatic.com/mapfiles/api-3/images/mapcnt6.png')) || null;
+        const googleImage = (objDom.context.src && objDom.context.src.indexOf('/maps.gstatic.com/mapfiles/api-3/images/mapcnt6.png')) || null;
 
         if (objDom.is(selectors) || e.which === 3 || googleImage === 7) {
             return;
@@ -1170,17 +1162,17 @@ define([
     }
 
     function changeInputFile(objDom) {
-        var URL = window.URL;
-        var file = objDom[0].files[0];
-        var src = file ? URL.createObjectURL(file) : QMCONFIG.defAvatar.url;
-        var fileName = file ? file.name : QMCONFIG.defAvatar.caption;
+        const { URL } = window;
+        const file = objDom[0].files[0];
+        const src = file ? URL.createObjectURL(file) : QMCONFIG.defAvatar.url;
+        const fileName = file ? file.name : QMCONFIG.defAvatar.caption;
 
-        objDom.prev().find('.avatar').css('background-image', 'url(' + src + ')').siblings('span')
+        objDom.prev().find('.avatar').css('background-image', `url(${src})`).siblings('span')
             .text(fileName);
     }
 
     function removePopover() {
-        var $openMap = $('.j-open_map');
+        const $openMap = $('.j-open_map');
 
         $('.is-contextmenu').removeClass('is-contextmenu');
         $('.popover').remove();
@@ -1240,15 +1232,15 @@ define([
     }
 
     function setAttachType(type) {
-        var otherType = type === 'photo' ? 'video' : 'photo';
+        const otherType = type === 'photo' ? 'video' : 'photo';
 
-        $('.attach-' + type).removeClass('is-hidden')
-            .siblings('.attach-' + otherType).addClass('is-hidden');
+        $(`.attach-${type}`).removeClass('is-hidden')
+            .siblings(`.attach-${otherType}`).addClass('is-hidden');
     }
 
     function setTriagle(UpOrDown) {
-        var $chat = $('.l-chat:visible');
-        var $triangle = $chat.find('.triangle_' + UpOrDown);
+        const $chat = $('.l-chat:visible');
+        const $triangle = $chat.find(`.triangle_${UpOrDown}`);
 
         $triangle.removeClass('is-hidden')
             .siblings('.triangle').addClass('is-hidden');

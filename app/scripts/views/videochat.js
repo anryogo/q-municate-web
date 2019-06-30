@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Q-municate chat application
  *
@@ -10,40 +12,43 @@ define([
     'config',
     'Helpers',
     'QBNotification',
-    'QMHtml'
-], function(
+    'QMHtml',
+], (
     $,
     Entities,
     QMCONFIG,
     Helpers,
     QBNotification,
-    QMHtml
-) {
-    var self;
-    var User;
-    var Settings;
-    var VideoChat;
-    var VoiceMessage;
-    var ContactList;
-    var SyncTabs;
-    var callTimer;
-    var sendAutoReject;
-    var curSession = {};
-    var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+    QMHtml,
+) => {
+    let self;
+    let User;
+    let Settings;
+    let VideoChat;
+    let VoiceMessage;
+    let ContactList;
+    let SyncTabs;
+    let callTimer;
+    let sendAutoReject;
+    let curSession = {};
+    const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
     function VideoChatView(app) {
         this.app = app;
         self = this;
+
+        /* eslint-disable prefer-destructuring */
         Settings = this.app.models.Settings;
         SyncTabs = this.app.models.SyncTabs;
         User = this.app.models.User;
         ContactList = this.app.models.ContactList;
         VideoChat = this.app.models.VideoChat;
         VoiceMessage = this.app.models.VoiceMessage;
+        /* eslint-enable prefer-destructuring */
     }
 
     VideoChatView.prototype.cancelCurrentCalls = function() {
-        var $mediacall = $('.mediacall');
+        const $mediacall = $('.mediacall');
 
         if ($mediacall.length > 0) {
             $mediacall.find('.btn_hangup').click();
@@ -51,7 +56,7 @@ define([
     };
 
     VideoChatView.prototype.clearChat = function() {
-        var $chatView = $('.chatView');
+        const $chatView = $('.chatView');
 
         if ($chatView.length > 1) {
             $chatView.first().remove();
@@ -59,27 +64,27 @@ define([
     };
 
     VideoChatView.prototype.init = function() {
-        var DialogView = this.app.views.Dialog;
-        var Dialog = this.app.models.Dialog;
+        const DialogView = this.app.views.Dialog;
+        const { Dialog } = this.app.models;
 
         $('body').on('click', '.videoCall, .audioCall', function() {
-            var $this = $(this);
-            var className;
-            var userId;
-            var $dialogItem;
-            var dialogId;
+            let $this = $(this);
+            let className;
+            let userId;
+            let $dialogItem;
+            let dialogId;
 
             if (QB.webrtc) {
                 $this = $(this);
                 className = $this.attr('class');
                 userId = $this.data('id');
-                $dialogItem = $('.j-dialogItem[data-id="' + userId + '"]');
+                $dialogItem = $(`.j-dialogItem[data-id="${userId}"]`);
 
                 if ($dialogItem.length) {
                     dialogId = $dialogItem.data('dialog');
                     openChatAndStartCall(dialogId);
                 } else {
-                    Dialog.restorePrivateDialog(userId, function(dialog) {
+                    Dialog.restorePrivateDialog(userId, (dialog) => {
                         dialogId = dialog.get('id');
                         openChatAndStartCall(dialogId);
                     });
@@ -103,12 +108,12 @@ define([
         });
 
         $('#popupIncoming').on('click', '.btn_decline', function() {
-            var $self = $(this);
-            var $incomingCall = $self.parents('.incoming-call');
-            var opponentId = $self.data('id');
-            var dialogId = $self.data('dialog');
-            var callType = $self.data('calltype');
-            var audioSignal = document.getElementById('ringtoneSignal');
+            const $self = $(this);
+            const $incomingCall = $self.parents('.incoming-call');
+            const opponentId = $self.data('id');
+            const dialogId = $self.data('dialog');
+            const callType = $self.data('calltype');
+            const audioSignal = document.getElementById('ringtoneSignal');
 
             curSession.reject({});
 
@@ -127,35 +132,27 @@ define([
         });
 
         $('#popupIncoming').on('click', '.btn_accept', function() {
-            var $self = $(this);
-            var id;
-            var $dialogItem;
-            var dialogId;
-            var sessionId;
-            var callType;
-            var audioSignal;
-            var params;
-            var $chat;
+            const $self = $(this);
 
             self.cancelCurrentCalls();
 
             clearTimeout(sendAutoReject);
             sendAutoReject = undefined;
 
-            id = $self.data('id');
-            $dialogItem = $('.dialog-item[data-id="' + id + '"]');
+            const id = $self.data('id');
+            const $dialogItem = $(`.dialog-item[data-id="${id}"]`);
 
             DialogView.htmlBuild($dialogItem);
 
-            dialogId = $self.data('dialog');
-            sessionId = $self.data('session');
-            callType = $self.data('calltype');
-            audioSignal = $('#ringtoneSignal')[0];
-            params = self.build(dialogId);
-            $chat = $('.l-chat[data-dialog="' + dialogId + '"]');
+            const dialogId = $self.data('dialog');
+            const sessionId = $self.data('session');
+            const callType = $self.data('calltype');
+            const audioSignal = $('#ringtoneSignal')[0];
+            const params = self.build(dialogId);
+            const $chat = $(`.l-chat[data-dialog="${dialogId}"]`);
 
             $self.parents('.incoming-call').remove();
-            $('#popupIncoming .mCSB_container').children().each(function() {
+            $('#popupIncoming .mCSB_container').children().each(() => {
                 $self.find('.btn_decline').click();
             });
 
@@ -167,7 +164,7 @@ define([
 
             params.isCallee = true;
 
-            VideoChat.getUserMedia(params, callType, function(err) {
+            VideoChat.getUserMedia(params, callType, (err) => {
                 if (err) {
                     $chat.find('.mediacall .btn_hangup').data('errorMessage', 1);
                     $chat.find('.mediacall .btn_hangup').click();
@@ -194,26 +191,18 @@ define([
         });
 
         $('body').on('click', '.btn_hangup', function() {
-            var $self = $(this);
-            var $chat;
-            var opponentId;
-            var dialogId;
-            var callType;
-            var duration;
-            var callingSignal;
-            var endCallSignal;
-            var isErrorMessage;
+            const $self = $(this);
 
             self.clearChat();
 
-            $chat = $self.parents('.l-chat');
-            opponentId = $self.data('id');
-            dialogId = $self.data('dialog');
-            callType = curSession.callType === 1 ? 'video' : 'audio';
-            duration = $self.parents('.mediacall').find('.mediacall-info-duration').text();
-            callingSignal = $('#callingSignal')[0];
-            endCallSignal = $('#endCallSignal')[0];
-            isErrorMessage = $self.data('errorMessage');
+            const $chat = $self.parents('.l-chat');
+            const opponentId = $self.data('id');
+            const dialogId = $self.data('dialog');
+            const callType = curSession.callType === 1 ? 'video' : 'audio';
+            const duration = $self.parents('.mediacall').find('.mediacall-info-duration').text();
+            const callingSignal = $('#callingSignal')[0];
+            const endCallSignal = $('#endCallSignal')[0];
+            const isErrorMessage = $self.data('errorMessage');
 
             if (VideoChat.caller) {
                 if (!isErrorMessage && duration !== 'connect...') {
@@ -237,7 +226,7 @@ define([
             $chat.find('.mediacall').remove();
             $chat.find('.l-chat-header').show();
             $chat.find('.l-chat-content').css({
-                height: 'calc(100% - 140px)'
+                height: 'calc(100% - 140px)',
             });
 
             addCallTypeIcon(opponentId, null);
@@ -248,9 +237,9 @@ define([
         $('body').on('click', '.btn_camera_off, .btn_mic_off', switchOffDevice);
 
         // full-screen-mode
-        $('body').on('click', '.btn_full-mode', function() {
-            var mediaScreen = document.getElementsByClassName('mediacall')[0];
-            var isFullScreen = false;
+        $('body').on('click', '.btn_full-mode', () => {
+            const mediaScreen = document.getElementsByClassName('mediacall')[0];
+            let isFullScreen = false;
 
             if (mediaScreen.requestFullscreen) {
                 if (document.fullScreenElement) {
@@ -289,24 +278,14 @@ define([
             return false;
         });
 
-        $(window).on('resize', function() {
+        $(window).on('resize', () => {
             setScreenStyle();
         });
     };
 
     VideoChatView.prototype.onCall = function(session, extension) {
-        var audioSignal;
-        var $incomings;
-        var id;
-        var contact;
-        var callType;
-        var userName;
-        var userAvatar;
-        var $dialogItem;
-        var dialogId;
-        var autoReject;
-        var htmlTpl;
-        var tplParams;
+        let htmlTpl;
+        let tplParams;
 
         if (User.contact.id === session.initiatorID) {
             return;
@@ -316,19 +295,19 @@ define([
             $('.is-overlay:not(.chat-occupants-wrap)').removeClass('is-overlay');
         }
 
-        audioSignal = document.getElementById('ringtoneSignal');
-        $incomings = $('#popupIncoming');
-        id = session.initiatorID;
-        contact = ContactList.contacts[id];
-        callType = (session.callType === 1 ? 'video' : 'audio') || extension.call_type;
-        userName = contact.full_name || extension.full_name;
-        userAvatar = contact.avatar_url || extension.avatar;
-        $dialogItem = $('.j-dialogItem[data-id="' + id + '"]');
-        dialogId = $dialogItem.length ? $dialogItem.data('dialog') : null;
-        autoReject = QMCONFIG.QBconf.webrtc.answerTimeInterval * 1000;
+        const audioSignal = document.getElementById('ringtoneSignal');
+        const $incomings = $('#popupIncoming');
+        const id = session.initiatorID;
+        const contact = ContactList.contacts[id];
+        const callType = (session.callType === 1 ? 'video' : 'audio') || extension.call_type;
+        const userName = contact.full_name || extension.full_name;
+        const userAvatar = contact.avatar_url || extension.avatar;
+        const $dialogItem = $(`.j-dialogItem[data-id="${id}"]`);
+        let dialogId = $dialogItem.length ? $dialogItem.data('dialog') : null;
+        const autoReject = QMCONFIG.QBconf.webrtc.answerTimeInterval * 1000;
 
         if (!dialogId && ContactList.roster[id]) {
-            self.app.models.Dialog.restorePrivateDialog(id, function(dialog) {
+            self.app.models.Dialog.restorePrivateDialog(id, (dialog) => {
                 dialogId = dialog.get('id');
                 incomingCall();
             });
@@ -338,13 +317,13 @@ define([
 
         function incomingCall() {
             tplParams = {
-                userAvatar: userAvatar,
+                userAvatar,
                 callTypeUС: capitaliseFirstLetter(callType),
-                callType: callType,
-                userName: userName,
-                dialogId: dialogId,
+                callType,
+                userName,
+                dialogId,
                 sessionId: session.ID,
-                userId: id
+                userId: id,
             };
 
             htmlTpl = QMHtml.VideoChat.onCallTpl(tplParams);
@@ -362,21 +341,21 @@ define([
             curSession = VideoChat.session;
 
             createAndShowNotification({
-                id: id,
-                dialogId: dialogId,
+                id,
+                dialogId,
                 callState: '4',
-                callType: callType
+                callType,
             });
 
-            sendAutoReject = setTimeout(function() {
+            sendAutoReject = setTimeout(() => {
                 $('.btn_decline').click();
             }, autoReject);
         }
     };
 
     VideoChatView.prototype.onIgnored = function(state, session, id, extension) {
-        var dialogId;
-        var callType;
+        let dialogId;
+        let callType;
 
         if ((state === 'onAccept') && (User.contact.id === id)) {
             stopIncomingCall(session.initiatorID);
@@ -386,7 +365,7 @@ define([
         }
         // send message to caller that user is busy
         if ((state === 'onCall') && (User.contact.id !== id)) {
-            dialogId = $('li.list-item.dialog-item[data-id="' + id + '"]').data('dialog');
+            dialogId = $(`li.list-item.dialog-item[data-id="${id}"]`).data('dialog');
             callType = (extension.callType === '1' ? 'video' : 'audio') || extension.call_type;
 
             VideoChat.sendMessage(id, '2', null, dialogId, callType);
@@ -394,9 +373,9 @@ define([
     };
 
     VideoChatView.prototype.onAccept = function(session, id) {
-        var audioSignal = document.getElementById('callingSignal');
-        var dialogId = $('li.list-item.dialog-item[data-id="' + id + '"]').data('dialog');
-        var callType = self.type;
+        const audioSignal = document.getElementById('callingSignal');
+        const dialogId = $(`li.list-item.dialog-item[data-id="${id}"]`).data('dialog');
+        const callType = self.type;
 
         if (Settings.get('sounds_notify')) {
             audioSignal.pause();
@@ -407,29 +386,29 @@ define([
         addCallTypeIcon(id, callType);
 
         createAndShowNotification({
-            id: id,
-            dialogId: dialogId,
+            id,
+            dialogId,
             callState: '5',
-            callType: callType
+            callType,
         });
     };
 
     VideoChatView.prototype.onRemoteStream = function(session, id, stream) {
-        var video = document.getElementById('remoteStream');
+        const video = document.getElementById('remoteStream');
 
         curSession.attachMediaStream('remoteStream', stream);
         $('.mediacall .btn_full-mode').prop('disabled', false);
 
         if (self.type === 'video') {
-            video.addEventListener('timeupdate', function() {
-                var duration = getTimer(Math.floor(video.currentTime));
+            video.addEventListener('timeupdate', () => {
+                const duration = getTimer(Math.floor(video.currentTime));
                 $('.mediacall-info-duration').text(duration);
             });
 
             $('#remoteUser').addClass('is-hidden');
             $('#remoteStream').removeClass('is-hidden');
         } else {
-            setTimeout(function() {
+            setTimeout(() => {
                 setDuration();
 
                 $('#remoteStream').addClass('is-hidden');
@@ -439,9 +418,9 @@ define([
     };
 
     VideoChatView.prototype.onReject = function(session, id) {
-        var dialogId = $('li.list-item.dialog-item[data-id="' + id + '"]').data('dialog');
-        var $chat = $('.l-chat[data-dialog="' + dialogId + '"]');
-        var isCurrentUser = (User.contact.id === id);
+        const dialogId = $(`li.list-item.dialog-item[data-id="${id}"]`).data('dialog');
+        const $chat = $(`.l-chat[data-dialog="${dialogId}"]`);
+        const isCurrentUser = (User.contact.id === id);
 
         if (Settings.get('sounds_notify')) {
             document.getElementById('callingSignal').pause();
@@ -462,7 +441,7 @@ define([
         $chat.find('.mediacall').remove();
         $chat.find('.l-chat-header').show();
         $chat.find('.l-chat-content').css({
-            height: 'calc(100% - 140px)'
+            height: 'calc(100% - 140px)',
         });
 
         addCallTypeIcon(id, null);
@@ -473,9 +452,9 @@ define([
     };
 
     VideoChatView.prototype.onUpdateCall = function(session, id, extension) {
-        var dialogId = $('li.list-item.dialog-item[data-id="' + id + '"]').data('dialog');
-        var $chat = $('.l-chat[data-dialog="' + dialogId + '"]');
-        var $selector = $(window.document.body);
+        const dialogId = $(`li.list-item.dialog-item[data-id="${id}"]`).data('dialog');
+        const $chat = $(`.l-chat[data-dialog="${dialogId}"]`);
+        const $selector = $(window.document.body);
 
         if ($chat[0] && ($chat.find('.mediacall')[0])) {
             if (extension.mute === 'video') {
@@ -499,7 +478,9 @@ define([
     };
 
     VideoChatView.prototype.onSessionCloseListener = function() {
-        var opponentId = User.contact.id === VideoChat.callee ? VideoChat.caller : VideoChat.callee;
+        const opponentId = User.contact.id === VideoChat.callee
+            ? VideoChat.caller
+            : VideoChat.callee;
 
         closeStreamScreen(opponentId);
     };
@@ -509,16 +490,16 @@ define([
     };
 
     VideoChatView.prototype.startCall = function(className, dialogId) {
-        var audioSignal = document.getElementById('callingSignal');
-        var params = self.build(dialogId);
-        var $chat = $('.l-chat:visible');
-        var callType = className.match(/audioCall/) ? 'audio' : 'video';
-        var QBApiCalls = this.app.service;
-        var calleeId = params.opponentId;
-        var fullName = User.contact.full_name;
-        var id = $chat.data('id');
+        const audioSignal = document.getElementById('callingSignal');
+        const params = self.build(dialogId);
+        const $chat = $('.l-chat:visible');
+        const callType = className.match(/audioCall/) ? 'audio' : 'video';
+        const QBApiCalls = this.app.service;
+        const calleeId = params.opponentId;
+        const fullName = User.contact.full_name;
+        const id = $chat.data('id');
 
-        VideoChat.getUserMedia(params, callType, function(err) {
+        VideoChat.getUserMedia(params, callType, (err) => {
             fixScroll();
             if (err) {
                 $chat.find('.mediacall .btn_hangup').click();
@@ -549,35 +530,32 @@ define([
     };
 
     VideoChatView.prototype.build = function(id) {
-        var $chat = id ? $('.j-chatItem[data-dialog="' + id + '"]') : $('.j-chatItem:visible');
-        var userId = $chat.data('id');
-        var dialogId = $chat.data('dialog');
-        var contact = ContactList.contacts[userId];
-        var htmlTpl;
-        var tplParams;
-
-        tplParams = {
+        const $chat = id ? $(`.j-chatItem[data-dialog="${id}"]`) : $('.j-chatItem:visible');
+        const userId = $chat.data('id');
+        const dialogId = $chat.data('dialog');
+        const contact = ContactList.contacts[userId];
+        const tplParams = {
             userAvatar: User.contact.avatar_url,
             contactAvatar: contact.avatar_url,
             contactName: contact.full_name,
-            dialogId: dialogId,
-            userId: userId
+            dialogId,
+            userId,
         };
 
-        htmlTpl = QMHtml.VideoChat.buildTpl(tplParams);
+        const htmlTpl = QMHtml.VideoChat.buildTpl(tplParams);
 
         $chat.parent('.chatView').addClass('j-mediacall');
         $chat.prepend(htmlTpl);
         $chat.find('.l-chat-header').hide();
         $chat.find('.l-chat-content').css({
-            height: 'calc(50% - 90px)'
+            height: 'calc(50% - 90px)',
         });
 
         setScreenStyle();
 
         return {
             opponentId: userId,
-            dialogId: dialogId
+            dialogId,
         };
     };
 
@@ -600,13 +578,13 @@ define([
     /* Private
     --------------------------------------------------------------------------*/
     function closeStreamScreen(id) {
-        var dialogId = $('li.list-item.dialog-item[data-id="' + id + '"]').data('dialog');
-        var $chat = $('.l-chat[data-dialog="' + dialogId + '"]');
-        var $declineButton = $('.btn_decline[data-dialog="' + dialogId + '"]');
-        var callingSignal = document.getElementById('callingSignal');
-        var endCallSignal = document.getElementById('endCallSignal');
-        var ringtoneSignal = document.getElementById('ringtoneSignal');
-        var incomingCall;
+        const dialogId = $(`li.list-item.dialog-item[data-id="${id}"]`).data('dialog');
+        const $chat = $(`.l-chat[data-dialog="${dialogId}"]`);
+        const $declineButton = $(`.btn_decline[data-dialog="${dialogId}"]`);
+        const callingSignal = document.getElementById('callingSignal');
+        const endCallSignal = document.getElementById('endCallSignal');
+        const ringtoneSignal = document.getElementById('ringtoneSignal');
+        let incomingCall;
 
         if ($chat[0] && ($chat.find('.mediacall')[0])) {
             if (Settings.get('sounds_notify') && SyncTabs.get()) {
@@ -626,7 +604,7 @@ define([
             $chat.find('.mediacall').remove();
             $chat.find('.l-chat-header').show();
             $chat.find('.l-chat-content').css({
-                height: 'calc(100% - 140px)'
+                height: 'calc(100% - 140px)',
             });
         } else if ($declineButton[0]) {
             incomingCall = $declineButton.parents('.incoming-call');
@@ -644,14 +622,14 @@ define([
     }
 
     function switchOffDevice(event) {
-        var $obj = $(event.target).data('id') ? $(event.target) : $(event.target).parent();
-        var dialogId = $obj.data('dialog');
-        var deviceType = $obj.attr('class').match(/btn_camera_off/) ? 'video' : 'audio';
-        var msg = deviceType === 'video' ? 'Camera' : 'Mic';
+        const $obj = $(event.target).data('id') ? $(event.target) : $(event.target).parent();
+        const dialogId = $obj.data('dialog');
+        const deviceType = $obj.attr('class').match(/btn_camera_off/) ? 'video' : 'audio';
+        const msg = deviceType === 'video' ? 'Camera' : 'Mic';
 
         if (self.type !== deviceType && self.type === 'audio') {
             $obj.addClass('off');
-            $obj.attr('title', msg + ' is off');
+            $obj.attr('title', `${msg} is off`);
             return true;
         }
 
@@ -660,7 +638,7 @@ define([
             if (deviceType === 'video') {
                 curSession.update({
                     dialog_id: dialogId,
-                    unmute: deviceType
+                    unmute: deviceType,
                 });
             }
             $obj.removeClass('off');
@@ -670,51 +648,46 @@ define([
             if (deviceType === 'video') {
                 curSession.update({
                     dialog_id: dialogId,
-                    mute: deviceType
+                    mute: deviceType,
                 });
             }
             $obj.addClass('off');
-            $obj.attr('title', msg + ' is off');
+            $obj.attr('title', `${msg} is off`);
         }
 
         return false;
     }
 
     function createAndShowNotification(paramsObg) {
-        var cancelNotify = !Settings.get('calls_notify');
-        var isNotMainTab = !SyncTabs.get();
-        var msg;
-        var params;
-        var title;
-        var options;
+        const cancelNotify = !Settings.get('calls_notify');
+        const isNotMainTab = !SyncTabs.get();
 
         if (cancelNotify || isNotMainTab) {
             return;
         }
 
-        msg = {
+        const msg = {
             callState: paramsObg.callState,
             dialog_id: paramsObg.dialogId,
             sender_id: paramsObg.id,
             caller: paramsObg.id,
             type: 'chat',
-            callType: capitaliseFirstLetter(paramsObg.callType)
+            callType: capitaliseFirstLetter(paramsObg.callType),
         };
-
-        params = {
+        const params = {
             user: User,
             dialogs: Entities.Collections.dialogs,
-            contacts: ContactList.contacts
+            contacts: ContactList.contacts,
         };
 
-        title = Helpers.Notifications.getTitle(msg, params);
-        options = Helpers.Notifications.getOptions(msg, params);
+        const title = Helpers.Notifications.getTitle(msg, params);
+        const options = Helpers.Notifications.getOptions(msg, params);
 
         if (QMCONFIG.notification && QBNotification.isSupported() && !window.isQMAppActive) {
             if (!QBNotification.needsPermission()) {
                 Helpers.Notifications.show(title, options);
             } else {
-                QBNotification.requestPermission(function(state) {
+                QBNotification.requestPermission((state) => {
                     if (state === 'granted') {
                         Helpers.Notifications.show(title, options);
                     }
@@ -724,7 +697,7 @@ define([
     }
 
     function addCallTypeIcon(id, callType) {
-        var $status = $('li.dialog-item[data-id="' + id + '"]').find('span.status');
+        const $status = $(`li.dialog-item[data-id="${id}"]`).find('span.status');
 
         if (callType === 'video') {
             $status.addClass('icon_videocall');
@@ -740,8 +713,8 @@ define([
     }
 
     function stopIncomingCall(id) {
-        var dialogId = $('li.list-item.dialog-item[data-id="' + id + '"]').data('dialog');
-        var $declineButton = $('.btn_decline[data-dialog="' + dialogId + '"]');
+        const dialogId = $(`li.list-item.dialog-item[data-id="${id}"]`).data('dialog');
+        const $declineButton = $(`.btn_decline[data-dialog="${dialogId}"]`);
 
         clearTimeout(sendAutoReject);
         sendAutoReject = undefined;
@@ -778,40 +751,40 @@ define([
     }
 
     function setDuration(currentTime) {
-        var c = currentTime || 0;
+        let c = currentTime || 0;
         $('.mediacall-info-duration').text(getTimer(c));
-        callTimer = setTimeout(function() {
+        callTimer = setTimeout(() => {
             c += 1;
             setDuration(c);
         }, 1000);
     }
 
     function getTimer(time) {
-        var h; var min; var
+        let h; let min; let
             sec;
 
         h = Math.floor(time / 3600);
-        h = h >= 10 ? h : '0' + h;
+        h = h >= 10 ? h : `0${h}`;
         min = Math.floor(time / 60);
-        min = min >= 10 ? min : '0' + min;
+        min = min >= 10 ? min : `0${min}`;
         sec = Math.floor(time % 60);
-        sec = sec >= 10 ? sec : '0' + sec;
+        sec = sec >= 10 ? sec : `0${sec}`;
 
-        return h + ':' + min + ':' + sec;
+        return `${h}:${min}:${sec}`;
     }
 
     function fixScroll() {
-        var $chat = $('.l-chat:visible');
-        var containerHeight = $chat.find('.l-chat-content .mCSB_container').height();
-        var chatContentHeight = $chat.find('.l-chat-content').height();
-        var draggerContainerHeight = $chat.find('.l-chat-content .mCSB_draggerContainer').height();
-        var draggerHeight = $chat.find('.l-chat-content .mCSB_dragger').height();
+        const $chat = $('.l-chat:visible');
+        const containerHeight = $chat.find('.l-chat-content .mCSB_container').height();
+        const chatContentHeight = $chat.find('.l-chat-content').height();
+        const draggerContainerHeight = $chat.find('.l-chat-content .mCSB_draggerContainer').height();
+        const draggerHeight = $chat.find('.l-chat-content .mCSB_dragger').height();
 
         $chat.find('.l-chat-content .mCSB_container').css({
-            top: chatContentHeight - containerHeight + 'px'
+            top: `${chatContentHeight - containerHeight}px`,
         });
         $chat.find('.l-chat-content .mCSB_dragger').css({
-            top: draggerContainerHeight - draggerHeight + 'px'
+            top: `${draggerContainerHeight - draggerHeight}px`,
         });
     }
 
