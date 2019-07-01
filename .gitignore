@@ -1,5 +1,4 @@
 .tmp
-app/__scripts__
 app/index.html
 dist
 

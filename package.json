@@ -22,9 +22,7 @@
     "compile:js": "npm-run-all bundle concat:js",
     "sass": "node-sass app/styles/main.scss app/.tmp/build.css --source-map true",
     "postcss": "postcss app/.tmp/build.css -u autoprefixer -r",
-    "prebundle": "babel app/scripts -d app/__scripts__",
-    "bundle": "cross-os requirejs",
-    "postbundle": "rimraf app/__scripts__",
+    "bundle": "webpack --config webpack.config.js --progress",
     "concat:css": "node scripts/concat-css.js",
     "concat:js": "node scripts/concat-js.js",
     "server": "live-server app --host=localhost --port=9000 --open",
@@ -53,13 +51,6 @@
     "lint:css": "stylelint app/styles",
     "lint:js": "eslint app/scripts"
   },
-  "cross-os": {
-    "requirejs": {
-      "darwin": "r.js -o scripts/requirejs.js",
-      "linux": "r.js -o scripts/requirejs.js",
-      "win32": "r.js.cmd -o scripts/requirejs.js"
-    }
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -74,17 +65,16 @@
     "npm": ">=5.6.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
     "@songkick/injectassets": "^1.1.0",
     "autoprefixer": "^9.5.1",
     "babel-eslint": "^10.0.2",
+    "babel-loader": "^8.0.6",
     "clean-css-cli": "^4.3.0",
     "concat": "^1.0.3",
     "cpy-cli": "^2.0.0",
     "cross-env": "^5.2.0",
-    "cross-os": "^1.3.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-backbone": "^2.1.1",
@@ -92,6 +82,7 @@
     "eslint-plugin-no-loops": "^0.3.0",
     "eslint-plugin-optimize-regex": "^1.1.6",
     "eslint-plugin-requirejs": "^4.0.0",
+    "exports-loader": "^0.7.0",
     "fs-extra": "^7.0.1",
     "hashmark": "^5.0.0",
     "headr": "0.0.4",
@@ -102,12 +93,13 @@
     "node-sass": "^4.11.0",
     "npm-run-all": "^4.1.5",
     "postcss-cli": "^6.1.2",
-    "requirejs": "^2.3.6",
     "rimraf": "^2.6.3",
     "stylelint": "^10.0.1",
     "stylelint-config-recommended": "^2.2.0",
     "stylelint-config-sass-guidelines": "^6.0.0",
-    "uglify-js": "^3.5.9"
+    "uglify-js": "^3.5.9",
+    "webpack": "^4.35.2",
+    "webpack-cli": "^3.3.5"
   },
   "browserslist": [
     "last 2 versions",

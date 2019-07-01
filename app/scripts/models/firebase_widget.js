@@ -4,6 +4,7 @@
  * QMPlayer
  */
 define([
+    'jquery',
     'underscore',
     'backbone',
     'config',
@@ -12,6 +13,7 @@ define([
     'intlTelInputUtils',
     'Events',
 ], (
+    $,
     _,
     Backbone,
     QMCONFIG,

@@ -12,6 +12,7 @@
         "es6": true
     },
     "globals": {
+        "GMaps": "readonly",
         "FB": "readonly",
         "QB": "readonly",
         "firebase": "readonly"

@@ -6,12 +6,10 @@
  *
  */
 define([
-    'googlemaps!',
-    'gmaps',
+    'jquery',
     'Helpers',
 ], (
-    googleMaps,
-    GMaps,
+    $,
     Helpers,
 ) => {
     let watchId;
