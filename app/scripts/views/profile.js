@@ -1,24 +1,18 @@
 'use strict';
 
+const $ = require('jquery');
+const _ = require('underscore');
+const Backbone = require('backbone');
+const QMCONFIG = require('config');
+const Helpers = require('Helpers');
+
 /*
  * Q-municate chat application
  *
  * Profile View
  *
  */
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'config',
-    'Helpers',
-], (
-    $,
-    _,
-    Backbone,
-    QMCONFIG,
-    Helpers,
-) => Backbone.View.extend({
+module.exports = Backbone.View.extend({
     className: 'profileWrap',
 
     template: _.template($('#templateProfile').html()),
@@ -123,4 +117,4 @@ define([
             }
         });
     },
-}));
+});

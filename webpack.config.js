@@ -4,10 +4,11 @@ const path = require('path');
 const webpack = require('webpack');
 
 const basePath = path.resolve(__dirname, 'app');
+const settingsPath = path.resolve(__dirname, 'settings');
 
 module.exports = {
-    mode: 'development',
-    devtool: 'cheap-module-source-map',
+    mode: process.env.NODE_ENV,
+    devtool: process.env.NODE_ENV === 'development' ? 'cheap-module-source-map' : false,
 
     entry: './app/scripts/main.js',
     output: {
@@ -42,7 +43,7 @@ module.exports = {
             QBMediaRecorder: 'media-recorder-js/qbMediaRecorder',
 
             // Q-municate application
-            config: `${basePath}/.tmp/config`,
+            config: `${settingsPath}/env`,
             MainModule: 'app',
 
             // models

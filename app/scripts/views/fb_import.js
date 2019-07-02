@@ -1,20 +1,16 @@
 'use strict';
 
+const $ = require('jquery');
+const _ = require('underscore');
+const Backbone = require('backbone');
+
 /*
  * Q-municate chat application
  *
  * FB Import Completed View
  *
  */
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-], (
-    $,
-    _,
-    Backbone,
-) => Backbone.View.extend({
+module.exports = Backbone.View.extend({
     className: 'importWrap',
 
     template: _.template($('#templateFBImport').html()),
@@ -51,4 +47,4 @@ define([
         $('.tempHide').removeClass('tempHide');
     },
 
-}));
+});

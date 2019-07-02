@@ -2,13 +2,12 @@
     "parser": "babel-eslint",
     "extends": [
         "airbnb-base",
-        "plugin:requirejs/recommended",
         "plugin:backbone/recommended"
     ],
     "env": {
         "browser": true,
         "jquery": true,
-        "amd": true,
+        "commonjs": true,
         "es6": true
     },
     "globals": {
@@ -21,10 +20,20 @@
         "ecmaVersion": 2018,
         "sourceType": "script"
     },
+    "settings": {
+        "import/resolver": {
+            "webpack": {
+                "config": "webpack.config.js"
+            }
+        },
+        "import/core-modules": [
+            "Events",
+            "Entities"
+        ]
+    },
     "plugins": [
         "optimize-regex",
         "no-loops",
-        "requirejs",
         "backbone"
     ],
     "rules": {
@@ -36,7 +45,6 @@
 
         "optimize-regex/optimize-regex": "warn",
         "no-loops/no-loops": "error",
-        "requirejs/one-dependency-per-line": "error",
         "backbone/no-native-jquery": "off",
         "backbone/initialize-on-top": ["warn", {
             "View": [
