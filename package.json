@@ -59,8 +59,8 @@
     "*.js": "eslint"
   },
   "engines": {
-    "node": ">=8.11.4",
-    "npm": ">=5.6.0"
+    "node": ">=10.15.3",
+    "npm": ">=6.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
