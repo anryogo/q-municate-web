@@ -2,15 +2,15 @@
 
 const $ = require('jquery');
 const _ = require('underscore');
-const QMCONFIG = require('config');
-const Entities = require('Entities');
-const Helpers = require('Helpers');
-const minEmoji = require('minEmoji');
-const Ps = require('perfectscrollbar');
+const Ps = require('perfect-scrollbar');
 
-require('mCustomScrollbar');
-require('nicescroll');
-require('mousewheel');
+require('malihu-custom-scrollbar-plugin');
+require('jquery.nicescroll');
+
+const QMCONFIG = require('config');
+const minEmoji = require('minEmoji');
+const Entities = require('../entities');
+const Helpers = require('../helpers');
 
 /*
  * Q-municate chat application

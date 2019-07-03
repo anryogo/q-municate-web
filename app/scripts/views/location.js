@@ -1,7 +1,8 @@
 'use strict';
 
 const $ = require('jquery');
-const Helpers = require('Helpers');
+
+const Helpers = require('../helpers');
 
 /**
  *

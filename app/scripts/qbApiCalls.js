@@ -1,10 +1,11 @@
 'use strict';
 
 const $ = require('jquery');
+
 const QMCONFIG = require('config');
-const Entities = require('Entities');
-const Helpers = require('Helpers');
-const Location = require('LocationView');
+const Location = require('views/location');
+const Entities = require('./entities');
+const Helpers = require('./helpers');
 
 /*
  * Q-municate chat application

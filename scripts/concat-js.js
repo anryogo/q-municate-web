@@ -5,6 +5,6 @@ const concat = require('concat'); // eslint-disable-line
 const outputFile = 'app/.tmp/vendor.js';
 
 concat([
-    'app/vendor/quickblox/quickblox.js',
-    'app/vendor/firebase/firebase.min.js',
+    'node_modules/quickblox/quickblox.min.js',
+    'node_modules/firebase/firebase.js',
 ], outputFile);

@@ -1,8 +1,9 @@
 'use strict';
 
 const $ = require('jquery');
-const Helpers = require('Helpers');
-const Ps = require('perfectscrollbar');
+const Ps = require('perfect-scrollbar');
+
+const Helpers = require('./helpers');
 
 const { QB } = window;
 

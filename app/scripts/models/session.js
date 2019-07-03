@@ -1,7 +1,8 @@
 'use strict';
 
+const CryptoJS = require('crypto-js');
+
 const QMCONFIG = require('config');
-const CryptoJS = require('cryptojs');
 
 /*
  * Q-municate chat application

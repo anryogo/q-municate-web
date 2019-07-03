@@ -1,7 +1,7 @@
 'use strict';
 
 const QMCONFIG = require('config');
-const Entities = require('Entities');
+const Entities = require('../entities');
 
 /*
  * Q-municate chat application

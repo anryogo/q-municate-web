@@ -1,13 +1,15 @@
 'use strict';
 
 const $ = require('jquery');
-const QMCONFIG = require('config');
-const Helpers = require('Helpers');
-const minEmoji = require('minEmoji');
-const QM = require('MainModule');
-const QBNotification = require('QBNotification');
+const QBNotification = require('web-notifications');
 
-require('fetch'); // the fetch polifil for IE 10+
+// the fetch polifil for IE 10+
+require('whatwg-fetch');
+
+const QMCONFIG = require('config');
+const minEmoji = require('minEmoji');
+const QM = require('./app');
+const Helpers = require('./helpers');
 
 let APP;
 

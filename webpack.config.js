@@ -18,85 +18,33 @@ module.exports = {
 
     resolve: {
         modules: [
-            `${basePath}/scripts`,
             `${basePath}/vendor`,
+            path.resolve(__dirname, 'node_modules'),
         ],
         alias: {
             // libs
-            cryptojs: 'crypto-js/crypto-js',
-            jquery: 'jquery/jquery.min',
-            underscore: 'underscore/underscore-min',
-            backbone: 'backbone/backbone-min',
-            fetch: 'fetch/fetch',
-            progressbar: 'progressbar/progressbar.min',
-            loadImage: 'blueimp-load-image/load-image',
-            mCustomScrollbar: 'malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar',
-            mousewheel: 'jquery-mousewheel/jquery.mousewheel.min',
-            'jquery-mousewheel': 'jquery-mousewheel/jquery.mousewheel.min',
-            timeago: 'jquery-timeago/jquery.timeago',
             minEmoji: 'emoji/js/minEmoji',
             initTelInput: 'intl-tel-input/js/intlTelInput.min',
             intlTelInputUtils: 'intl-tel-input/js/utils',
-            nicescroll: 'jquery-nicescroll/jquery.nicescroll.min',
-            perfectscrollbar: 'perfect-scrollbar/perfect-scrollbar.min',
-            QBNotification: 'web-notifications/qbNotification',
-            QBMediaRecorder: 'media-recorder-js/qbMediaRecorder',
+            progressbar: 'progressbar/progressbar.min',
 
             // Q-municate application
             config: `${settingsPath}/env`,
-            MainModule: 'app',
-
-            // models
-            UserModule: 'models/user',
-            SessionModule: 'models/session',
-            SettingsModule: 'models/settings',
-            ContactModule: 'models/contact',
-            DialogModule: 'models/dialog',
-            MessageModule: 'models/message',
-            AttachModule: 'models/attach',
-            ContactListModule: 'models/contact_list',
-            VideoChatModule: 'models/videochat',
-            CursorModule: 'models/custom_cursor',
-            SyncTabsModule: 'models/sync_tabs',
-            FirebaseWidget: 'models/firebase_widget',
-
-            // views
-            UserView: 'views/user',
-            SettingsView: 'views/settings',
-            DialogView: 'views/dialog',
-            MessageView: 'views/message',
-            AttachView: 'views/attach',
-            ContactListView: 'views/contact_list',
-            VideoChatView: 'views/videochat',
-            LocationView: 'views/location',
-            QMPlayer: 'views/qmplayer',
-
-            // others
-            QBApiCalls: 'qbApiCalls',
-            Events: 'appEvents',
-            Helpers: 'helpers',
-            Listeners: 'listeners',
-            QMHtml: 'qmhtml',
-            Entities: 'entities',
-            VoiceMessage: 'voicemessage',
+            models: `${basePath}/scripts/models`,
+            views: `${basePath}/scripts/views`,
         },
     },
 
     module: {
         rules: [
             {
-                test: /cryptojs/,
-                use: 'exports-loader?CryptoJS',
+                test: /minEmoji/,
+                use: 'exports-loader?minEmoji',
             },
             {
                 test: /progressbar/,
                 use: 'exports-loader?ProgressBar',
             },
-            {
-                test: /minEmoji/,
-                use: 'exports-loader?minEmoji',
-            },
-
             {
                 test: /\.js$/,
                 exclude: [

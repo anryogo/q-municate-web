@@ -2,7 +2,8 @@
 
 const $ = require('jquery');
 const _ = require('underscore');
-const Helpers = require('Helpers');
+
+const Helpers = require('./helpers');
 
 /**
  *

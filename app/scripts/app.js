@@ -1,33 +1,37 @@
 'use strict';
 
 const $ = require('jquery');
+
 const QMCONFIG = require('config');
-const User = require('UserModule');
-const Session = require('SessionModule');
-const Settings = require('SettingsModule');
-const Contact = require('ContactModule');
-const Dialog = require('DialogModule');
-const Message = require('MessageModule');
-const Attach = require('AttachModule');
-const ContactList = require('ContactListModule');
-const VideoChat = require('VideoChatModule');
-const Cursor = require('CursorModule');
-const SyncTabs = require('SyncTabsModule');
-const UserView = require('UserView');
-const SettingsView = require('SettingsView');
-const DialogView = require('DialogView');
-const MessageView = require('MessageView');
-const AttachView = require('AttachView');
-const ContactListView = require('ContactListView');
-const VideoChatView = require('VideoChatView');
-const Events = require('Events');
-const Helpers = require('Helpers');
-const QBApiCalls = require('QBApiCalls');
-const Entities = require('Entities');
-const Listeners = require('Listeners');
-const VoiceMessage = require('VoiceMessage');
-const QMPlayer = require('QMPlayer');
-const FirebaseWidget = require('FirebaseWidget');
+
+const User = require('models/user');
+const Session = require('models/session');
+const Settings = require('models/settings');
+const Contact = require('models/contact');
+const Dialog = require('models/dialog');
+const Message = require('models/message');
+const Attach = require('models/attach');
+const ContactList = require('models/contact_list');
+const VideoChat = require('models/videochat');
+const Cursor = require('models/custom_cursor');
+const SyncTabs = require('models/sync_tabs');
+const FirebaseWidget = require('models/firebase_widget');
+
+const UserView = require('views/user');
+const SettingsView = require('views/settings');
+const DialogView = require('views/dialog');
+const MessageView = require('views/message');
+const AttachView = require('views/attach');
+const ContactListView = require('views/contact_list');
+const VideoChatView = require('views/videochat');
+const QMPlayer = require('views/qmplayer');
+
+const Events = require('./events');
+const Helpers = require('./helpers');
+const QBApiCalls = require('./qbApiCalls');
+const Entities = require('./entities');
+const Listeners = require('./listeners');
+const VoiceMessage = require('./voicemessage');
 
 /*
  * Q-municate chat application

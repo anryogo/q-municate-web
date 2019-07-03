@@ -1,8 +1,9 @@
 'use strict';
 
+const QBMediaRecorder = require('media-recorder-js');
+
 const QMCONFIG = require('config');
-const Helpers = require('Helpers');
-const QBMediaRecorder = require('QBMediaRecorder');
+const Helpers = require('./helpers');
 
 /**
  * AudioRecorder

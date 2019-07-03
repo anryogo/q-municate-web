@@ -2,13 +2,14 @@
 
 const $ = require('jquery');
 const _ = require('underscore');
+
 const QMCONFIG = require('config');
-const Helpers = require('Helpers');
-const FirebaseWidget = require('FirebaseWidget');
+const FirebaseWidget = require('models/firebase_widget');
 const Person = require('models/person');
 const ProfileView = require('views/profile');
 const ChangePassView = require('views/change_password');
 const FBImportView = require('views/fb_import');
+const Helpers = require('../helpers');
 
 /*
  * Q-municate chat application

@@ -1,14 +1,14 @@
 'use strict';
 
 const $ = require('jquery');
-const QMCONFIG = require('config');
-const Helpers = require('Helpers');
-const QMHtml = require('QMHtml');
-const Location = require('LocationView');
-const Ps = require('perfectscrollbar');
+const Ps = require('perfect-scrollbar');
 
-require('mCustomScrollbar');
-require('mousewheel');
+require('malihu-custom-scrollbar-plugin');
+
+const QMCONFIG = require('config');
+const Location = require('views/location');
+const Helpers = require('./helpers');
+const QMHtml = require('./qmhtml');
 
 /*
  * Q-municate chat application
