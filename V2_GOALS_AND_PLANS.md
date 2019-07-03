@@ -26,8 +26,8 @@
 12. ~~Convert js code to ES2015+ syntax~~
 13. ~~Set webpack instead RequireJS~~
 14. ~~Rewrite AMD to CommonJS modules~~
-15. Migrate the vendor libs to npm packages
-16. Update all dependencies to the latest versions
+15. ~~Migrate the vendor libs to npm packages~~
+16. ~~Update all dependencies to the latest versions~~
 17. Split the project architecture according to component approach
 18. Refactor components (try to remove the backbone artifacts and jquery, then leave only the simple native JS components)
 
