@@ -3,6 +3,9 @@
 const $ = require('jquery');
 const _ = require('underscore');
 const Backbone = require('backbone');
+const firebase = require('firebase/app');
+
+require('firebase/auth');
 
 const QMCONFIG = require('config');
 const Helpers = require('../helpers');

@@ -12,8 +12,7 @@
     "globals": {
         "GMaps": "readonly",
         "FB": "readonly",
-        "QB": "readonly",
-        "firebase": "readonly"
+        "QB": "readonly"
     },
     "parserOptions": {
         "ecmaVersion": 2018,

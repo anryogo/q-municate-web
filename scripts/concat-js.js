@@ -6,5 +6,4 @@ const outputFile = 'app/.tmp/vendor.js';
 
 concat([
     'node_modules/quickblox/quickblox.min.js',
-    'node_modules/firebase/firebase.js',
 ], outputFile);

@@ -4,6 +4,7 @@ const $ = require('jquery');
 const Ps = require('perfect-scrollbar');
 
 require('malihu-custom-scrollbar-plugin');
+require('jquery-mousewheel');
 
 const QMCONFIG = require('config');
 const Location = require('views/location');
@@ -480,12 +481,12 @@ Events.prototype = {
                 window.location.reload();
             }
 
-            if (window.firebase) {
-                UserView.logInFirebase();
-            } else {
-                $('.j-firebasePhone').addClass('not_allowed j-reloadPage')
-                    .html('Login by phone number failed.<br>Click to reload the page.');
-            }
+            // if (window.firebase) {
+            UserView.logInFirebase();
+            // } else {
+            //     $('.j-firebasePhone').addClass('not_allowed j-reloadPage')
+            //         .html('Login by phone number failed.<br>Click to reload the page.');
+            // }
 
             return false;
         });
