@@ -2,10 +2,11 @@
 
 const $ = require('jquery');
 const _ = require('underscore');
+
 const QMCONFIG = require('config');
-const Helpers = require('Helpers');
-const QMHtml = require('QMHtml');
 const ProgressBar = require('progressbar');
+const Helpers = require('../helpers');
+const QMHtml = require('../qmhtml');
 
 /*
  * Q-municate chat application

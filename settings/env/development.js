@@ -21,6 +21,7 @@ const settings = Object.assign({}, baseSettings, {
         projectId: 'q-municate-web',
         storageBucket: 'q-municate-web.appspot.com',
         messagingSenderId: '661916700459',
+        appId: '1:661916700459:web:8e67c75e0d3d6ce6',
     },
 });
 

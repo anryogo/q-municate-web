@@ -6,15 +6,13 @@
     ],
     "env": {
         "browser": true,
-        "jquery": true,
         "commonjs": true,
         "es6": true
     },
     "globals": {
         "GMaps": "readonly",
         "FB": "readonly",
-        "QB": "readonly",
-        "firebase": "readonly"
+        "QB": "readonly"
     },
     "parserOptions": {
         "ecmaVersion": 2018,
@@ -25,11 +23,7 @@
             "webpack": {
                 "config": "webpack.config.js"
             }
-        },
-        "import/core-modules": [
-            "Events",
-            "Entities"
-        ]
+        }
     },
     "plugins": [
         "optimize-regex",

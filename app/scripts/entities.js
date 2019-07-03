@@ -3,8 +3,9 @@
 const $ = require('jquery');
 const _ = require('underscore');
 const Backbone = require('backbone');
+
 const QMCONFIG = require('config');
-const Helpers = require('Helpers');
+const Helpers = require('./helpers');
 
 /** ****************** Module for dialogs and messages ************************ */
 const { QB } = window;

@@ -1,8 +1,9 @@
 'use strict';
 
 const $ = require('jquery');
+
 const QMCONFIG = require('config');
-const Helpers = require('Helpers');
+const Helpers = require('../helpers');
 
 /*
  * Q-municate chat application

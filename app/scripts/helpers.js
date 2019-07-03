@@ -2,10 +2,11 @@
 
 const $ = require('jquery');
 const _ = require('underscore');
-const QMCONFIG = require('config');
-const QBNotification = require('QBNotification');
+const QBNotification = require('web-notifications');
 
 require('timeago');
+
+const QMCONFIG = require('config');
 
 /**
  * Helper Module

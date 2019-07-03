@@ -1,6 +1,6 @@
 'use strict';
 
-const loadImage = require('loadImage');
+const loadImage = require('blueimp-load-image');
 
 /*
  * Q-municate chat application

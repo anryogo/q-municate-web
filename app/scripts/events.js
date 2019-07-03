@@ -1,14 +1,15 @@
 'use strict';
 
 const $ = require('jquery');
-const QMCONFIG = require('config');
-const Helpers = require('Helpers');
-const QMHtml = require('QMHtml');
-const Location = require('LocationView');
-const Ps = require('perfectscrollbar');
+const Ps = require('perfect-scrollbar');
 
-require('mCustomScrollbar');
-require('mousewheel');
+require('malihu-custom-scrollbar-plugin');
+require('jquery-mousewheel');
+
+const QMCONFIG = require('config');
+const Location = require('views/location');
+const Helpers = require('./helpers');
+const QMHtml = require('./qmhtml');
 
 /*
  * Q-municate chat application
@@ -480,12 +481,12 @@ Events.prototype = {
                 window.location.reload();
             }
 
-            if (window.firebase) {
-                UserView.logInFirebase();
-            } else {
-                $('.j-firebasePhone').addClass('not_allowed j-reloadPage')
-                    .html('Login by phone number failed.<br>Click to reload the page.');
-            }
+            // if (window.firebase) {
+            UserView.logInFirebase();
+            // } else {
+            //     $('.j-firebasePhone').addClass('not_allowed j-reloadPage')
+            //         .html('Login by phone number failed.<br>Click to reload the page.');
+            // }
 
             return false;
         });

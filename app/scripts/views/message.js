@@ -2,12 +2,13 @@
 
 const $ = require('jquery');
 const _ = require('underscore');
+const QBNotification = require('web-notifications');
+
 const QMCONFIG = require('config');
 const minEmoji = require('minEmoji');
-const Helpers = require('Helpers');
-const QBNotification = require('QBNotification');
-const QMHtml = require('QMHtml');
-const Entities = require('Entities');
+const Helpers = require('../helpers');
+const QMHtml = require('../qmhtml');
+const Entities = require('../entities');
 
 /*
  * Q-municate chat application

@@ -2,12 +2,13 @@
 
 const $ = require('jquery');
 const _ = require('underscore');
-const QMCONFIG = require('config');
-const Entities = require('Entities');
-const Helpers = require('Helpers');
 
-require('mCustomScrollbar');
-require('mousewheel');
+require('malihu-custom-scrollbar-plugin');
+require('jquery-mousewheel');
+
+const QMCONFIG = require('config');
+const Entities = require('../entities');
+const Helpers = require('../helpers');
 
 /*
  * Q-municate chat application

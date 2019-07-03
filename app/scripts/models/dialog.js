@@ -1,9 +1,11 @@
 'use strict';
 
+const $ = require('jquery');
 const _ = require('underscore');
+
 const QMCONFIG = require('config');
-const Helpers = require('Helpers');
-const Entities = require('Entities');
+const Helpers = require('../helpers');
+const Entities = require('../entities');
 
 /*
  * Q-municate chat application

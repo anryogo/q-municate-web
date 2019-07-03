@@ -1,11 +1,12 @@
 'use strict';
 
 const $ = require('jquery');
+const QBNotification = require('web-notifications');
+
 const QMCONFIG = require('config');
-const Entities = require('Entities');
-const Helpers = require('Helpers');
-const QBNotification = require('QBNotification');
-const QMHtml = require('QMHtml');
+const Entities = require('../entities');
+const Helpers = require('../helpers');
+const QMHtml = require('../qmhtml');
 
 /*
  * Q-municate chat application

@@ -3,9 +3,13 @@
 const $ = require('jquery');
 const _ = require('underscore');
 const Backbone = require('backbone');
+const firebase = require('firebase/app');
+
+require('firebase/auth');
+
 const QMCONFIG = require('config');
-const Helpers = require('Helpers');
-const Events = require('Events');
+const Helpers = require('../helpers');
+const Events = require('../events');
 
 require('initTelInput');
 require('intlTelInputUtils');
