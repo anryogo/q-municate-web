@@ -1,6 +1,8 @@
-var concat = require('concat');
+'use strict';
 
-var outputFile = 'app/.tmp/vendor.css';
+const concat = require('concat'); // eslint-disable-line
+
+const outputFile = 'app/.tmp/vendor.css';
 
 concat([
     'app/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css',
@@ -8,5 +10,5 @@ concat([
     'app/vendor/progressbar/progressbar.css',
     'app/vendor/balloon-css/balloon.min.css',
     'app/vendor/emoji/css/minEmoji.css',
-    'app/vendor/intl-tel-input/css/intlTelInput.css'
+    'app/vendor/intl-tel-input/css/intlTelInput.css',
 ], outputFile);

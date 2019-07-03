@@ -1,12 +1,5 @@
-var path = require('path');
-var fse = require('fs-extra');
-var settings = require('./env/' + process.env.NODE_ENV);
+'use strict';
 
-var filePath = path.resolve('app/.tmp/', 'config.js');
-var content = 'define(' + JSON.stringify(settings) + ');';
+const settings = require(`./env/${process.env.NODE_ENV}`); // eslint-disable-line
 
-fse.outputFile(filePath, content, function(err) {
-    if (err) {
-        throw err;
-    }
-});
+module.exports = settings;

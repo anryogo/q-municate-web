@@ -33,6 +33,8 @@
     if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){location.href='//q-municate.com/';}
 </script>
 
+<div id="fb-root"></div>
+
 <div class="l-wrapper">
 
     <div id="firebase_container" class="text firebase__container"></div>
@@ -548,13 +550,6 @@
     <source src="audio/end_of_call.mp3" />
 </audio>
 
-<div id="fb-root"></div>
-
-<script src="https://connect.facebook.net/en_US/sdk.js"></script>
-{{#js}}
-<script src="{{{.}}}"></script>
-{{/js}}
-
 <script id="templateProfile" type="text/template">
     <section id="popupProfile" class="popup popup_profile">
         <div class="userProfile-preview">
@@ -704,6 +699,8 @@
                     </div>
                 </footer>
             </section>
+        </header>
+    </section>
 </script>
 
 <script id="QMPlayer" type="text/template">
@@ -788,6 +785,12 @@
     </form>
 </script>
 
-</body>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAhduIkJbVdtRm0Hz6XpkihGt8h_R8cZds&libraries=geometry"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gmaps.js/0.4.25/gmaps.min.js"></script>
+<script src="https://connect.facebook.net/en_US/sdk.js"></script>
+{{#js}}
+<script src="{{{.}}}"></script>
+{{/js}}
 
+</body>
 </html>

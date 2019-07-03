@@ -1,415 +1,397 @@
+'use strict';
+
+const $ = require('jquery');
+const QMCONFIG = require('config');
+const Entities = require('Entities');
+const Helpers = require('Helpers');
+const QMHtml = require('QMHtml');
+const Location = require('LocationView');
+
 /*
  * Q-municate chat application
  *
  * User View Module
  *
  */
-define([
-    'jquery',
-    'config',
-    'Entities',
-    'Helpers',
-    'QMHtml',
-    'LocationView'
-], function(
-    $,
-    QMCONFIG,
-    Entities,
-    Helpers,
-    QMHtml,
-    Location
-) {
-    var User;
-    var ContactList;
-    var FBCallback = null;
-    var clearErrors;
-    var switchPage;
-    var switchOnWelcomePage;
-    var appearAnimation;
+let User;
+let ContactList;
+let FBCallback = null;
+let clearErrors;
+let switchPage;
+let switchOnWelcomePage;
+let appearAnimation;
 
-    function UserView(app) {
-        this.app = app;
-        User = this.app.models.User;
-        ContactList = this.app.models.ContactList;
-    }
+function UserView(app) {
+    this.app = app;
 
-    UserView.prototype = {
+    /* eslint-disable prefer-destructuring */
+    User = this.app.models.User;
+    ContactList = this.app.models.ContactList;
+    /* eslint-enable prefer-destructuring */
+}
 
-        signupQB: function() {
-            switchPage($('#signUpPage'));
-        },
+UserView.prototype = {
 
-        loginQB: function() {
-            switchPage($('#loginPage'));
-        },
+    signupQB() {
+        switchPage($('#signUpPage'));
+    },
 
-        forgot: function() {
-            switchPage($('#forgotPage'));
-        },
+    loginQB() {
+        switchPage($('#loginPage'));
+    },
 
-        logInFirebase: function(callback) {
-            if (typeof callback === 'function') {
-                User.reLogInFirebasePhone(function(authParams) {
-                    callback(authParams);
-                });
-            } else {
-                new this.app.FirebaseWidget(User.logInFirebasePhone); // eslint-disable-line no-new
-            }
-        },
+    forgot() {
+        switchPage($('#forgotPage'));
+    },
 
-        logInFacebook: function() {
-            User.logInFacebook();
-        },
-
-        connectFB: function(token) {
-            User.connectFB(token);
-        },
-
-        signupForm: function() {
-            clearErrors();
-            User.signup();
-        },
-
-        loginForm: function() {
-            clearErrors();
-            User.login();
-        },
-
-        forgotForm: function() {
-            clearErrors();
-            User.forgot();
-        },
-
-        resetForm: function() {
-            clearErrors();
-            User.resetPass();
-        },
-
-        autologin: function() {
-            switchPage($('#loginPage'));
-            User.autologin();
-        },
-
-        createSpinner: function() {
-            $('section:visible form').addClass('is-hidden').next('.l-spinner').removeClass('is-hidden');
-        },
-
-        removeSpinner: function() {
-            $('section:visible form').removeClass('is-hidden').next('.l-spinner').addClass('is-hidden');
-        },
-
-
-        successFormCallback: function() {
-            var $profileAvatar = $('#avatar-container');
-
-            this.removeSpinner();
-            $profileAvatar.addClass('profileUserAvatar').css('background-image', 'url(' + User.contact.avatar_url + ')');
-            $profileAvatar.attr('data-id', User.contact.id);
-            $profileAvatar.attr('data-name', User.contact.full_name);
-            switchPage($('#mainPage'));
-            this.app.views.Dialog.createDataSpinner();
-        },
-
-        successSendEmailCallback: function() {
-            var alert = '<div class="j-success_callback note l-form l-flexbox l-flexbox_column">';
-            alert += '<span class="text text_alert text_alert_success">Success!</span>';
-            alert += '<span class="text">Please check your email and click a link in the letter in order to reset your password</span>';
-            alert += '</div>';
-
-            this.removeSpinner();
-            $('section:visible form').addClass('is-hidden').after(alert);
-        },
-
-        getFBStatus: function(cb) {
-            var callback;
-
-            if (typeof FB === 'undefined') {
-                // Wait until FB SDK will be downloaded and then calling this function again
-                FBCallback = cb;
-                sessionStorage.setItem('QM.is_getFBStatus', true);
-                return;
-            }
-
-            callback = cb || FBCallback;
-            FBCallback = null;
-
-            FB.getLoginStatus(function(response) {
-                Helpers.log('FB status response', response);
-                if (callback) {
-                    // situation when you are recovering QB session via FB
-                    // and FB accessToken has expired
-                    if (response.status === 'connected') {
-                        callback(response.authResponse.accessToken);
-                    } else {
-                        FB.login(function(res) {
-                            Helpers.log('FB authResponse', res);
-                            if (res.status === 'connected') callback(res.authResponse.accessToken);
-                        });
-                    }
-                }
-            }, true);
-        },
-
-        profilePopover: function(objDom) {
-            var html = QMHtml.User.profilePopover();
-
-            objDom.after(html);
-            appearAnimation();
-        },
-
-        contactPopover: function(objDom) {
-            var ids = objDom.parent().data('id');
-            var dialogId = objDom.parent().data('dialog');
-            var roster = ContactList.roster;
-            var dialogs = Entities.Collections.dialogs;
-            var dialog = dialogs.get(dialogId).toJSON();
-            var htmlTpl;
-            var elemPosition;
-            var list;
-            var topListOffset;
-            var listHeigth;
-            var listViewPort;
-            var botListOffset;
-            var dropList;
-            var dropListElemCount;
-            var botElemPosition;
-            var elemPositionInList;
-
-            htmlTpl = QMHtml.User.contactPopover({
-                dialogId: dialogId,
-                dialogType: dialog.type,
-                occupantsIds: dialog.occupants_ids,
-                ids: ids
-            }, roster[ids]);
-
-            objDom.after(htmlTpl)
-                .parent().addClass('is-contextmenu');
-
-            appearAnimation();
-
-            elemPosition = objDom.offset().top;
-            list = document.querySelector('.j-scrollbar_aside');
-            topListOffset = list.offsetTop;
-            listHeigth = list.offsetHeight;
-            listViewPort = 0;
-            botListOffset = listHeigth + topListOffset;
-            dropList = objDom.next();
-            dropListElemCount = objDom.next().children().length;
-            botElemPosition = botListOffset - elemPosition;
-            elemPositionInList = elemPosition - topListOffset;
-
-            $('.j-aside_list_item').each(function(index, element) {
-                listViewPort += element.offsetHeight;
+    logInFirebase(callback) {
+        if (typeof callback === 'function') {
+            User.reLogInFirebasePhone((authParams) => {
+                callback(authParams);
             });
-
-            if ((botElemPosition <= dropListElemCount * 50)
-                && (elemPositionInList > dropListElemCount * 40)) {
-                dropList.addClass('margin-up');
-            }
-
-            if (listViewPort <= 400) {
-                list.style.paddingBottom = (dropListElemCount * 40) + 'px';
-            }
-        },
-
-        occupantPopover: function(objDom, e) {
-            var id = objDom.data('id');
-            var jid = QB.chat.helpers.getUserJid(id, QMCONFIG.qbAccount.appId);
-            var roster = ContactList.roster;
-            var position = e.currentTarget.getBoundingClientRect();
-            var htmlTpl = QMHtml.User.occupantPopover({
-                id: id,
-                jid: jid
-            }, roster[id]);
-
-            $('body').append(htmlTpl);
-
-            appearAnimation();
-
-            objDom.addClass('is-active');
-
-            $('.list-actions_occupants').offset({
-                top: (29 + position.top),
-                left: position.left
-            });
-        },
-
-        buildDetails: function(userId) {
-            var popup = $('#popupDetails');
-            var contact = ContactList.contacts[userId];
-            var roster = ContactList.roster;
-            var chatStatus = roster[userId] ? roster[userId] : null;
-
-            if (navigator.userAgent.match(/Firefox/)) {
-                popup.find('.userDetails-controls button').css('padding', '0 12px');
-            }
-
-            popup.find('.userDetails-avatar').attr('data-id', userId).css('background-image', 'url(' + contact.avatar_url + ')');
-            popup.find('.userDetails-filename').attr('data-id', userId).text(contact.full_name);
-
-            popup.find('.userDetails-status').attr('data-id', userId).text(contact.status);
-
-            if (chatStatus && chatStatus.status) {
-                popup.find('.userDetails-chatStatus').html('<span class="status status_online"></span><span class="status_text">Online</span>');
-            } else {
-                popup.find('.userDetails-chatStatus').html('<span class="status"></span><span class="status_text">Offline</span>');
-            }
-
-            popup.find('.writeMessage').data('id', userId);
-
-            popup.find('.userDetails-field').attr('data-id', userId).html(
-                contact.phone
-                    ? '<span class="userDetails-label">Phone:</span><span class="userDetails-phone">' + contact.phone + '</span>'
-                    : ''
-            );
-
-            this.getNewProfile(userId);
-        },
-
-        getNewProfile: function(userId) {
-            var QBApiCalls = this.app.service;
-            var Contact = this.app.models.Contact;
-
-            QBApiCalls.getUser(userId, function(user) {
-                var contact = Contact.create(user);
-                ContactList.contacts[contact.id] = contact;
-
-                $('.profileUserName[data-id="' + contact.id + '"]').text(contact.full_name);
-                $('.profileUserStatus[data-id="' + contact.id + '"]').text(contact.status);
-                if (contact.phone) {
-                    $('.profileUserPhone[data-id="' + contact.id + '"]').html(
-                        '<span class="userDetails-label">Phone:</span><span class="userDetails-phone">' + contact.phone + '</span>'
-                    );
-                }
-                $('.profileUserAvatar[data-id="' + contact.id + '"]').css('background-image', 'url(' + contact.avatar_url + ')');
-
-                localStorage.setItem('QM.contact-' + contact.id, JSON.stringify(contact));
-            });
-        },
-
-        logout: function() {
-            var DialogView = this.app.views.Dialog;
-
-            $('.mediacall .btn_hangup').click();
-
-            User.logout(function() {
-                switchOnWelcomePage();
-                $('.j-capBox').removeClass('is-hidden');
-                $('.j-chatWrap').addClass('is-hidden');
-                $('.j-popover_const').removeClass('is-active');
-                $('.l-chat').remove();
-                Helpers.log('current User and Session were destroyed');
-                DialogView.logoutWithClearData();
-            });
-        },
-
-        localSearch: function(form) {
-            var val = form.find('input[type="search"]').val().trim().toLowerCase();
-            var selected = $('#searchList li.is-selected').data('dialog');
-            var $notSearchLists = $('#recentList, #historyList, #requestsList');
-
-            if (val.length > 0) {
-                $('#searchList').removeClass('is-hidden').siblings('section').addClass('is-hidden');
-                $('#searchList ul').html('').add('#searchList .note').removeClass('is-hidden');
-
-                $('#recentList, #historyList, #oldHistoryList').find('.dialog-item').each(function() {
-                    var name = $(this).find('.name').text().toLowerCase();
-                    var li = $(this).clone();
-
-                    if (name.indexOf(val) > -1) {
-                        $('#searchList ul').append(li);
-                        $('#searchList .note').addClass('is-hidden');
-                    }
-                });
-
-                if ($('#searchList ul').find('li').length === 0) {
-                    $('#searchList .note').removeClass('is-hidden').siblings('ul').addClass('is-hidden');
-                }
-            } else {
-                $('#searchList').addClass('is-hidden');
-                $notSearchLists.each(function() {
-                    var $this = $(this);
-
-                    if ($this.find('.list-item').length > 0) {
-                        $this.removeClass('is-hidden');
-                    }
-
-                    if (selected) {
-                        $this.find('.list-item[data-dialog="' + selected + '"]').addClass('is-selected');
-                    }
-                });
-                if ($('.l-list-wrap section:not(#searchList) .list-item').length === 0) {
-                    $('#emptyList').removeClass('is-hidden');
-                }
-            }
-        },
-
-        friendsSearch: function(form) {
-            var val = form.find('input[type="search"]').val().trim().toLowerCase();
-            var result = form.next();
-
-            result.find('ul').removeClass('is-hidden').siblings().addClass('is-hidden');
-            result.find('ul li').removeClass('is-hidden');
-
-            if (val.length > 0) {
-                result.find('ul li').each(function() {
-                    var name = $(this).find('.name').text().toLowerCase();
-                    var li = $(this);
-
-                    if (name.indexOf(val) === -1) {
-                        li.addClass('is-hidden');
-                    }
-                });
-
-                if (result.find('ul li:visible').length === 0) {
-                    result.find('.note').removeClass('is-hidden').siblings().addClass('is-hidden');
-                }
-            }
+        } else {
+            new this.app.FirebaseWidget(User.logInFirebasePhone); // eslint-disable-line no-new
         }
+    },
 
-    };
+    logInFacebook() {
+        User.logInFacebook();
+    },
 
-    /* Private
-    ---------------------------------------------------------------------- */
-    clearErrors = function() {
-        $('.is-error').removeClass('is-error');
-    };
+    connectFB(token) {
+        User.connectFB(token);
+    },
 
-    switchPage = function(page) {
-        $('body').removeClass('is-welcome');
-        page.removeClass('is-hidden').siblings('section').addClass('is-hidden');
-
-        // reset form
+    signupForm() {
         clearErrors();
-        $('.no-connection').addClass('is-hidden');
-        page.find('input').val('');
-        if (!page.is('#mainPage')) {
-            page.find('form').removeClass('is-hidden').next('.l-form').remove(); // reset Forgot form after success sending of letter
-            page.find('input:file').prev().find('.avatar').css('background-image', 'url(' + QMCONFIG.defAvatar.url + ')')
-                .siblings('span')
-                .text(QMCONFIG.defAvatar.caption);
-            page.find('input:checkbox').prop('checked', false);
+        User.signup();
+    },
 
-            // start watch location if the option is enabled
-            if (localStorage['QM.latitude'] && localStorage['QM.longitude']) {
-                localStorage.removeItem('QM.latitude');
-                localStorage.removeItem('QM.longitude');
+    loginForm() {
+        clearErrors();
+        User.login();
+    },
 
-                Location.toggleGeoCoordinatesToLocalStorage(true, function(res, err) {
-                    Helpers.log('Location: ', err || res);
-                });
+    forgotForm() {
+        clearErrors();
+        User.forgot();
+    },
+
+    resetForm() {
+        clearErrors();
+        User.resetPass();
+    },
+
+    autologin() {
+        switchPage($('#loginPage'));
+        User.autologin();
+    },
+
+    createSpinner() {
+        $('section:visible form').addClass('is-hidden').next('.l-spinner').removeClass('is-hidden');
+    },
+
+    removeSpinner() {
+        $('section:visible form').removeClass('is-hidden').next('.l-spinner').addClass('is-hidden');
+    },
+
+
+    successFormCallback() {
+        const $profileAvatar = $('#avatar-container');
+
+        this.removeSpinner();
+        $profileAvatar.addClass('profileUserAvatar').css('background-image', `url(${User.contact.avatar_url})`);
+        $profileAvatar.attr('data-id', User.contact.id);
+        $profileAvatar.attr('data-name', User.contact.full_name);
+        switchPage($('#mainPage'));
+        this.app.views.Dialog.createDataSpinner();
+    },
+
+    successSendEmailCallback() {
+        let alert = '<div class="j-success_callback note l-form l-flexbox l-flexbox_column">';
+        alert += '<span class="text text_alert text_alert_success">Success!</span>';
+        alert += '<span class="text">Please check your email and click a link in the letter in order to reset your password</span>';
+        alert += '</div>';
+
+        this.removeSpinner();
+        $('section:visible form').addClass('is-hidden').after(alert);
+    },
+
+    getFBStatus(cb) {
+        if (typeof FB === 'undefined') {
+            // Wait until FB SDK will be downloaded and then calling this function again
+            FBCallback = cb;
+            sessionStorage.setItem('QM.is_getFBStatus', true);
+            return;
+        }
+
+        const callback = cb || FBCallback;
+        FBCallback = null;
+
+        FB.getLoginStatus((response) => {
+            Helpers.log('FB status response', response);
+            if (callback) {
+                // situation when you are recovering QB session via FB
+                // and FB accessToken has expired
+                if (response.status === 'connected') {
+                    callback(response.authResponse.accessToken);
+                } else {
+                    FB.login((res) => {
+                        Helpers.log('FB authResponse', res);
+                        if (res.status === 'connected') callback(res.authResponse.accessToken);
+                    });
+                }
+            }
+        }, true);
+    },
+
+    profilePopover(objDom) {
+        const html = QMHtml.User.profilePopover();
+
+        objDom.after(html);
+        appearAnimation();
+    },
+
+    contactPopover(objDom) {
+        const ids = objDom.parent().data('id');
+        const dialogId = objDom.parent().data('dialog');
+        const { roster } = ContactList;
+        const { dialogs } = Entities.Collections;
+        const dialog = dialogs.get(dialogId).toJSON();
+        const htmlTpl = QMHtml.User.contactPopover({
+            dialogId,
+            dialogType: dialog.type,
+            occupantsIds: dialog.occupants_ids,
+            ids,
+        }, roster[ids]);
+
+        objDom.after(htmlTpl)
+            .parent().addClass('is-contextmenu');
+
+        appearAnimation();
+
+        const elemPosition = objDom.offset().top;
+        const list = document.querySelector('.j-scrollbar_aside');
+        const topListOffset = list.offsetTop;
+        const listHeigth = list.offsetHeight;
+        let listViewPort = 0;
+        const botListOffset = listHeigth + topListOffset;
+        const dropList = objDom.next();
+        const dropListElemCount = objDom.next().children().length;
+        const botElemPosition = botListOffset - elemPosition;
+        const elemPositionInList = elemPosition - topListOffset;
+
+        $('.j-aside_list_item').each((index, element) => {
+            listViewPort += element.offsetHeight;
+        });
+
+        if ((botElemPosition <= dropListElemCount * 50)
+            && (elemPositionInList > dropListElemCount * 40)) {
+            dropList.addClass('margin-up');
+        }
+
+        if (listViewPort <= 400) {
+            list.style.paddingBottom = `${dropListElemCount * 40}px`;
+        }
+    },
+
+    occupantPopover(objDom, e) {
+        const id = objDom.data('id');
+        const jid = QB.chat.helpers.getUserJid(id, QMCONFIG.qbAccount.appId);
+        const { roster } = ContactList;
+        const position = e.currentTarget.getBoundingClientRect();
+        const htmlTpl = QMHtml.User.occupantPopover({
+            id,
+            jid,
+        }, roster[id]);
+
+        $('body').append(htmlTpl);
+
+        appearAnimation();
+
+        objDom.addClass('is-active');
+
+        $('.list-actions_occupants').offset({
+            top: (29 + position.top),
+            left: position.left,
+        });
+    },
+
+    buildDetails(userId) {
+        const popup = $('#popupDetails');
+        const contact = ContactList.contacts[userId];
+        const { roster } = ContactList;
+        const chatStatus = roster[userId] ? roster[userId] : null;
+
+        if (navigator.userAgent.match(/Firefox/)) {
+            popup.find('.userDetails-controls button').css('padding', '0 12px');
+        }
+
+        popup.find('.userDetails-avatar').attr('data-id', userId).css('background-image', `url(${contact.avatar_url})`);
+        popup.find('.userDetails-filename').attr('data-id', userId).text(contact.full_name);
+
+        popup.find('.userDetails-status').attr('data-id', userId).text(contact.status);
+
+        if (chatStatus && chatStatus.status) {
+            popup.find('.userDetails-chatStatus').html('<span class="status status_online"></span><span class="status_text">Online</span>');
+        } else {
+            popup.find('.userDetails-chatStatus').html('<span class="status"></span><span class="status_text">Offline</span>');
+        }
+
+        popup.find('.writeMessage').data('id', userId);
+
+        popup.find('.userDetails-field').attr('data-id', userId).html(
+            contact.phone
+                ? `<span class="userDetails-label">Phone:</span><span class="userDetails-phone">${contact.phone}</span>`
+                : '',
+        );
+
+        this.getNewProfile(userId);
+    },
+
+    getNewProfile(userId) {
+        const QBApiCalls = this.app.service;
+        const { Contact } = this.app.models;
+
+        QBApiCalls.getUser(userId, (user) => {
+            const contact = Contact.create(user);
+            ContactList.contacts[contact.id] = contact;
+
+            $(`.profileUserName[data-id="${contact.id}"]`).text(contact.full_name);
+            $(`.profileUserStatus[data-id="${contact.id}"]`).text(contact.status);
+            if (contact.phone) {
+                $(`.profileUserPhone[data-id="${contact.id}"]`).html(
+                    `<span class="userDetails-label">Phone:</span><span class="userDetails-phone">${contact.phone}</span>`,
+                );
+            }
+            $(`.profileUserAvatar[data-id="${contact.id}"]`).css('background-image', `url(${contact.avatar_url})`);
+
+            localStorage.setItem(`QM.contact-${contact.id}`, JSON.stringify(contact));
+        });
+    },
+
+    logout() {
+        const DialogView = this.app.views.Dialog;
+
+        $('.mediacall .btn_hangup').click();
+
+        User.logout(() => {
+            switchOnWelcomePage();
+            $('.j-capBox').removeClass('is-hidden');
+            $('.j-chatWrap').addClass('is-hidden');
+            $('.j-popover_const').removeClass('is-active');
+            $('.l-chat').remove();
+            Helpers.log('current User and Session were destroyed');
+            DialogView.logoutWithClearData();
+        });
+    },
+
+    localSearch(form) {
+        const val = form.find('input[type="search"]').val().trim().toLowerCase();
+        const selected = $('#searchList li.is-selected').data('dialog');
+        const $notSearchLists = $('#recentList, #historyList, #requestsList');
+
+        if (val.length > 0) {
+            $('#searchList').removeClass('is-hidden').siblings('section').addClass('is-hidden');
+            $('#searchList ul').html('').add('#searchList .note').removeClass('is-hidden');
+
+            $('#recentList, #historyList, #oldHistoryList').find('.dialog-item').each(function() {
+                const name = $(this).find('.name').text().toLowerCase();
+                const li = $(this).clone();
+
+                if (name.indexOf(val) > -1) {
+                    $('#searchList ul').append(li);
+                    $('#searchList .note').addClass('is-hidden');
+                }
+            });
+
+            if ($('#searchList ul').find('li').length === 0) {
+                $('#searchList .note').removeClass('is-hidden').siblings('ul').addClass('is-hidden');
+            }
+        } else {
+            $('#searchList').addClass('is-hidden');
+            $notSearchLists.each(function() {
+                const $this = $(this);
+
+                if ($this.find('.list-item').length > 0) {
+                    $this.removeClass('is-hidden');
+                }
+
+                if (selected) {
+                    $this.find(`.list-item[data-dialog="${selected}"]`).addClass('is-selected');
+                }
+            });
+            if ($('.l-list-wrap section:not(#searchList) .list-item').length === 0) {
+                $('#emptyList').removeClass('is-hidden');
             }
         }
-    };
+    },
 
-    switchOnWelcomePage = function() {
-        $('body').addClass('is-welcome');
-        $('#welcomePage').removeClass('is-hidden').siblings('section').addClass('is-hidden');
-    };
+    friendsSearch(form) {
+        const val = form.find('input[type="search"]').val().trim().toLowerCase();
+        const result = form.next();
 
-    appearAnimation = function() {
-        $('.popover:not(.j-popover_const)').fadeIn(150);
-    };
+        result.find('ul').removeClass('is-hidden').siblings().addClass('is-hidden');
+        result.find('ul li').removeClass('is-hidden');
 
-    return UserView;
-});
+        if (val.length > 0) {
+            result.find('ul li').each(function() {
+                const name = $(this).find('.name').text().toLowerCase();
+                const li = $(this);
+
+                if (name.indexOf(val) === -1) {
+                    li.addClass('is-hidden');
+                }
+            });
+
+            if (result.find('ul li:visible').length === 0) {
+                result.find('.note').removeClass('is-hidden').siblings().addClass('is-hidden');
+            }
+        }
+    },
+
+};
+
+/* Private
+---------------------------------------------------------------------- */
+clearErrors = function() {
+    $('.is-error').removeClass('is-error');
+};
+
+switchPage = function(page) {
+    $('body').removeClass('is-welcome');
+    page.removeClass('is-hidden').siblings('section').addClass('is-hidden');
+
+    // reset form
+    clearErrors();
+    $('.no-connection').addClass('is-hidden');
+    page.find('input').val('');
+    if (!page.is('#mainPage')) {
+        page.find('form').removeClass('is-hidden').next('.l-form').remove(); // reset Forgot form after success sending of letter
+        page.find('input:file').prev().find('.avatar').css('background-image', `url(${QMCONFIG.defAvatar.url})`)
+            .siblings('span')
+            .text(QMCONFIG.defAvatar.caption);
+        page.find('input:checkbox').prop('checked', false);
+
+        // start watch location if the option is enabled
+        if (localStorage['QM.latitude'] && localStorage['QM.longitude']) {
+            localStorage.removeItem('QM.latitude');
+            localStorage.removeItem('QM.longitude');
+
+            Location.toggleGeoCoordinatesToLocalStorage(true, (res, err) => {
+                Helpers.log('Location: ', err || res);
+            });
+        }
+    }
+};
+
+switchOnWelcomePage = function() {
+    $('body').addClass('is-welcome');
+    $('#welcomePage').removeClass('is-hidden').siblings('section').addClass('is-hidden');
+};
+
+appearAnimation = function() {
+    $('.popover:not(.j-popover_const)').fadeIn(150);
+};
+
+module.exports = UserView;

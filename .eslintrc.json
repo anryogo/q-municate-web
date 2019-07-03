@@ -1,22 +1,39 @@
 {
+    "parser": "babel-eslint",
     "extends": [
-        "airbnb-base/legacy",
-        "plugin:requirejs/recommended",
+        "airbnb-base",
         "plugin:backbone/recommended"
     ],
     "env": {
         "browser": true,
-        "jquery": true
+        "jquery": true,
+        "commonjs": true,
+        "es6": true
     },
     "globals": {
+        "GMaps": "readonly",
         "FB": "readonly",
         "QB": "readonly",
         "firebase": "readonly"
     },
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "script"
+    },
+    "settings": {
+        "import/resolver": {
+            "webpack": {
+                "config": "webpack.config.js"
+            }
+        },
+        "import/core-modules": [
+            "Events",
+            "Entities"
+        ]
+    },
     "plugins": [
         "optimize-regex",
         "no-loops",
-        "requirejs",
         "backbone"
     ],
     "rules": {
@@ -28,7 +45,6 @@
 
         "optimize-regex/optimize-regex": "warn",
         "no-loops/no-loops": "error",
-        "requirejs/one-dependency-per-line": "error",
         "backbone/no-native-jquery": "off",
         "backbone/initialize-on-top": ["warn", {
             "View": [

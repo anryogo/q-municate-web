@@ -1,10 +1,12 @@
-var DEBUG = Number(process.env.NODE_ENV !== 'production');
+'use strict';
 
-var baseSettings = {
+const DEBUG = Number(process.env.NODE_ENV !== 'production');
+
+const baseSettings = {
     debug: DEBUG,
 
     notification: {
-        timeout: 7
+        timeout: 7,
     },
 
     defAvatar: {
@@ -12,7 +14,7 @@ var baseSettings = {
         url_png: 'images/ava-single.png',
         group_url: 'images/ava-group.svg',
         group_url_png: 'images/ava-group.png',
-        caption: 'Choose user picture'
+        caption: 'Choose user picture',
     },
 
     // Loadable limit of messages by one request. Useful for pagination.
@@ -26,8 +28,8 @@ var baseSettings = {
     MAX_RECORD_TIME: 30,
 
     patterns: {
-        name: ".{3,50}",
-        password: ".{8,40}"
+        name: '.{3,50}',
+        password: '.{8,40}',
     },
 
     errors: {
@@ -49,24 +51,24 @@ var baseSettings = {
         unauthorized: 'The email or password is incorrect',
         notFoundEmail: 'The email you entered wasn\'t found',
         crashFBToken: 'Sorry, we noticed that you had logged out from Facebook so we need to recreate your FB token now. Please click the Connect with FB button again',
-        FBAccountExists: 'This FB user already has an account in the Q-municate. You can\'t combine two Q-municate users'
+        FBAccountExists: 'This FB user already has an account in the Q-municate. You can\'t combine two Q-municate users',
     },
 
     QBconf: {
         chatReconnectionTimeInterval: 2,
         chatProtocol: {
             // BOSH protocol = 1, WebSocket = 2
-            active: 2
+            active: 2,
         },
         debug: {
             mode: DEBUG,
-            file: null
+            file: null,
         },
         webrtc: {
             answerTimeInterval: 45,
-            statsReportTimeInterval: 5
-        }
-    }
+            statsReportTimeInterval: 5,
+        },
+    },
 };
 
 module.exports = baseSettings;

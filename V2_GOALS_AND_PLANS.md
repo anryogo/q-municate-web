@@ -22,10 +22,10 @@
 8. ~~Convert old css to scss syntax~~
 9. ~~Add autoprefixer~~
 10. ~~Add eslint and remove jshint configuration~~
-11. Add babel
-12. Convert js code to ES2015+ syntax
-13. Set webpack
-14. Rewrite RequireJS modules to CommonJS modules
+11. ~~Add babel~~
+12. ~~Convert js code to ES2015+ syntax~~
+13. ~~Set webpack instead RequireJS~~
+14. ~~Rewrite AMD to CommonJS modules~~
 15. Migrate the vendor libs to npm packages
 16. Update all dependencies to the latest versions
 17. Split the project architecture according to component approach
