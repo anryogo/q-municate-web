@@ -3,13 +3,12 @@
 const $ = require('jquery');
 const _ = require('underscore');
 const Backbone = require('backbone');
+const QB = require('quickblox');
 
 const QMCONFIG = require('config');
 const Helpers = require('./helpers');
 
 /** ****************** Module for dialogs and messages ************************ */
-const { QB } = window;
-
 const entities = {
     Models: {},
     Views: {},

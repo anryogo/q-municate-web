@@ -1,6 +1,7 @@
 'use strict';
 
 const $ = require('jquery');
+const QB = require('quickblox');
 
 const QMCONFIG = require('config');
 const Helpers = require('../helpers');

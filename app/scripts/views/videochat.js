@@ -1,6 +1,7 @@
 'use strict';
 
 const $ = require('jquery');
+const QB = require('quickblox');
 const QBNotification = require('web-notifications');
 
 const QMCONFIG = require('config');

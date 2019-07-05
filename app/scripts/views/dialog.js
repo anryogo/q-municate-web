@@ -2,6 +2,7 @@
 
 const $ = require('jquery');
 const _ = require('underscore');
+const QB = require('quickblox');
 const Ps = require('perfect-scrollbar');
 
 require('malihu-custom-scrollbar-plugin');

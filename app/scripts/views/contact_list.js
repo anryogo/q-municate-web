@@ -2,6 +2,7 @@
 
 const $ = require('jquery');
 const _ = require('underscore');
+const QB = require('quickblox');
 
 require('malihu-custom-scrollbar-plugin');
 require('jquery-mousewheel');

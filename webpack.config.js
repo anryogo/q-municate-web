@@ -1,25 +1,40 @@
 'use strict';
 
 const path = require('path');
-const webpack = require('webpack');
 
 const basePath = path.resolve(__dirname, 'app');
 const settingsPath = path.resolve(__dirname, 'settings');
 
+const isDevMode = process.env.NODE_ENV === 'development';
+
 module.exports = {
     mode: process.env.NODE_ENV,
-    devtool: process.env.NODE_ENV === 'development' ? 'cheap-module-source-map' : false,
+    devtool: isDevMode ? 'cheap-module-source-map' : false,
 
-    entry: './app/scripts/main.js',
+    entry: {
+        build: './app/scripts/main.js',
+    },
     output: {
+        filename: '[name].js',
         path: `${basePath}/.tmp`,
-        filename: 'build.js',
+    },
+
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                vendor: {
+                    test: /node_modules/,
+                    chunks: 'initial',
+                    name: 'vendor',
+                },
+            },
+        },
     },
 
     resolve: {
         modules: [
             `${basePath}/vendor`,
-            path.resolve(__dirname, 'node_modules'),
+            'node_modules',
         ],
         alias: {
             // libs
@@ -47,19 +62,14 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                exclude: [
-                    path.resolve(__dirname, 'node_modules'),
-                    `${basePath}/vendor`,
-                    `${basePath}/workers`,
-                ],
-                loader: 'babel-loader',
+                exclude: /(node_modules|vendor|workers)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        cacheDirectory: true,
+                    },
+                },
             },
         ],
     },
-
-    plugins: [
-        new webpack.optimize.LimitChunkCountPlugin({
-            maxChunks: 1,
-        }),
-    ],
 };

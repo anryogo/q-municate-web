@@ -11,8 +11,7 @@
     },
     "globals": {
         "GMaps": "readonly",
-        "FB": "readonly",
-        "QB": "readonly"
+        "FB": "readonly"
     },
     "parserOptions": {
         "ecmaVersion": 2018,

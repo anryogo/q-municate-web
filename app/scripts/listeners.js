@@ -1,11 +1,10 @@
 'use strict';
 
 const $ = require('jquery');
+const QB = require('quickblox');
 const Ps = require('perfect-scrollbar');
 
 const Helpers = require('./helpers');
-
-const { QB } = window;
 
 let self;
 

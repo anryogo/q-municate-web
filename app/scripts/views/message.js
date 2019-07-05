@@ -2,6 +2,7 @@
 
 const $ = require('jquery');
 const _ = require('underscore');
+const QB = require('quickblox');
 const QBNotification = require('web-notifications');
 
 const QMCONFIG = require('config');
