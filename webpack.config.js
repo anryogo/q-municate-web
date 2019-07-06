@@ -3,6 +3,7 @@
 const path = require('path');
 const autoprefixer = require('autoprefixer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isDevMode = process.env.NODE_ENV === 'development';
 
@@ -105,10 +106,25 @@ module.exports = {
                     limit: 8192,
                 },
             },
+            {
+                test: /\.html$/,
+                use: 'html-loader',
+            },
         ],
     },
 
     plugins: [
         new MiniCssExtractPlugin(),
+        new HtmlWebpackPlugin({
+            template: `${basePath}/index.html`,
+        }),
+        new HtmlWebpackPlugin({
+            filename: '404.html',
+            template: `${basePath}/404.html`,
+            excludeChunks: [
+                'build',
+                'vendor',
+            ],
+        }),
     ],
 };
