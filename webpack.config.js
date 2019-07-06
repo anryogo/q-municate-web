@@ -1,11 +1,13 @@
 'use strict';
 
 const path = require('path');
+const autoprefixer = require('autoprefixer');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const isDevMode = process.env.NODE_ENV === 'development';
 
 const basePath = path.resolve(__dirname, 'app');
 const settingsPath = path.resolve(__dirname, 'settings');
-
-const isDevMode = process.env.NODE_ENV === 'development';
 
 module.exports = {
     mode: process.env.NODE_ENV,
@@ -23,7 +25,7 @@ module.exports = {
         splitChunks: {
             cacheGroups: {
                 vendor: {
-                    test: /node_modules/,
+                    test: /(node_modules|vendor)/,
                     chunks: 'initial',
                     name: 'vendor',
                 },
@@ -70,6 +72,43 @@ module.exports = {
                     },
                 },
             },
+            {
+                test: /\.css$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                ],
+            },
+            {
+                test: /\.scss$/,
+                exclude: /(node_modules|vendor)/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    { loader: 'css-loader', options: { sourceMap: true } },
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            ident: 'postcss',
+                            plugins: [autoprefixer],
+                            sourceMap: true,
+                        },
+                    },
+                    { loader: 'sass-loader', options: { sourceMap: true } },
+                ],
+            },
+            {
+                test: /\.(png|jpe?g|gif|svg)$/,
+                loader: 'url-loader',
+                options: {
+                    name: '[name].[ext]',
+                    outputPath: 'images',
+                    limit: 8192,
+                },
+            },
         ],
     },
+
+    plugins: [
+        new MiniCssExtractPlugin(),
+    ],
 };

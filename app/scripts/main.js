@@ -11,6 +11,8 @@ const minEmoji = require('minEmoji');
 const QM = require('./app');
 const Helpers = require('./helpers');
 
+require('../styles/main.scss');
+
 let APP;
 
 // Application initialization
