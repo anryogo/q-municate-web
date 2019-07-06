@@ -6,7 +6,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isDevMode = process.env.NODE_ENV === 'development';
-
 const basePath = path.resolve(__dirname, 'app');
 const settingsPath = path.resolve(__dirname, 'settings');
 
@@ -19,7 +18,7 @@ module.exports = {
     },
     output: {
         filename: '[name].js',
-        path: `${basePath}/.tmp`,
+        path: path.resolve(__dirname, 'dist'),
     },
 
     optimization: {
@@ -46,7 +45,7 @@ module.exports = {
             intlTelInputUtils: 'intl-tel-input/js/utils',
             progressbar: 'progressbar/progressbar.min',
 
-            // Q-municate application
+            // application
             config: `${settingsPath}/env`,
             models: `${basePath}/scripts/models`,
             views: `${basePath}/scripts/views`,
@@ -74,13 +73,6 @@ module.exports = {
                 },
             },
             {
-                test: /\.css$/,
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
-                ],
-            },
-            {
                 test: /\.scss$/,
                 exclude: /(node_modules|vendor)/,
                 use: [
@@ -95,6 +87,13 @@ module.exports = {
                         },
                     },
                     { loader: 'sass-loader', options: { sourceMap: true } },
+                ],
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
                 ],
             },
             {
@@ -127,4 +126,12 @@ module.exports = {
             ],
         }),
     ],
+
+    devServer: {
+        contentBase: path.resolve(__dirname, 'dist'),
+        port: 9000,
+        historyApiFallback: {
+            rewrites: [{ from: /./, to: '/404.html' }],
+        },
+    },
 };
