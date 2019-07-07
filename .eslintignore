@@ -1,2 +1,2 @@
-app/vendor
-app/workers
+src/app/vendor
+src/assets/workers

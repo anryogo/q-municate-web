@@ -191,7 +191,7 @@
                         <div class="header-logo">
                             <a id="home" class="j-home" href="#">
                                 <div class="l-header-logo">
-                                    <img src="images/app_icon_launch.svg" width="32" height="32" alt="Q-municate">
+                                    <img src="~images/app_icon_launch.svg" width="32" height="32" alt="Q-municate">
                                     <p class="l-header-logo-text">q-municate</p>
                                 </div>
 
@@ -263,7 +263,7 @@
                     <section id="capBox" class="l-workspace l-flexbox j-capBox">
                         <div class="l-cap l-flexbox l-flexbox_column">
                             <span class="cap-text">Is anybody here?</span>
-                            <img class="cap-anybody" src="images/anybody.png" alt="QuickBlox anybody">
+                            <img class="cap-anybody" src="~images/anybody.png" alt="QuickBlox anybody">
                             <button class="search btn btn_add btn_invite without_M">
                                 <div class="btn-icon btn-icon_invite"></div>Search for Friends</button>
                         </div>
@@ -325,11 +325,11 @@
 
         <footer class="l-footer l-flexbox l-flexbox_flexbetween">
             <div class="footer-logo">
-                <a href="//quickblox.com" target="_blank"><img src="images/logo-quickblox-gray.svg" alt="QuickBlox"></a>
+                <a href="//quickblox.com" target="_blank"><img src="~images/logo-quickblox-gray.svg" alt="QuickBlox"></a>
             </div>
             <div class="footer-apps l-flexbox">
-                <a class="footer-apps-ios" href="//itunes.apple.com/us/app/q-municate/id909698517" target="_blank"><img src="images/icon-ios.svg" alt="download Q-municate iOS"></a>
-                <a href="//play.google.com/store/apps/details?id=com.quickblox.qb_qmunicate" target="_blank"><img src="images/icon-android.svg" alt="download Q-municate Android"></a>
+                <a class="footer-apps-ios" href="//itunes.apple.com/us/app/q-municate/id909698517" target="_blank"><img src="~images/icon-ios.svg" alt="download Q-municate iOS"></a>
+                <a href="//play.google.com/store/apps/details?id=com.quickblox.qb_qmunicate" target="_blank"><img src="~images/icon-android.svg" alt="download Q-municate Android"></a>
             </div>
             <div class="j-appVersion l-app-version"></div>
         </footer>
@@ -422,7 +422,7 @@
     <div id="popupIncoming" class="popup incoming-call-popup is-open"></div>
 
     <div id="popupAttach" class="popup popup_attach">
-        <img class="attach-photo" src="images/photo_preloader.gif" alt="attach">
+        <img class="attach-photo" src="~images/photo_preloader.gif" alt="attach">
         <div class="attach-description l-flexbox l-flexbox_flexbetween">
             <span class="attach-name"></span>
             <a class="attach-download" href="" target="_blank" download="">Download</a>
@@ -515,7 +515,7 @@
             <div class="l-cap l-cap_contacts l-flexbox l-flexbox_column">
                 <span class="cap-text cap-text_contacts">It's a little lonely<br>over here</span>
                 <button class="search btn btn_invite btn_invite_contacts btn_add">
-                    <img class="btn-icon btn-icon_invite btn-icon_invite_contacts" src="images/icon-invite.svg" alt="invite"> Search for Friends
+                    <img class="btn-icon btn-icon_invite btn-icon_invite_contacts" src="~images/icon-invite.svg" alt="invite"> Search for Friends
                 </button>
             </div>
         </div>
@@ -647,29 +647,29 @@
                     <div class="chat-controls">
                         <% if (type === 3) { %>
                         <button class="btn_chat btn_chat_videocall videoCall" data-id="<%= user_id %>" data-balloon="Make a video call" data-balloon-pos="down">
-                            <img src="images/icon-videocall.svg" alt="Make a Video Call">
+                            <img src="~images/icon-videocall.svg" alt="Make a Video Call">
                         </button>
                         <button class="btn_chat btn_chat_audiocall audioCall" data-id="<%= user_id %>" data-balloon="Make an audio call" data-balloon-pos="down">
-                            <img src="images/icon-audiocall.svg" alt="Make an Audio Call">
+                            <img src="~images/icon-audiocall.svg" alt="Make an Audio Call">
                         </button>
                         <button class="btn_chat btn_chat_profile userDetails" data-id="<%= user_id %>" data-balloon="Show user profile" data-balloon-pos="down">
-                            <img src="images/icon-profile.svg" alt="Show user profile">
+                            <img src="~images/icon-profile.svg" alt="Show user profile">
                         </button>
                         <button class="btn_chat btn_chat_add createGroupChat" data-ids="<%= occupantsIds.join() %>" data-private="1" data-balloon="Create a new group chat with the current user" data-balloon-pos="down">
-                            <img src="images/icon-add.svg" alt="Create a new group chat">
+                            <img src="~images/icon-add.svg" alt="Create a new group chat">
                         </button>
                         <button class="btn_chat btn_chat_delete deleteContact j-deleteContact" data-balloon="Delete contact" data-balloon-pos="down">
-                            <img src="images/icon-profile-delete.svg" alt="Delete contact">
+                            <img src="~images/icon-profile-delete.svg" alt="Delete contact">
                         </button>
                         <button class="btn_chat btn_chat_delete deleteChat j-deleteChat" data-balloon="Remove chat" data-balloon-pos="down">
-                            <img src="images/icon-delete.svg" alt="Remove chat">
+                            <img src="~images/icon-delete.svg" alt="Remove chat">
                         </button>
                         <% } else { %>
                         <button class="btn_chat btn_chat_add addToGroupChat" data-ids="<%= occupantsIds.join() %>" data-dialog="<%= dialog_id %>" data-balloon="Add occupants to group chat" data-balloon-pos="down">
-                            <img src="images/icon-add.svg" alt="Add occupants to group chat">
+                            <img src="~images/icon-add.svg" alt="Add occupants to group chat">
                         </button>
                         <button class="btn_chat btn_chat_leave deleteChat j-deleteChat" data-balloon="Leave chat and clear history" data-balloon-pos="down">
-                            <img src="images/icon-exit.svg" alt="Leave chat">
+                            <img src="~images/icon-exit.svg" alt="Leave chat">
                         </button>
                         <% } %>
                     </div>

@@ -6,7 +6,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isDevMode = process.env.NODE_ENV === 'development';
-const basePath = path.resolve(__dirname, 'app');
+const basePath = path.resolve(__dirname, 'src/app');
+const assetsPath = path.resolve(__dirname, 'src/assets');
 const settingsPath = path.resolve(__dirname, 'settings');
 
 module.exports = {
@@ -14,7 +15,7 @@ module.exports = {
     devtool: isDevMode ? 'cheap-module-source-map' : false,
 
     entry: {
-        build: './app/scripts/main.js',
+        build: './src/app/scripts/main.js',
     },
     output: {
         filename: '[name].js',
@@ -49,6 +50,7 @@ module.exports = {
             config: `${settingsPath}/env`,
             models: `${basePath}/scripts/models`,
             views: `${basePath}/scripts/views`,
+            images: `${assetsPath}/images`,
         },
     },
 
@@ -128,7 +130,10 @@ module.exports = {
     ],
 
     devServer: {
-        contentBase: path.resolve(__dirname, 'dist'),
+        contentBase: [
+            path.resolve(__dirname, 'dist'),
+            path.resolve(__dirname, 'src/assets'),
+        ],
         port: 9000,
         historyApiFallback: {
             rewrites: [{ from: /./, to: '/404.html' }],
