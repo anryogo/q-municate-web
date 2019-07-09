@@ -5,21 +5,17 @@ const autoprefixer = require('autoprefixer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const isDevMode = process.env.NODE_ENV === 'development';
-const basePath = path.resolve(__dirname, 'src/app');
-const assetsPath = path.resolve(__dirname, 'src/assets');
-const settingsPath = path.resolve(__dirname, 'settings');
+const basePath = path.resolve('src/app');
+const assetsPath = path.resolve('src/assets');
+const settingsPath = path.resolve('settings');
+const distPath = path.resolve('dist');
 
 module.exports = {
-    mode: process.env.NODE_ENV,
-    devtool: isDevMode ? 'cheap-module-source-map' : false,
+    entry: `${basePath}/scripts/main.js`,
 
-    entry: {
-        build: './src/app/scripts/main.js',
-    },
     output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, 'dist'),
+        filename: '[name].[hash].js',
+        path: distPath,
     },
 
     optimization: {
@@ -100,11 +96,13 @@ module.exports = {
             },
             {
                 test: /\.(png|jpe?g|gif|svg)$/,
-                loader: 'url-loader',
-                options: {
-                    name: '[name].[ext]',
-                    outputPath: 'images',
-                    limit: 8192,
+                use: {
+                    loader: 'url-loader',
+                    options: {
+                        name: '[name].[ext]',
+                        outputPath: 'images',
+                        limit: 8192,
+                    },
                 },
             },
             {
@@ -115,7 +113,9 @@ module.exports = {
     },
 
     plugins: [
-        new MiniCssExtractPlugin(),
+        new MiniCssExtractPlugin({
+            filename: '[name].[hash].css',
+        }),
         new HtmlWebpackPlugin({
             template: `${basePath}/index.html`,
         }),
@@ -123,20 +123,9 @@ module.exports = {
             filename: '404.html',
             template: `${basePath}/404.html`,
             excludeChunks: [
-                'build',
+                'main',
                 'vendor',
             ],
         }),
     ],
-
-    devServer: {
-        contentBase: [
-            path.resolve(__dirname, 'dist'),
-            path.resolve(__dirname, 'src/assets'),
-        ],
-        port: 9000,
-        historyApiFallback: {
-            rewrites: [{ from: /./, to: '/404.html' }],
-        },
-    },
 };
