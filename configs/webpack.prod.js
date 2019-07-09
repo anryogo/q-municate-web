@@ -24,6 +24,16 @@ module.exports = merge(common, {
         minimizer: [
             new TerserJSPlugin(),
             new OptimizeCSSAssetsPlugin(),
+            new ImageminPlugin({
+                imageminOptions: {
+                    plugins: [
+                        'gifsicle',
+                        'jpegtran',
+                        'optipng',
+                        'svgo',
+                    ],
+                },
+            }),
         ],
     },
 
@@ -31,16 +41,6 @@ module.exports = merge(common, {
         new webpack.BannerPlugin({
             exclude: /vendor/,
             banner,
-        }),
-        new ImageminPlugin({
-            imageminOptions: {
-                plugins: [
-                    'gifsicle',
-                    'jpegtran',
-                    'optipng',
-                    'svgo',
-                ],
-            },
         }),
     ],
 });

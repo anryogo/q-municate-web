@@ -11,7 +11,7 @@
   "private": true,
   "scripts": {
     "start": "npm run server",
-    "server": "webpack-dev-server --config configs/webpack.dev.js --progress",
+    "server": "webpack-dev-server --config configs/webpack.dev.js --progress --open",
     "build": "npm-run-all lint clean compile copy:assets",
     "clean": "rimraf dist",
     "compile": "webpack --config configs/webpack.prod.js --progress",
