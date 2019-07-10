@@ -76,7 +76,7 @@ If you want to build your own app using Q-municate as a base, please do the foll
 
 1. Install [NodeJS](https://nodejs.org/en/download/) (**10+** version includes npm **6+**) before start.
 2. Run `npm install` to install all additional packages in your terminal as an administrator.		
-3. Copy the QuickBlox credentials (App ID, Authorization key, Authorization secret), your Facebook App ID ([How to generate and save Facebook application ID](https://quickblox.com/developers/How_to_generate_and_save_Facebook_application_ID)) and your Firebase settings into project code in `settings/env/(development|production).js`. This will configure Q-municate application for you.
+3. Copy the QuickBlox credentials (App ID, Authorization key, Authorization secret), your Facebook App ID ([How to generate and save Facebook application ID](https://quickblox.com/developers/How_to_generate_and_save_Facebook_application_ID)) and your Firebase settings into project code in `settings/credentials.js`. This will configure Q-municate application for you.
 
 ![](https://quickblox.com/developers/images/9/95/Js_qm_project.png)
 ![](https://quickblox.com/developers/images/0/05/Endpoints.png)
