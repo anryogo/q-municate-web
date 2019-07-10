@@ -1,8 +1,10 @@
 'use strict';
 
+const credentials = require('./credentials');
+
 const DEBUG = Number(process.env.NODE_ENV !== 'production');
 
-const baseSettings = {
+const settings = Object.assign({}, credentials, {
     debug: DEBUG,
 
     notification: {
@@ -69,6 +71,6 @@ const baseSettings = {
             statsReportTimeInterval: 5,
         },
     },
-};
+});
 
-module.exports = baseSettings;
+module.exports = settings;

@@ -1,8 +1,6 @@
 'use strict';
 
-const baseSettings = require('./base');
-
-const settings = Object.assign({}, baseSettings, {
+const credentials = {
     qbAccount: {
         appId: 76743,
         authKey: 'exCV7U-V4BY-t4X',
@@ -23,6 +21,6 @@ const settings = Object.assign({}, baseSettings, {
         messagingSenderId: '661916700459',
         appId: '1:661916700459:web:8e67c75e0d3d6ce6',
     },
-});
+};
 
-module.exports = settings;
+module.exports = credentials;

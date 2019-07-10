@@ -15,7 +15,7 @@
     "build": "npm-run-all lint clean compile copy:assets",
     "clean": "rimraf dist",
     "compile": "webpack --config configs/webpack.prod.js --progress",
-    "copy:assets": "cpy audio/ workers/ \"../../dist\" --cwd=src/assets --parents",
+    "copy:assets": "cpy audio/ images/ workers/ \"../../dist\" --cwd=src/assets --parents",
     "test": "npm run lint",
     "lint": "npm-run-all --parallel lint:*",
     "lint:css": "stylelint src/app/styles",

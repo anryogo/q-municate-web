@@ -43,7 +43,7 @@ module.exports = {
             progressbar: 'progressbar/progressbar.min',
 
             // application
-            config: `${settingsPath}/env`,
+            config: `${settingsPath}/settings`,
             models: `${basePath}/scripts/models`,
             views: `${basePath}/scripts/views`,
             images: `${assetsPath}/images`,
