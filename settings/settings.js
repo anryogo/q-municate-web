@@ -1,9 +1,8 @@
-'use strict';
-
 const credentials = require('./credentials');
 
 const DEBUG = Number(process.env.NODE_ENV !== 'production');
 
+/* eslint-disable-next-line prefer-object-spread */
 const settings = Object.assign({}, credentials, {
     debug: DEBUG,
 

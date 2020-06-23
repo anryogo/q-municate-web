@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const QB = require('quickblox');
 const QBNotification = require('web-notifications');
@@ -501,7 +499,6 @@ VideoChatView.prototype.startCall = function(className, dialogId) {
             return;
         }
         QBApiCalls.sendPushNotification(calleeId, fullName);
-
 
         VoiceMessage.resetRecord();
         VoiceMessage.blockRecorder('during a call');

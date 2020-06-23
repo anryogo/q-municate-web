@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const QB = require('quickblox');
 
@@ -96,7 +94,6 @@ UserView.prototype = {
     removeSpinner() {
         $('section:visible form').removeClass('is-hidden').next('.l-spinner').addClass('is-hidden');
     },
-
 
     successFormCallback() {
         const $profileAvatar = $('#avatar-container');

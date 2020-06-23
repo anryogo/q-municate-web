@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const _ = require('underscore');
 const QB = require('quickblox');
@@ -710,7 +708,6 @@ MessageView.prototype = {
 
         const lastMessage = $chat.find('article[data-type="message"]').last();
         msg.stack = Message.isStack(true, msg, lastMessage);
-
 
         // subscribe message
         if (notificationType === '4') {

@@ -1,5 +1,3 @@
-'use strict';
-
 const credentials = {
     qbAccount: {
         appId: 76743,

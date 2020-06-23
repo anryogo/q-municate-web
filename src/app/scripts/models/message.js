@@ -1,5 +1,3 @@
-'use strict';
-
 const QMCONFIG = require('config');
 const Entities = require('../entities');
 

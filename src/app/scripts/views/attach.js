@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const _ = require('underscore');
 const QB = require('quickblox');
@@ -150,7 +148,7 @@ AttachView.prototype = {
                 }, 50);
             } else {
                 progressBar.setPercent(percent);
-                part = (fileSizeCrop * percent / 100).toFixed(1);
+                part = ((fileSizeCrop * percent) / 100).toFixed(1);
                 $(`.attach-part_${id}`).text(part);
                 percent += 5;
 

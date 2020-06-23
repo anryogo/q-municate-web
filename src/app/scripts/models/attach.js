@@ -1,5 +1,3 @@
-'use strict';
-
 const loadImage = require('blueimp-load-image');
 
 /*

@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const _ = require('underscore');
 const QBNotification = require('web-notifications');

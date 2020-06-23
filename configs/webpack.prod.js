@@ -1,5 +1,3 @@
-'use strict';
-
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const TerserJSPlugin = require('terser-webpack-plugin');
@@ -11,7 +9,7 @@ const PACKAGE = require('../package.json');
 
 const banner = `
     ${PACKAGE.name} - ${PACKAGE.description}
-        
+
     @version ${PACKAGE.version}
     @homepage ${PACKAGE.homepage}
     @license ${PACKAGE.license}

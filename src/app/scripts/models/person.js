@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const _ = require('underscore');
 const Backbone = require('backbone');
@@ -51,7 +49,7 @@ module.exports = Backbone.Model.extend({
         // Field: password
         // mustn’t contain non-Latin characters and spaces; 8-40 characters
         if (attrs.password) {
-            if (!/^[\w!"#$%&'()*+,\-./:;<=>?@[\\\]^`{|}~]+$/.test(attrs.password)) {
+            if (!/^[\w!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~-]+$/.test(attrs.password)) {
                 return QMCONFIG.errors.invalidPass;
             }
             if (attrs.password.length < 8) {

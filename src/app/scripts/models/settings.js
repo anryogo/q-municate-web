@@ -1,5 +1,3 @@
-'use strict';
-
 /*
  *
  * Q-MUNICATE settings models Module

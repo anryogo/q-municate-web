@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const Ps = require('perfect-scrollbar');
 
@@ -199,7 +197,6 @@ Events.prototype = {
 
             return false;
         });
-
 
         $('.j-em_wrap').on('click', function(event) {
             const target = $(this).children()[0];

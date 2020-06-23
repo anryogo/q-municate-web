@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const _ = require('underscore');
 const firebase = require('firebase/app');
@@ -91,7 +89,6 @@ User.prototype = {
             return;
         }
         isFacebookCalled = true;
-
 
         // NOTE!! You should use FB.login method instead FB.getLoginStatus
         // and your browser won't block FB Login popup

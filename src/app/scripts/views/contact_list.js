@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const _ = require('underscore');
 const QB = require('quickblox');
@@ -139,7 +137,7 @@ ContactListView.prototype = {
             return user.full_name;
         }), 'id').map(String);
 
-        friends = _.filter(sortedContacts, el => roster[el] && roster[el].subscription !== 'none');
+        friends = _.filter(sortedContacts, (el) => roster[el] && roster[el].subscription !== 'none');
         Helpers.log('Friends', friends);
 
         if (friends.length === 0) {

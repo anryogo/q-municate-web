@@ -1,5 +1,3 @@
-'use strict';
-
 const QBMediaRecorder = require('media-recorder-js');
 
 const QMCONFIG = require('config');

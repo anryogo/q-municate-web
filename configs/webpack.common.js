@@ -138,10 +138,12 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: `${basePath}/index.html`,
+            minify: false,
         }),
         new HtmlWebpackPlugin({
             filename: '404.html',
             template: `${basePath}/404.html`,
+            minify: false,
             excludeChunks: [
                 'main',
                 'vendor',

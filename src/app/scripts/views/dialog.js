@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const _ = require('underscore');
 const QB = require('quickblox');
@@ -179,7 +177,6 @@ DialogView.prototype = {
             }
             clearTimeout(errorDialogsLoadingID);
 
-
             dialogs = result.items;
             totalEntries = result.total_entries;
             localEntries = result.limit + result.skip;
@@ -328,23 +325,15 @@ DialogView.prototype = {
         const lastTime = Helpers.getTime(lastMessageDateSent, true);
         const lastMessage = minEmoji(Helpers.Messages.parser(dialog.get('last_message')));
         const defaultAvatar = privateId ? QMCONFIG.defAvatar.url : QMCONFIG.defAvatar.group_url;
-        let status;
-        let icon;
-        let name;
         let html;
         /* eslint-enable vars-on-top */
 
         privateId = dialogType === 3 ? occupantsIds[0] : null;
 
-        try {
-            /* eslint-disable max-len */
-            icon = (privateId && contacts[privateId]) ? contacts[privateId].avatar_url : (roomPhoto || defaultAvatar);
-            name = (privateId && contacts[privateId]) ? contacts[privateId].full_name : roomName;
-            /* eslint-enable max-len */
-            status = roster[privateId] ? roster[privateId] : null;
-        } catch (error) {
-            throw error;
-        }
+        /* eslint-disable-next-line max-len */
+        const icon = (privateId && contacts[privateId]) ? contacts[privateId].avatar_url : (roomPhoto || defaultAvatar);
+        const name = (privateId && contacts[privateId]) ? contacts[privateId].full_name : roomName;
+        const status = roster[privateId] ? roster[privateId] : null;
 
         html = `<li class="list-item dialog-item j-dialogItem presence-listener" data-dialog="${dialogId}" data-id="${privateId}">`;
         html += '<div class="contact l-flexbox" href="#">';
@@ -484,7 +473,6 @@ DialogView.prototype = {
         // set dialogId to localStorage wich must bee read in all tabs for same user
         localStorage.removeItem(readBadge);
         localStorage.setItem(readBadge, dialogId);
-
 
         // reset recorder state
         VoiceMessage.resetRecord();

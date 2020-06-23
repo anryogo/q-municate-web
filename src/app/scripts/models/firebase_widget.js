@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const _ = require('underscore');
 const Backbone = require('backbone');
@@ -305,6 +303,5 @@ FirebaseWidget.prototype.setDisableState = function() {
         button.attr('disabled', newState);
     }
 };
-
 
 module.exports = FirebaseWidget;

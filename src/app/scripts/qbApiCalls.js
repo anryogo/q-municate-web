@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const QB = require('quickblox');
 
@@ -250,7 +248,6 @@ QBApiCalls.prototype = {
                         res.items.forEach((item) => {
                             responseIds.push(item.user.id);
                         });
-
 
                         ContactList.cleanUp(requestIds, responseIds);
                     }
