@@ -1,5 +1,3 @@
-'use strict';
-
 const path = require('path');
 const autoprefixer = require('autoprefixer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -47,6 +45,7 @@ module.exports = {
             models: `${basePath}/scripts/models`,
             views: `${basePath}/scripts/views`,
             images: `${assetsPath}/images`,
+            audio: `${assetsPath}/audio`,
         },
     },
 
@@ -54,11 +53,22 @@ module.exports = {
         rules: [
             {
                 test: /minEmoji/,
-                use: 'exports-loader?minEmoji',
+                use: {
+                    loader: 'exports-loader',
+                    options: {
+                        type: 'commonjs',
+                        exports: 'single minEmoji',
+                    },
+                },
             },
             {
                 test: /progressbar/,
-                use: 'exports-loader?ProgressBar',
+                use: {
+                    loader: 'exports-loader',
+                    options: {
+                        exports: 'ProgressBar',
+                    },
+                },
             },
             {
                 test: /\.js$/,
@@ -102,6 +112,16 @@ module.exports = {
                         name: '[name].[hash].[ext]',
                         outputPath: 'images',
                         limit: 8192,
+                    },
+                },
+            },
+            {
+                test: /\.(mp3|ogg)$/,
+                use: {
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[hash].[ext]',
+                        outputPath: 'audio',
                     },
                 },
             },

@@ -19,6 +19,7 @@
     },
     "settings": {
         "import/resolver": {
+            "node": {},
             "webpack": {
                 "config": "configs/webpack.dev.js"
             }
