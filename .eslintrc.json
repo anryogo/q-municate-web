@@ -7,7 +7,8 @@
     "env": {
         "browser": true,
         "commonjs": true,
-        "es6": true
+        "es6": true,
+        "node": true
     },
     "globals": {
         "GMaps": "readonly",
@@ -19,7 +20,6 @@
     },
     "settings": {
         "import/resolver": {
-            "node": {},
             "webpack": {
                 "config": "configs/webpack.dev.js"
             }
