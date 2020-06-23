@@ -12,7 +12,7 @@
 
 **PHASE 1 (Native web app)**
 
-1. ~~Upgrade Node version~~ (current: node - **v10.15.3**, npm - **v6.4.1**)
+1. ~~Upgrade Node version~~ (current: node - **v12.18.1**, npm - **v6.14.5**)
 2. ~~Remove yeoman configuration~~
 3. ~~Rewrite grunt tasks to npm scripts~~
 4. ~~Remove grunt~~
