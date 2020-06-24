@@ -1,10 +1,10 @@
-const $ = require('jquery');
-const _ = require('underscore');
-const QB = require('quickblox');
-const QMCONFIG = require('config');
-const ProgressBar = require('progressbar');
-const Helpers = require('../helpers');
-const QMHtml = require('../qmhtml');
+import $ from 'jquery';
+import _ from 'underscore';
+import QB from 'quickblox';
+import QMCONFIG from 'config';
+import ProgressBar from 'progressbar';
+import Helpers from '../helpers';
+import QMHtml from '../qmhtml';
 
 /*
  * Q-municate chat application
@@ -218,6 +218,7 @@ AttachView.prototype = {
     });
 
     Helpers.log(message);
+
     if (type === 'chat') {
       lastMessage = chat.find('article[data-type="message"]').last();
 
@@ -229,6 +230,7 @@ AttachView.prototype = {
       copyDialogItem = dialogItem.clone();
       dialogItem.remove();
       $('#recentList ul').prepend(copyDialogItem);
+
       if (!$('#searchList').is(':visible')) {
         $('#recentList').removeClass('is-hidden');
         Helpers.Dialogs.isSectionEmpty($('#recentList ul'));
@@ -341,30 +343,36 @@ function readMetadata(file) {
       image = new Image();
 
       image.src = WINDOW_URL.createObjectURL(file);
+
       image.onload = function() {
         metadata.width = this.width;
         metadata.height = this.height;
       };
+
       break;
 
     case 'audio':
       audio = new Audio();
 
       audio.src = WINDOW_URL.createObjectURL(file);
+
       audio.onloadedmetadata = function() {
         metadata.duration = Math.floor(this.duration);
       };
+
       break;
 
     case 'video':
       video = document.createElement('video');
 
       video.src = WINDOW_URL.createObjectURL(file);
+
       video.onloadedmetadata = function() {
         metadata.width = this.videoWidth;
         metadata.height = this.videoHeight;
         metadata.duration = Math.floor(this.duration);
       };
+
       break;
 
     default:
@@ -374,4 +382,4 @@ function readMetadata(file) {
   return metadata;
 }
 
-module.exports = AttachView;
+export default AttachView;

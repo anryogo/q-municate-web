@@ -1,7 +1,7 @@
-const $ = require('jquery');
-const QB = require('quickblox');
-const Ps = require('perfect-scrollbar');
-const Helpers = require('./helpers');
+import $ from 'jquery';
+import QB from 'quickblox';
+import Ps from 'perfect-scrollbar';
+import Helpers from './helpers';
 
 let self;
 
@@ -239,4 +239,4 @@ function switchToOnlineMode() {
   }
 }
 
-module.exports = Listeners;
+export default Listeners;

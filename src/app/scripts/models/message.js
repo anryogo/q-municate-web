@@ -1,5 +1,5 @@
-const QMCONFIG = require('config');
-const Entities = require('../entities');
+import QMCONFIG from 'config';
+import Entities from '../entities';
 
 /*
  * Q-municate chat application
@@ -42,6 +42,7 @@ Message.prototype = {
     }, (messages, error) => {
       if (error) {
         callback(null, error);
+
         return;
       }
 
@@ -129,8 +130,10 @@ Message.prototype = {
         } else {
           sameUser = (curMsg.sender_id === prevMsg.sender_id);
         }
+
         sameTime = (Math.floor(curMsg.date_sent / 60) === Math.floor(prevMsg.date_sent / 60));
       }
+
       stack = !!((sameTime && sameUser));
     }
 
@@ -139,4 +142,4 @@ Message.prototype = {
 
 };
 
-module.exports = Message;
+export default Message;

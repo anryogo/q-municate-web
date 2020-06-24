@@ -1,6 +1,6 @@
-const QBMediaRecorder = require('media-recorder-js');
-const QMCONFIG = require('config');
-const Helpers = require('./helpers');
+import QBMediaRecorder from 'media-recorder-js';
+import QMCONFIG from 'config';
+import Helpers from './helpers';
 
 /**
  * AudioRecorder
@@ -262,6 +262,7 @@ VoiceMessage.prototype = {
     if (self.stream) {
       self.stopRecord();
     }
+
     self.blob = null;
     self.toggleActiveState(false);
   },
@@ -285,4 +286,4 @@ VoiceMessage.prototype = {
   },
 };
 
-module.exports = VoiceMessage;
+export default VoiceMessage;

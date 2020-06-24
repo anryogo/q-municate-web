@@ -87,4 +87,4 @@ function Cursor() {
   }
 }
 
-module.exports = Cursor;
+export default Cursor;

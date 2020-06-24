@@ -1,11 +1,11 @@
-const $ = require('jquery');
-const Ps = require('perfect-scrollbar');
-require('malihu-custom-scrollbar-plugin');
-require('jquery-mousewheel');
-const QMCONFIG = require('config');
-const Location = require('views/location');
-const Helpers = require('./helpers');
-const QMHtml = require('./qmhtml');
+import $ from 'jquery';
+import Ps from 'perfect-scrollbar';
+import 'malihu-custom-scrollbar-plugin';
+import 'jquery-mousewheel';
+import QMCONFIG from 'config';
+import Location from 'views/location';
+import Helpers from './helpers';
+import QMHtml from './qmhtml';
 
 /*
  * Q-municate chat application
@@ -154,6 +154,7 @@ Events.prototype = {
       FB.login(
         (response) => {
           Helpers.log('FB authResponse', response);
+
           if (response.status === 'connected') {
             profileView.addFBAccount(response.authResponse.userID);
           } else {
@@ -352,6 +353,7 @@ Events.prototype = {
         ----------------------------------------------------- */
     $workspace.on('mouseenter focus', '.groupTitle .name_chat', () => {
       const $chat = $('.l-chat:visible');
+
       $chat.find('.triangle:visible').addClass('is-hover')
         .siblings('.pencil').removeClass('is-hidden');
 
@@ -412,6 +414,7 @@ Events.prototype = {
         name: $self.text().trim(),
         created_at: Date.now(),
       };
+
       if (code === 13) {
         $(document.body).click();
         $self.blur();
@@ -549,9 +552,11 @@ Events.prototype = {
     $('#profile').on('click', function(event) {
       event.preventDefault();
       removePopover();
+
       if ($('.l-chat:visible').find('.triangle_down').is('.is-hidden')) {
         setTriagle('down');
       }
+
       UserView.profilePopover($(this));
     });
 
@@ -905,6 +910,7 @@ Events.prototype = {
 
     $('#popupContacts .btn_popup_add').on('click', function() {
       const dialogId = $(this).parents('.popup').data('dialog');
+
       DialogView.createGroupChat('add', dialogId);
     });
 
@@ -997,13 +1003,18 @@ Events.prototype = {
 
       if (isEnterKey && (isLoading || isEmpty)) {
         return;
-      } if (isEnterKey && !shiftKey) {
+      }
+
+      if (isEnterKey && !shiftKey) {
         isStopTyping();
         MessageView.sendMessage($self);
         $self.find('.textarea').empty();
         removePopover();
+
         return;
-      } if (stopTyping === undefined) {
+      }
+
+      if (stopTyping === undefined) {
         isStartTyping();
         stopTyping = setTimeout(isStopTyping, 4000);
         retryTyping = setInterval(isStartTyping, 4000);
@@ -1056,6 +1067,7 @@ Events.prototype = {
 
     $body.on('paste', '.j-message', (e) => {
       const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+
       document.execCommand('insertText', false, text);
 
       return false;
@@ -1145,6 +1157,7 @@ function clickBehaviour(e) {
   if (objDom.is(selectors) || e.which === 3 || googleImage === 7) {
     return;
   }
+
   removePopover();
 }
 
@@ -1182,12 +1195,15 @@ function openPopup(objDom, id, dialogId, isProfile) {
     objDom.data('id', id);
     objDom.find('.j-deleteContactConfirm').data('id', id);
   }
+
   if (dialogId) {
     objDom.find('.j-deleteChatConfirm').data('dialog', dialogId);
   }
+
   if (isProfile) {
     objDom.find('.popup-control-button_cancel').attr('data-isprofile', true);
   }
+
   objDom.add('.popups').addClass('is-overlay');
 }
 
@@ -1236,4 +1252,4 @@ function setTriagle(UpOrDown) {
   $chat.find('.l-chat-content').toggleClass('l-chat-content_min');
 }
 
-module.exports = Events;
+export default Events;

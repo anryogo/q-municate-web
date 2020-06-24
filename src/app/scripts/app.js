@@ -1,31 +1,31 @@
-const $ = require('jquery');
-const QMCONFIG = require('config');
-const User = require('models/user');
-const Session = require('models/session');
-const Settings = require('models/settings');
-const Contact = require('models/contact');
-const Dialog = require('models/dialog');
-const Message = require('models/message');
-const Attach = require('models/attach');
-const ContactList = require('models/contact_list');
-const VideoChat = require('models/videochat');
-const Cursor = require('models/custom_cursor');
-const SyncTabs = require('models/sync_tabs');
-const FirebaseWidget = require('models/firebase_widget');
-const UserView = require('views/user');
-const SettingsView = require('views/settings');
-const DialogView = require('views/dialog');
-const MessageView = require('views/message');
-const AttachView = require('views/attach');
-const ContactListView = require('views/contact_list');
-const VideoChatView = require('views/videochat');
-const QMPlayer = require('views/qmplayer');
-const Events = require('./events');
-const Helpers = require('./helpers');
-const QBApiCalls = require('./qbApiCalls');
-const Entities = require('./entities');
-const Listeners = require('./listeners');
-const VoiceMessage = require('./voicemessage');
+import $ from 'jquery';
+import QMCONFIG from 'config';
+import User from 'models/user';
+import Session from 'models/session';
+import Settings from 'models/settings';
+import Contact from 'models/contact';
+import Dialog from 'models/dialog';
+import Message from 'models/message';
+import Attach from 'models/attach';
+import ContactList from 'models/contact_list';
+import VideoChat from 'models/videochat';
+import Cursor from 'models/custom_cursor';
+import SyncTabs from 'models/sync_tabs';
+import FirebaseWidget from 'models/firebase_widget';
+import UserView from 'views/user';
+import SettingsView from 'views/settings';
+import DialogView from 'views/dialog';
+import MessageView from 'views/message';
+import AttachView from 'views/attach';
+import ContactListView from 'views/contact_list';
+import VideoChatView from 'views/videochat';
+import QMPlayer from 'views/qmplayer';
+import Events from './events';
+import Helpers from './helpers';
+import QBApiCalls from './qbApiCalls';
+import Entities from './entities';
+import Listeners from './listeners';
+import VoiceMessage from './voicemessage';
 
 /*
  * Q-municate chat application
@@ -117,4 +117,4 @@ QM.prototype = {
   },
 };
 
-module.exports = QM;
+export default QM;

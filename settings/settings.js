@@ -1,4 +1,4 @@
-const credentials = require('./credentials');
+import credentials from './credentials';
 
 const DEBUG = Number(process.env.NODE_ENV !== 'production');
 
@@ -72,4 +72,4 @@ const settings = Object.assign({}, credentials, {
   },
 });
 
-module.exports = settings;
+export default settings;

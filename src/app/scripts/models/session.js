@@ -1,5 +1,5 @@
-const CryptoJS = require('crypto-js');
-const QMCONFIG = require('config');
+import CryptoJS from 'crypto-js';
+import QMCONFIG from 'config';
 
 /*
  * Q-municate chat application
@@ -57,6 +57,7 @@ Session.prototype = {
         .encrypt(params.password, QMCONFIG.qbAccount.authSecret)
         .toString();
     }
+
     return params;
   },
 
@@ -66,9 +67,10 @@ Session.prototype = {
         .decrypt(params.password, QMCONFIG.qbAccount.authSecret)
         .toString(CryptoJS.enc.Utf8);
     }
+
     return params;
   },
 
 };
 
-module.exports = Session;
+export default Session;

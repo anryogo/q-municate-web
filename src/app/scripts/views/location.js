@@ -1,5 +1,5 @@
-const $ = require('jquery');
-const Helpers = require('../helpers');
+import $ from 'jquery';
+import Helpers from '../helpers';
 
 /**
  *
@@ -140,4 +140,4 @@ const Location = {
 
 };
 
-module.exports = Location;
+export default Location;

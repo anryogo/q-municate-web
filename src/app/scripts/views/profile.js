@@ -1,8 +1,8 @@
-const $ = require('jquery');
-const _ = require('underscore');
-const Backbone = require('backbone');
-const QMCONFIG = require('config');
-const Helpers = require('../helpers');
+import $ from 'jquery';
+import _ from 'underscore';
+import Backbone from 'backbone';
+import QMCONFIG from 'config';
+import Helpers from '../helpers';
 
 /*
  * Q-municate chat application
@@ -10,7 +10,7 @@ const Helpers = require('../helpers');
  * Profile View
  *
  */
-module.exports = Backbone.View.extend({
+export default Backbone.View.extend({
   className: 'profileWrap',
 
   template: _.template($('#templateProfile').html()),
@@ -32,6 +32,7 @@ module.exports = Backbone.View.extend({
     }
 
     const template = this.$el.html(this.template(renderObj));
+
     $('.popups').append(template);
     this.delegateEvents(this.events);
 

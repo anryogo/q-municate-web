@@ -29,8 +29,9 @@
 15. ~~Migrate the vendor libs to npm packages~~
 16. ~~Update all dependencies to the latest versions~~
 17. ~~Move assets to separate folder~~
-18. Split the project architecture according to component approach
-19. Refactor components (try to remove the backbone artifacts and jquery, then leave only the simple native JS components)
+18. ~~Migrate CommonJS to ES6 modules~~
+19. Split the project architecture according to component approach
+20. Refactor components (try to remove the backbone artifacts and jquery, then leave only the simple native JS components)
 
 **PHASE 2 (React app)**
 

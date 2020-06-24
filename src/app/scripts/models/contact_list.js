@@ -1,5 +1,5 @@
-const _ = require('underscore');
-const Helpers = require('../helpers');
+import _ from 'underscore';
+import Helpers from '../helpers';
 
 /*
  * Q-municate chat application
@@ -95,6 +95,7 @@ ContactList.prototype = {
     }
 
     const val = sessionStorage['QM.search.value'];
+
     page = sessionStorage['QM.search.page'];
 
     isExistingRequest = true;
@@ -174,6 +175,7 @@ ContactList.prototype = {
       users.items.forEach((qbUser) => {
         const { user } = qbUser;
         const contact = Contact.create(user);
+
         newIds.push(user.id);
         self.contacts[user.id] = contact;
         localStorage.setItem(`QM.contact-${user.id}`, JSON.stringify(contact));
@@ -217,4 +219,4 @@ function getContacts() {
   return contacts;
 }
 
-module.exports = ContactList;
+export default ContactList;

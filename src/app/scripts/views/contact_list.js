@@ -1,11 +1,11 @@
-const $ = require('jquery');
-const _ = require('underscore');
-const QB = require('quickblox');
-require('malihu-custom-scrollbar-plugin');
-require('jquery-mousewheel');
-const QMCONFIG = require('config');
-const Entities = require('../entities');
-const Helpers = require('../helpers');
+import $ from 'jquery';
+import _ from 'underscore';
+import QB from 'quickblox';
+import 'malihu-custom-scrollbar-plugin';
+import 'jquery-mousewheel';
+import QMCONFIG from 'config';
+import Entities from '../entities';
+import Helpers from '../helpers';
 
 /*
  * Q-municate chat application
@@ -77,6 +77,7 @@ ContactListView.prototype = {
 
     if (len > 0) {
       $firstNote.addClass('is-hidden');
+
       // display "Name must be more than 2 characters" or "No results found"
       if (len < 3) {
         $popup.find('.popup-elem .not_found').addClass('is-hidden');
@@ -132,6 +133,7 @@ ContactListView.prototype = {
       if (user.full_name) {
         return user.full_name.toLowerCase();
       }
+
       return user.full_name;
     }), 'id').map(String);
 
@@ -141,6 +143,7 @@ ContactListView.prototype = {
     if (friends.length === 0) {
       popup.children(':not(.popup-header)').addClass('is-hidden');
       popup.find('.popup-nofriends').removeClass('is-hidden');
+
       return;
     }
 
@@ -250,8 +253,10 @@ ContactListView.prototype = {
 
     dialogItem = $(`.l-list-wrap section:not(#searchList) .dialog-item[data-id="${id}"]`);
     const copyDialogItem = dialogItem.clone();
+
     dialogItem.remove();
     $('#recentList ul').prepend(copyDialogItem);
+
     if ($('#searchList').is(':hidden')) {
       $('#recentList').removeClass('is-hidden');
       Helpers.Dialogs.isSectionEmpty($('.j-recentList'));
@@ -298,6 +303,7 @@ ContactListView.prototype = {
     });
 
     const dialog = dialogs.get(dialogId);
+
     Helpers.log('Dialog', dialog.toJSON());
 
     if (isClick) {
@@ -330,6 +336,7 @@ ContactListView.prototype = {
 
     // delete duplicate contact item
     const li = $(`.dialog-item[data-id="${id}"]`);
+
     list = li.parents('ul');
     li.remove();
     Helpers.Dialogs.isSectionEmpty(list);
@@ -338,8 +345,10 @@ ContactListView.prototype = {
 
     dialogItem = $(`.l-list-wrap section:not(#searchList) .dialog-item[data-id="${id}"]`);
     const copyDialogItem = dialogItem.clone();
+
     dialogItem.remove();
     $('.j-recentList').prepend(copyDialogItem);
+
     if ($('#searchList').is(':hidden')) {
       $('#recentList').removeClass('is-hidden');
       Helpers.Dialogs.isSectionEmpty($('.j-recentList'));
@@ -519,15 +528,18 @@ ContactListView.prototype = {
     ContactList.saveNotConfirmed(notConfirmed);
 
     dialogItem.find('.status').removeClass('status_online').addClass('status_request');
+
     if (dialogItem.is('.l-chat')) {
       dialogItem.addClass('is-request');
     }
+
     if (request.length > 0) {
       QB.chat.roster.remove(jid, () => {
         request.remove();
         Helpers.Dialogs.isSectionEmpty(list);
       });
     }
+
     dialogItem.addClass('is-request');
   },
 
@@ -595,6 +607,7 @@ function sendContactRequest(params) {
 
 function openPopup(objDom, type, dialogId) {
   objDom.add('.popups').addClass('is-overlay');
+
   if (type) {
     objDom.addClass(type).data('dialog', dialogId);
   } else {
@@ -659,13 +672,16 @@ function createListResults(list, results, selfObj) {
       item += `<div class="contact-avatar avatar profileUserAvatar" style="background-image:url(${contact.avatar_url})" data-id="${contact.id}"></div>`;
       item += `<span class="name profileUserName" data-id="${contact.id}">${contact.full_name}</span>`;
       item += '</div>';
+
       if (!rosterItem || (rosterItem && rosterItem.subscription === 'none' && !rosterItem.ask && !notConfirmed[contact.id])) {
         item += '<button class="send-request j-sendRequest"><img class="icon-normal" src="images/icon-request.svg" alt="request">';
         item += '<img class="icon-active" src="images/icon-request_active.svg" alt="request"></button>';
       }
+
       if (rosterItem && rosterItem.subscription === 'none' && rosterItem.ask) {
         item += '<span class="send-request l-flexbox">Request Sent</span>';
       }
+
       item += '</a></li>';
 
       list.find('.mCSB_container').append(item);
@@ -679,4 +695,4 @@ function createListResults(list, results, selfObj) {
   selfObj.removeDataSpinner();
 }
 
-module.exports = ContactListView;
+export default ContactListView;

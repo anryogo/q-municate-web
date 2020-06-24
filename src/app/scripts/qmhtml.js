@@ -1,6 +1,6 @@
-const $ = require('jquery');
-const _ = require('underscore');
-const Helpers = require('./helpers');
+import $ from 'jquery';
+import _ from 'underscore';
+import Helpers from './helpers';
 
 /**
  *
@@ -104,6 +104,7 @@ QMHtml.User = {
       htmlStr += '<li class="list-item"><a class="j-deleteContact deleteContact list-actions-action" href="#">Delete contact</a></li>'
                 + '<li class="list-item"><a class="list-actions-action userDetails" data-id="<%=ids%>" href="#">Profile</a></li>';
     }
+
     htmlStr += '<li class="list-item"><a class="j-deleteChat deleteChat list-actions-action" data-group="true" href="#">Remove chat</a></li>';
 
     return $html.append(_.template(htmlStr)(params));
@@ -225,4 +226,4 @@ QMHtml.Attach = {
 
 };
 
-module.exports = QMHtml;
+export default QMHtml;

@@ -1,10 +1,10 @@
-const $ = require('jquery');
-const QB = require('quickblox');
-const QMCONFIG = require('config');
-const Location = require('views/location');
-const Entities = require('../entities');
-const Helpers = require('../helpers');
-const QMHtml = require('../qmhtml');
+import $ from 'jquery';
+import QB from 'quickblox';
+import QMCONFIG from 'config';
+import Location from 'views/location';
+import Entities from '../entities';
+import Helpers from '../helpers';
+import QMHtml from '../qmhtml';
 
 /*
  * Q-municate chat application
@@ -107,6 +107,7 @@ UserView.prototype = {
 
   successSendEmailCallback() {
     let alert = '<div class="j-success_callback note l-form l-flexbox l-flexbox_column">';
+
     alert += '<span class="text text_alert text_alert_success">Success!</span>';
     alert += '<span class="text">Please check your email and click a link in the letter in order to reset your password</span>';
     alert += '</div>';
@@ -120,14 +121,17 @@ UserView.prototype = {
       // Wait until FB SDK will be downloaded and then calling this function again
       FBCallback = cb;
       sessionStorage.setItem('QM.is_getFBStatus', true);
+
       return;
     }
 
     const callback = cb || FBCallback;
+
     FBCallback = null;
 
     FB.getLoginStatus((response) => {
       Helpers.log('FB status response', response);
+
       if (callback) {
         // situation when you are recovering QB session via FB
         // and FB accessToken has expired
@@ -253,15 +257,18 @@ UserView.prototype = {
 
     QBApiCalls.getUser(userId, (user) => {
       const contact = Contact.create(user);
+
       ContactList.contacts[contact.id] = contact;
 
       $(`.profileUserName[data-id="${contact.id}"]`).text(contact.full_name);
       $(`.profileUserStatus[data-id="${contact.id}"]`).text(contact.status);
+
       if (contact.phone) {
         $(`.profileUserPhone[data-id="${contact.id}"]`).html(
           `<span class="userDetails-label">Phone:</span><span class="userDetails-phone">${contact.phone}</span>`,
         );
       }
+
       $(`.profileUserAvatar[data-id="${contact.id}"]`).css('background-image', `url(${contact.avatar_url})`);
 
       localStorage.setItem(`QM.contact-${contact.id}`, JSON.stringify(contact));
@@ -319,6 +326,7 @@ UserView.prototype = {
           $this.find(`.list-item[data-dialog="${selected}"]`).addClass('is-selected');
         }
       });
+
       if ($('.l-list-wrap section:not(#searchList) .list-item').length === 0) {
         $('#emptyList').removeClass('is-hidden');
       }
@@ -364,6 +372,7 @@ switchPage = function(page) {
   clearErrors();
   $('.no-connection').addClass('is-hidden');
   page.find('input').val('');
+
   if (!page.is('#mainPage')) {
     page.find('form').removeClass('is-hidden').next('.l-form').remove(); // reset Forgot form after success sending of letter
     page.find('input:file').prev().find('.avatar').css('background-image', `url(${QMCONFIG.defAvatar.url})`)
@@ -392,4 +401,4 @@ appearAnimation = function() {
   $('.popover:not(.j-popover_const)').fadeIn(150);
 };
 
-module.exports = UserView;
+export default UserView;

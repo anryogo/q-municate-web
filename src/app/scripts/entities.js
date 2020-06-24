@@ -1,9 +1,9 @@
-const $ = require('jquery');
-const _ = require('underscore');
-const Backbone = require('backbone');
-const QB = require('quickblox');
-const QMCONFIG = require('config');
-const Helpers = require('./helpers');
+import $ from 'jquery';
+import _ from 'underscore';
+import Backbone from 'backbone';
+import QB from 'quickblox';
+import QMCONFIG from 'config';
+import Helpers from './helpers';
 
 /** ****************** Module for dialogs and messages ************************ */
 const entities = {
@@ -78,6 +78,7 @@ entities.Models.Message = Backbone.Model.extend({
           messageId,
         });
       }
+
       // collect last messages for opened dialog's
       this.addMessageToCollection(dialog.get('messages'));
     }
@@ -242,6 +243,7 @@ entities.Collections.Dialogs = Backbone.Collection.extend({
 
       unreadMeassages.reset();
     }
+
     // read all dialog's messages on REST
     if (+unreadCount > 0) {
       QB.chat.message.update(null, {
@@ -367,4 +369,4 @@ $('.j-home').on('click', () => {
   entities.active = '';
 });
 
-module.exports = entities;
+export default entities;

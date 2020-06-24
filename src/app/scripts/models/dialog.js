@@ -1,9 +1,9 @@
-const $ = require('jquery');
-const _ = require('underscore');
-const QB = require('quickblox');
-const QMCONFIG = require('config');
-const Helpers = require('../helpers');
-const Entities = require('../entities');
+import $ from 'jquery';
+import _ from 'underscore';
+import QB from 'quickblox';
+import QMCONFIG from 'config';
+import Helpers from '../helpers';
+import Entities from '../entities';
 
 /*
  * Q-municate chat application
@@ -389,4 +389,4 @@ Dialog.prototype = {
 
 };
 
-module.exports = Dialog;
+export default Dialog;

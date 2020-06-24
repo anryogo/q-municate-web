@@ -1,5 +1,5 @@
-const _ = require('underscore');
-const Backbone = require('backbone');
+import _ from 'underscore';
+import Backbone from 'backbone';
 
 /**
  * QMPlayer
@@ -108,4 +108,4 @@ QMPlayer.init = function(id) {
   }
 };
 
-module.exports = QMPlayer;
+export default QMPlayer;

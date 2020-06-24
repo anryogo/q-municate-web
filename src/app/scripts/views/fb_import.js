@@ -1,6 +1,6 @@
-const $ = require('jquery');
-const _ = require('underscore');
-const Backbone = require('backbone');
+import $ from 'jquery';
+import _ from 'underscore';
+import Backbone from 'backbone';
 
 /*
  * Q-municate chat application
@@ -8,7 +8,7 @@ const Backbone = require('backbone');
  * FB Import Completed View
  *
  */
-module.exports = Backbone.View.extend({
+export default Backbone.View.extend({
   className: 'importWrap',
 
   template: _.template($('#templateFBImport').html()),
@@ -22,6 +22,7 @@ module.exports = Backbone.View.extend({
 
     $('.popups').append(template);
     this.delegateEvents(this.events);
+
     return this;
   },
 

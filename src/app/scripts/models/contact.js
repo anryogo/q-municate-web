@@ -1,5 +1,5 @@
-const QB = require('quickblox');
-const QMCONFIG = require('config');
+import QB from 'quickblox';
+import QMCONFIG from 'config';
 
 /*
  * Q-municate chat application
@@ -59,4 +59,4 @@ function getStatus(contact) {
   return (contact.custom_data && JSON.parse(contact.custom_data).status) || '';
 }
 
-module.exports = Contact;
+export default Contact;

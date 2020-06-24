@@ -1,14 +1,14 @@
-const $ = require('jquery');
-const _ = require('underscore');
-const QB = require('quickblox');
-const Ps = require('perfect-scrollbar');
-require('malihu-custom-scrollbar-plugin');
-require('jquery.nicescroll');
-require('jquery-mousewheel');
-const QMCONFIG = require('config');
-const minEmoji = require('minEmoji');
-const Entities = require('../entities');
-const Helpers = require('../helpers');
+import $ from 'jquery';
+import _ from 'underscore';
+import QB from 'quickblox';
+import Ps from 'perfect-scrollbar';
+import 'malihu-custom-scrollbar-plugin';
+import 'jquery.nicescroll';
+import 'jquery-mousewheel';
+import QMCONFIG from 'config';
+import minEmoji from 'minEmoji';
+import Entities from '../entities';
+import Helpers from '../helpers';
 
 /*
  * Q-municate chat application
@@ -173,6 +173,7 @@ DialogView.prototype = {
 
         return;
       }
+
       clearTimeout(errorDialogsLoadingID);
 
       dialogs = result.items;
@@ -190,9 +191,11 @@ DialogView.prototype = {
 
             // don't create a duplicate dialog in contact list
             chat = $(`.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialog.get('id')}"]`);
+
             if (chat[0] && dialog.get('unread_count')) {
               chat.find('.unread').text(dialog.get('unread_count'));
               self.getUnreadCounter(dialog.get('id'));
+
               return;
             }
 
@@ -208,6 +211,7 @@ DialogView.prototype = {
 
             // not show dialog if user has not confirmed this contact
             notConfirmed = localStorage['QM.notConfirmed'] ? JSON.parse(localStorage['QM.notConfirmed']) : {};
+
             if (privateId && (!roster[privateId]
                             || (roster[privateId] && roster[privateId].subscription === 'none'
                                 && !roster[privateId].ask && notConfirmed[privateId]))) {
@@ -306,6 +310,7 @@ DialogView.prototype = {
   addDialogItem(dialog, isDownload, parameter) {
     if (!dialog) {
       Helpers.log('Dialog is undefined');
+
       return;
     }
 
@@ -351,6 +356,7 @@ DialogView.prototype = {
     html += '</a></li>';
 
     const startOfCurrentDay = new Date();
+
     startOfCurrentDay.setHours(0, 0, 0, 0);
 
     // remove duplicate and replace to newest
@@ -378,6 +384,7 @@ DialogView.prototype = {
     }
 
     $('#emptyList').addClass('is-hidden');
+
     if (unreadCount) {
       self.getUnreadCounter(dialogId);
     }
@@ -551,6 +558,7 @@ DialogView.prototype = {
     occupantsIds = occupantsIds.join();
 
     self.createDataSpinner(null, true);
+
     if (type) {
       Dialog.updateGroup(occupantsNames, {
         dialog_id: dialogId,
@@ -566,11 +574,13 @@ DialogView.prototype = {
           copyDialogItem = dialogItem.clone();
           dialogItem.remove();
           $('#recentList ul.j-list').prepend(copyDialogItem);
+
           if (!$('#searchList').is(':visible')) {
             $('#recentList').removeClass('is-hidden');
             Helpers.Dialogs.isSectionEmpty($('#recentList ul.j-list'));
           }
         }
+
         $('.is-overlay:not(.chat-occupants-wrap)').removeClass('is-overlay');
       });
     } else {
@@ -910,6 +920,7 @@ function setScrollToNewMessages(selector) {
 
   if ($('.j-newMessages').length) {
     scrollToThrArea('.j-newMessages');
+
     if (!isBottom && isScrollDragger) {
       $('.j-toBottom').show();
     }
@@ -942,4 +953,4 @@ function isNeedToStopTheVideo() {
   });
 }
 
-module.exports = DialogView;
+export default DialogView;

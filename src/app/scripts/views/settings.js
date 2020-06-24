@@ -1,4 +1,4 @@
-const $ = require('jquery');
+import $ from 'jquery';
 
 /*
  *
@@ -36,4 +36,4 @@ SettingsView.prototype = {
 
 };
 
-module.exports = SettingsView;
+export default SettingsView;

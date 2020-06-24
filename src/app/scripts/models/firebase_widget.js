@@ -1,13 +1,13 @@
-const $ = require('jquery');
-const _ = require('underscore');
-const Backbone = require('backbone');
-const firebase = require('firebase/app');
-require('firebase/auth');
-const QMCONFIG = require('config');
-const Helpers = require('../helpers');
-const Events = require('../events');
-require('initTelInput');
-require('intlTelInputUtils');
+import $ from 'jquery';
+import _ from 'underscore';
+import Backbone from 'backbone';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import QMCONFIG from 'config';
+import Helpers from '../helpers';
+import Events from '../events';
+import 'initTelInput';
+import 'intlTelInputUtils';
 
 /**
  * QMPlayer
@@ -201,10 +201,12 @@ FirebaseWidget.prototype.firebaseDigitsNumberForm = Backbone.View.extend({
     const $text = $('.j-firebase__timer_text');
     const $timer = $('.j-firebase__resend_time');
     const $button = $('.j-firebase__resend');
+
     if (widget.resendTime === timeLeft) {
       $button.hide();
       $text.show();
     }
+
     if (timeLeft < 0) {
       $text.hide();
       $button.show();
@@ -301,4 +303,4 @@ FirebaseWidget.prototype.setDisableState = function() {
   }
 };
 
-module.exports = FirebaseWidget;
+export default FirebaseWidget;

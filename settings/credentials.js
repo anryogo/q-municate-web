@@ -21,4 +21,4 @@ const credentials = {
   },
 };
 
-module.exports = credentials;
+export default credentials;

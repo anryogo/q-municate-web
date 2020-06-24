@@ -1,4 +1,4 @@
-const loadImage = require('blueimp-load-image');
+import loadImage from 'blueimp-load-image';
 
 /*
  * Q-municate chat application
@@ -56,6 +56,7 @@ Attach.prototype = {
         const attr = {
           crop: true,
         };
+
         if (img.width > img.height) {
           attr.maxWidth = params.w;
         } else {
@@ -78,4 +79,4 @@ Attach.prototype = {
 
 };
 
-module.exports = Attach;
+export default Attach;

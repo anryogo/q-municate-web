@@ -1,12 +1,12 @@
-const $ = require('jquery');
-const _ = require('underscore');
-const QB = require('quickblox');
-const QBNotification = require('web-notifications');
-const QMCONFIG = require('config');
-const minEmoji = require('minEmoji');
-const Helpers = require('../helpers');
-const QMHtml = require('../qmhtml');
-const Entities = require('../entities');
+import $ from 'jquery';
+import _ from 'underscore';
+import QB from 'quickblox';
+import QBNotification from 'web-notifications';
+import QMCONFIG from 'config';
+import minEmoji from 'minEmoji';
+import Helpers from '../helpers';
+import QMHtml from '../qmhtml';
+import Entities from '../entities';
 
 /*
  * Q-municate chat application
@@ -268,6 +268,7 @@ MessageView.prototype = {
             html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(message.date_sent)}</time>`;
             html += '<div class="info_indent"></div></div></div></div></article>';
           }
+
           break;
 
         case '9':
@@ -293,6 +294,7 @@ MessageView.prototype = {
             html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(message.date_sent)}</time>`;
             html += '<div class="info_indent"></div></div></div></div></article>';
           }
+
           break;
 
         case '10':
@@ -312,6 +314,7 @@ MessageView.prototype = {
             html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(message.date_sent)}</time>`;
             html += '<div class="info_indent"></div></div></div></div></article>';
           }
+
           break;
 
         default:
@@ -381,6 +384,7 @@ MessageView.prototype = {
         } else {
           $chat.find('.l-chat-content').prepend(html);
         }
+
         setAttachSize(attachParams);
         getUrlPreview(message.id);
         smartScroll();
@@ -466,9 +470,11 @@ MessageView.prototype = {
       });
       val = $textarea.html();
     }
+
     if (form.find('.textarea > div').length > 0) {
       val = $textarea.text();
     }
+
     val = val.replace(/<br>/gi, '\n').trim();
 
     if (val.length > 0) {
@@ -706,6 +712,7 @@ MessageView.prototype = {
     }
 
     const lastMessage = $chat.find('article[data-type="message"]').last();
+
     msg.stack = Message.isStack(true, msg, lastMessage);
 
     // subscribe message
@@ -816,6 +823,7 @@ MessageView.prototype = {
 
         message.online = true;
         msg = Message.create(message);
+
         // Don't show any notification if system message from current User
         if (msg.sender_id !== User.contact.id) {
           dialogGroupItem.find('.unread').text(unread);
@@ -988,6 +996,7 @@ function roomJidVerification(dialogId) {
   if (arrayString[0] === '_') {
     roomJid = QMCONFIG.qbAccount.appId + roomJid.toString();
   }
+
   return roomJid;
 }
 
@@ -1221,4 +1230,4 @@ function setAttachSize(params) {
   smartScroll();
 }
 
-module.exports = MessageView;
+export default MessageView;

@@ -1,4 +1,4 @@
-const $ = require('jquery');
+import $ from 'jquery';
 
 /*
  *
@@ -109,4 +109,4 @@ function SyncTabs(app) {
   }
 }
 
-module.exports = SyncTabs;
+export default SyncTabs;

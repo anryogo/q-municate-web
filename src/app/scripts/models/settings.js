@@ -44,4 +44,4 @@ function Settings() {
   }
 }
 
-module.exports = Settings;
+export default Settings;

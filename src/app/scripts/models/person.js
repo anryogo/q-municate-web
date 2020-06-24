@@ -1,9 +1,9 @@
-const $ = require('jquery');
-const _ = require('underscore');
-const Backbone = require('backbone');
-const QB = require('quickblox');
-const QMCONFIG = require('config');
-const Helpers = require('../helpers');
+import $ from 'jquery';
+import _ from 'underscore';
+import Backbone from 'backbone';
+import QB from 'quickblox';
+import QMCONFIG from 'config';
+import Helpers from '../helpers';
 
 /*
  * Q-municate chat application
@@ -13,7 +13,7 @@ const Helpers = require('../helpers');
  */
 let App;
 
-module.exports = Backbone.Model.extend({
+export default Backbone.Model.extend({
   defaults: {
     full_name: null,
     email: null,
@@ -35,12 +35,15 @@ module.exports = Backbone.Model.extend({
     if (!attrs.full_name) {
       return 'Name is required';
     }
+
     if (attrs.full_name === 'Unknown user') {
       return QMCONFIG.errors.unknownUserName;
     }
+
     if (attrs.full_name.length < 3) {
       return QMCONFIG.errors.shortName;
     }
+
     if (attrs.full_name.length > 200) {
       return QMCONFIG.errors.bigName;
     }
@@ -51,6 +54,7 @@ module.exports = Backbone.Model.extend({
       if (!/^[\w!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~-]+$/.test(attrs.password)) {
         return QMCONFIG.errors.invalidPass;
       }
+
       if (attrs.password.length < 8) {
         return QMCONFIG.errors.shortPass;
       }
@@ -62,9 +66,11 @@ module.exports = Backbone.Model.extend({
       if (!/^image.*$/.test(attrs.avatar.type)) {
         return QMCONFIG.errors.avatarType;
       }
+
       if (attrs.avatar.size > MAX_SIZE) {
         return QMCONFIG.errors.fileSize;
       }
+
       if (attrs.avatar.name.length > 100) {
         return QMCONFIG.errors.fileName;
       }
@@ -80,6 +86,7 @@ module.exports = Backbone.Model.extend({
 
     _.each(data, function(val, key) {
       const isHasKey = _.has(this.defaults, key);
+
       if (key !== 'id' && !isHasKey) {
         delete data[key];
       } else if (typeof val === 'string') {
@@ -104,16 +111,19 @@ module.exports = Backbone.Model.extend({
       currentUser.full_name = data.full_name;
       params.full_name = data.full_name;
     }
+
     if (data.phone) {
       currentUser.phone = data.phone;
       params.phone = data.phone;
     }
+
     if (data.status.length >= 0) {
       currentUser.status = data.status;
       customData.status = data.status;
       currentUser.custom_data = JSON.stringify(customData);
       params.custom_data = JSON.stringify(customData);
     }
+
     if (data.avatar) {
       this.uploadAvatar(data.avatar, (blob) => {
         const avatarUrl = QB.content.publicUrl(blob.uid);
@@ -199,6 +209,7 @@ module.exports = Backbone.Model.extend({
     if (self.get('avatar_url') === QMCONFIG.defAvatar.url) {
       customData.avatar_url = `https://graph.facebook.com/v3.0/${fbId}/picture?width=1200&height=1200`;
     }
+
     customData.is_import = '1';
     params.facebook_id = fbId;
     params.custom_data = JSON.stringify(customData);
@@ -211,6 +222,7 @@ module.exports = Backbone.Model.extend({
           self.set('avatar_url', customData.avatar_url);
           currentUser.avatar_url = customData.avatar_url;
         }
+
         self.set('facebook_id', fbId);
         currentUser.facebook_id = fbId;
         currentUser.custom_data = params.custom_data;

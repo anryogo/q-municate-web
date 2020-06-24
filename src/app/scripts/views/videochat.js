@@ -1,10 +1,10 @@
-const $ = require('jquery');
-const QB = require('quickblox');
-const QBNotification = require('web-notifications');
-const QMCONFIG = require('config');
-const Entities = require('../entities');
-const Helpers = require('../helpers');
-const QMHtml = require('../qmhtml');
+import $ from 'jquery';
+import QB from 'quickblox';
+import QBNotification from 'web-notifications';
+import QMCONFIG from 'config';
+import Entities from '../entities';
+import Helpers from '../helpers';
+import QMHtml from '../qmhtml';
 
 /*
  * Q-municate chat application
@@ -114,6 +114,7 @@ VideoChatView.prototype.init = function() {
 
     if ($('#popupIncoming .mCSB_container').children().length === 0) {
       closePopup();
+
       if (Settings.get('sounds_notify')) {
         audioSignal.pause();
       }
@@ -160,6 +161,7 @@ VideoChatView.prototype.init = function() {
         $chat.find('.mediacall .btn_hangup').data('errorMessage', 1);
         $chat.find('.mediacall .btn_hangup').click();
         fixScroll();
+
         return;
       }
 
@@ -351,9 +353,11 @@ VideoChatView.prototype.onIgnored = function(state, session, id, extension) {
   if ((state === 'onAccept') && (User.contact.id === id)) {
     stopIncomingCall(session.initiatorID);
   }
+
   if ((state === 'onStop') && (User.contact.id === id)) {
     closeStreamScreen(id);
   }
+
   // send message to caller that user is busy
   if ((state === 'onCall') && (User.contact.id !== id)) {
     dialogId = $(`li.list-item.dialog-item[data-id="${id}"]`).data('dialog');
@@ -393,6 +397,7 @@ VideoChatView.prototype.onRemoteStream = function(session, id, stream) {
   if (self.type === 'video') {
     video.addEventListener('timeupdate', () => {
       const duration = getTimer(Math.floor(video.currentTime));
+
       $('.mediacall-info-duration').text(duration);
     });
 
@@ -452,6 +457,7 @@ VideoChatView.prototype.onUpdateCall = function(session, id, extension) {
       $selector.find('#remoteStream').addClass('is-hidden');
       $selector.find('#remoteUser').removeClass('is-hidden');
     }
+
     if (extension.unmute === 'video') {
       $selector.find('#remoteStream').removeClass('is-hidden');
       $selector.find('#remoteUser').addClass('is-hidden');
@@ -492,11 +498,14 @@ VideoChatView.prototype.startCall = function(className, dialogId) {
 
   VideoChat.getUserMedia(params, callType, (err) => {
     fixScroll();
+
     if (err) {
       $chat.find('.mediacall .btn_hangup').click();
       QMHtml.VideoChat.showError();
+
       return;
     }
+
     QBApiCalls.sendPushNotification(calleeId, fullName);
 
     VoiceMessage.resetRecord();
@@ -551,6 +560,7 @@ VideoChatView.prototype.build = function(id) {
 
 VideoChatView.prototype.mute = function(callType) {
   curSession.mute(callType);
+
   if (callType === 'video') {
     $('#localStream').addClass('is-hidden');
     $('#localUser').removeClass('is-hidden');
@@ -559,6 +569,7 @@ VideoChatView.prototype.mute = function(callType) {
 
 VideoChatView.prototype.unmute = function(callType) {
   curSession.unmute(callType);
+
   if (callType === 'video') {
     $('#localStream').removeClass('is-hidden');
     $('#localUser').addClass('is-hidden');
@@ -581,6 +592,7 @@ function closeStreamScreen(id) {
       callingSignal.pause();
       endCallSignal.play();
     }
+
     clearTimeout(callTimer);
     curSession = {};
     VideoChat.session = null;
@@ -602,6 +614,7 @@ function closeStreamScreen(id) {
 
     if ($('#popupIncoming .mCSB_container').children().length === 0) {
       closePopup();
+
       if (Settings.get('sounds_notify')) {
         ringtoneSignal.pause();
       }
@@ -620,27 +633,32 @@ function switchOffDevice(event) {
   if (self.type !== deviceType && self.type === 'audio') {
     $obj.addClass('off');
     $obj.attr('title', `${msg} is off`);
+
     return true;
   }
 
   if ($obj.is('.off')) {
     self.unmute(deviceType);
+
     if (deviceType === 'video') {
       curSession.update({
         dialog_id: dialogId,
         unmute: deviceType,
       });
     }
+
     $obj.removeClass('off');
     $obj.removeAttr('title');
   } else {
     self.mute(deviceType);
+
     if (deviceType === 'video') {
       curSession.update({
         dialog_id: dialogId,
         mute: deviceType,
       });
     }
+
     $obj.addClass('off');
     $obj.attr('title', `${msg} is off`);
   }
@@ -713,6 +731,7 @@ function stopIncomingCall(id) {
 
   if ($('#popupIncoming .mCSB_container').children().length === 0) {
     closePopup();
+
     if (Settings.get('sounds_notify')) {
       document.getElementById('ringtoneSignal').pause();
     }
@@ -742,6 +761,7 @@ function closePopup() {
 
 function setDuration(currentTime) {
   let c = currentTime || 0;
+
   $('.mediacall-info-duration').text(getTimer(c));
   callTimer = setTimeout(() => {
     c += 1;
@@ -790,4 +810,4 @@ function setScreenStyle() {
   }
 }
 
-module.exports = VideoChatView;
+export default VideoChatView;

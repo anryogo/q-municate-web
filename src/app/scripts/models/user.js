@@ -1,14 +1,14 @@
-const $ = require('jquery');
-const _ = require('underscore');
-const firebase = require('firebase/app');
-require('firebase/auth');
-const QMCONFIG = require('config');
-const FirebaseWidget = require('models/firebase_widget');
-const Person = require('models/person');
-const ProfileView = require('views/profile');
-const ChangePassView = require('views/change_password');
-const FBImportView = require('views/fb_import');
-const Helpers = require('../helpers');
+import $ from 'jquery';
+import _ from 'underscore';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import QMCONFIG from 'config';
+import FirebaseWidget from 'models/firebase_widget';
+import Person from 'models/person';
+import ProfileView from 'views/profile';
+import ChangePassView from 'views/change_password';
+import FBImportView from 'views/fb_import';
+import Helpers from '../helpers';
 
 /*
  * Q-municate chat application
@@ -86,6 +86,7 @@ User.prototype = {
     if (isFacebookCalled) {
       return;
     }
+
     isFacebookCalled = true;
 
     // NOTE!! You should use FB.login method instead FB.getLoginStatus
@@ -192,6 +193,7 @@ User.prototype = {
       } else {
         DialogView.downloadDialogs();
       }
+
       self.isImport = '1';
       self.updateQBUser(user);
     });
@@ -499,4 +501,4 @@ function getImport(user) {
   return isImport;
 }
 
-module.exports = User;
+export default User;

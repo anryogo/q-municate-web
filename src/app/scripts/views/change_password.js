@@ -1,8 +1,8 @@
-const $ = require('jquery');
-const _ = require('underscore');
-const Backbone = require('backbone');
-const QMCONFIG = require('config');
-const Helpers = require('../helpers');
+import $ from 'jquery';
+import _ from 'underscore';
+import Backbone from 'backbone';
+import QMCONFIG from 'config';
+import Helpers from '../helpers';
 
 /*
  * Q-municate chat application
@@ -10,7 +10,7 @@ const Helpers = require('../helpers');
  * Change Password View
  *
  */
-module.exports = Backbone.View.extend({
+export default Backbone.View.extend({
   className: 'passWrap',
 
   template: _.template($('#templateChangePass').html()),
@@ -25,8 +25,10 @@ module.exports = Backbone.View.extend({
 
   render() {
     const template = this.$el.html(this.template(this.model.toJSON()));
+
     $('.popups').append(template);
     this.delegateEvents(this.events);
+
     return this;
   },
 
@@ -64,6 +66,7 @@ module.exports = Backbone.View.extend({
 
   createDataSpinner() {
     let spinnerBlock = '<div class="popup-elem spinner_bounce spinner_bounce_changepass">';
+
     spinnerBlock += '<div class="spinner_bounce-bounce1"></div>';
     spinnerBlock += '<div class="spinner_bounce-bounce2"></div>';
     spinnerBlock += '<div class="spinner_bounce-bounce3"></div>';
@@ -93,6 +96,7 @@ module.exports = Backbone.View.extend({
         validate: true,
       });
       Helpers.log(this.model);
+
       if (!this.model.validationError) {
         this.model.changeQBPass(params, (err) => {
           if (err) {

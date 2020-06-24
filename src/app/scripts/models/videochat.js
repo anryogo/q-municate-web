@@ -1,7 +1,7 @@
-const $ = require('jquery');
-const QB = require('quickblox');
-const QMCONFIG = require('config');
-const Helpers = require('../helpers');
+import $ from 'jquery';
+import QB from 'quickblox';
+import QMCONFIG from 'config';
+import Helpers from '../helpers';
 
 /*
  * Q-municate chat application
@@ -51,6 +51,7 @@ VideoChat.prototype.getUserMedia = function(options, callType, callback) {
   curSession.getUserMedia(params, (err, stream) => {
     if (err) {
       Helpers.log('Error', err);
+
       if (!options.isCallee) {
         callback(err, null);
       } else {
@@ -62,6 +63,7 @@ VideoChat.prototype.getUserMedia = function(options, callType, callback) {
 
       if (!$(`.l-chat[data-dialog="${options.dialogId}"]`).find('.mediacall')[0]) {
         stream.stop({});
+
         return;
       }
 
@@ -74,6 +76,7 @@ VideoChat.prototype.getUserMedia = function(options, callType, callback) {
         self.caller = User.contact.id;
         self.callee = options.opponentId;
       }
+
       callback(null, stream);
     }
   });
@@ -142,6 +145,7 @@ VideoChat.prototype.sendMessage = function(userId, state, callDuration, dialogId
   });
 
   const message = Message.create(msg);
+
   Helpers.log(message);
   MessageView.addItem(message, true, true);
 
@@ -158,4 +162,4 @@ VideoChat.prototype.sendMessage = function(userId, state, callDuration, dialogId
 /* Private
 ---------------------------------------------------------------------- */
 
-module.exports = VideoChat;
+export default VideoChat;

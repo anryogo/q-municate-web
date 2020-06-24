@@ -4,18 +4,6 @@
     "airbnb-base",
     "plugin:backbone/recommended"
   ],
-  "env": {
-    "browser": true,
-    "commonjs": true
-  },
-  "globals": {
-    "GMaps": "readonly",
-    "FB": "readonly"
-  },
-  "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "script"
-  },
   "plugins": [
     "optimize-regex",
     "backbone"
@@ -28,12 +16,24 @@
       }
     }
   },
+  "globals": {
+    "GMaps": "readonly",
+    "FB": "readonly"
+  },
   "rules": {
     "no-console": "error",
     "func-names": ["error", "never"],
     "space-before-function-paren": ["error", "never"],
     "no-use-before-define": ["error", { "functions": false }],
     "no-param-reassign": ["error", { "props": false }],
+    "padding-line-between-statements": [
+      "error",
+      { "blankLine": "always", "prev": ["const", "let"], "next": "*" },
+      { "blankLine": "any",    "prev": ["const", "let"], "next": ["const", "let"] },
+      { "blankLine": "always", "prev": "*", "next": "block-like" },
+      { "blankLine": "always", "prev": "block-like", "next": "*" },
+      { "blankLine": "always", "prev": "*", "next": "return" }
+    ],
 
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "import/prefer-default-export": "off",

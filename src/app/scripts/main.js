@@ -1,12 +1,12 @@
-const $ = require('jquery');
-const QBNotification = require('web-notifications');
+import $ from 'jquery';
+import QBNotification from 'web-notifications';
 // the fetch polifil for IE 10+
-require('whatwg-fetch');
-const QMCONFIG = require('config');
-const minEmoji = require('minEmoji');
-const QM = require('./app');
-const Helpers = require('./helpers');
-require('../styles/main.scss');
+import 'whatwg-fetch';
+import QMCONFIG from 'config';
+import minEmoji from 'minEmoji';
+import QM from './app';
+import Helpers from './helpers';
+import '../styles/main.scss';
 
 let APP;
 
@@ -33,6 +33,7 @@ $(() => {
   // emoji smiles run
   $('.smiles-group').each(function() {
     const obj = $(this);
+
     obj.html(minEmoji(obj.text(), true));
   });
 

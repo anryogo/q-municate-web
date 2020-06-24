@@ -1,9 +1,9 @@
-const $ = require('jquery');
-const QB = require('quickblox');
-const QMCONFIG = require('config');
-const Location = require('views/location');
-const Entities = require('./entities');
-const Helpers = require('./helpers');
+import $ from 'jquery';
+import QB from 'quickblox';
+import QMCONFIG from 'config';
+import Location from 'views/location';
+import Entities from './entities';
+import Helpers from './helpers';
 
 /*
  * Q-municate chat application
@@ -510,8 +510,10 @@ function setRecoverySessionInterval() {
     QB.getSession((err) => {
       if (err) {
         Helpers.log('recovery session error', err);
+
         return;
       }
+
       Session.update({
         date: new Date(),
       });
@@ -529,6 +531,7 @@ fail = function(errMsg) {
 
 failForgot = function() {
   const errMsg = QMCONFIG.errors.notFoundEmail;
+
   $('section:visible input[type="email"]').addClass('is-error');
   fail(errMsg);
 };
@@ -538,4 +541,4 @@ failSearch = function() {
   ContactListView.removeDataSpinner();
 };
 
-module.exports = QBApiCalls;
+export default QBApiCalls;

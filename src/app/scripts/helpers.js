@@ -1,8 +1,8 @@
-const $ = require('jquery');
-const _ = require('underscore');
-const QBNotification = require('web-notifications');
-require('timeago');
-const QMCONFIG = require('config');
+import $ from 'jquery';
+import _ from 'underscore';
+import QBNotification from 'web-notifications';
+import 'timeago';
+import QMCONFIG from 'config';
 
 /**
  * Helper Module
@@ -104,6 +104,7 @@ Helpers.Notifications = {
         } else {
           text = `Call from ${contacts[message.caller].full_name}, duration ${Helpers.getDuration(message.callDuration)}`;
         }
+
         break;
 
       case '9':
@@ -112,6 +113,7 @@ Helpers.Notifications = {
         } else {
           text = `Missed call from ${contacts[message.caller].full_name}`;
         }
+
         break;
 
       case '10':
@@ -120,6 +122,7 @@ Helpers.Notifications = {
         } else {
           text = 'Camera and/or microphone wasn\'t found.';
         }
+
         break;
 
       case '11':
@@ -169,6 +172,7 @@ Helpers.Messages = {
 
     occupantsIds.forEach((item, index) => {
       user = contacts[item] && contacts[item].full_name;
+
       if (user) {
         occupantsNames = (index + 1) === len ? occupantsNames.concat(user) : occupantsNames.concat(user).concat(', ');
       } else if (item === myContact.id) {
@@ -194,6 +198,7 @@ Helpers.Messages = {
     str = str.replace(URL_REGEXP, (match) => {
       url = (/^[a-z]+:/i).test(match) ? match : `http://${match}`;
       urlText = match;
+
       return `<a href="${escapeHTML(url)}" target="_blank">${escapeHTML(urlText)}</a>`;
     });
     /* eslint-enable no-param-reassign */
@@ -215,6 +220,7 @@ Helpers.Dialogs = {
       copyDialogItem = dialogItem.clone();
       dialogItem.remove();
       $('.j-recentList').prepend(copyDialogItem);
+
       if (!$('#searchList').is(':visible')) {
         $('#recentList').removeClass('is-hidden');
         this.isSectionEmpty($('#recentList ul.j-list'));
@@ -301,6 +307,7 @@ Helpers.getDuration = function(seconds, duration) {
   if (duration) {
     return Date.parse(`Thu, 01 Jan 1970 ${duration} GMT`) / 1000;
   }
+
   return new Date(seconds * 1000).toUTCString().split(/ /)[4];
 };
 
@@ -312,9 +319,12 @@ Helpers.getTime = function(time, isDate) {
 
   if (messageDate > startOfCurrentDay) {
     return `${messageDate.getHours()}:${messageDate.getMinutes().toString().length === 1 ? `0${messageDate.getMinutes()}` : messageDate.getMinutes()}`;
-  } if ((messageDate.getFullYear() === startOfCurrentDay.getFullYear()) && !isDate) {
+  }
+
+  if ((messageDate.getFullYear() === startOfCurrentDay.getFullYear()) && !isDate) {
     return $.timeago(messageDate);
   }
+
   return `${messageDate.getDate()}/${messageDate.getMonth() + 1}/${messageDate.getFullYear()}`;
 };
 
@@ -355,6 +365,7 @@ Helpers.getOpenGraphInfo = function(params, callback) {
 
 Helpers.isValidUrl = function(url) {
   const validator = /^(?:([a-z]+):(?:([a-z]*):)?\/\/)?(?:([^:@]*)(?::([^:@]*))?@)?((?:[\w-]+\.)+[a-z]{2,}|localhost|(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d\d?|2[0-4]\d|25[0-5]))(?::(\d+))?(?:([^#:?]+))?(?:\?([^#]+))?(?:#(\S+))?$/i;
+
   return validator.test(url);
 };
 
@@ -366,6 +377,7 @@ Helpers.pauseAllMedia = function(target) {
   document.querySelectorAll('.j-audioPlayer, .j-videoPlayer').forEach((element) => {
     if (element !== target) {
       element.pause();
+
       if (target) {
         element.currentTime = 0;
       }
@@ -377,4 +389,4 @@ Helpers.isIE11orEdge = function() {
   return (/rv:11.0/i.test(navigator.userAgent) || /edge\/\d./i.test(navigator.userAgent));
 };
 
-module.exports = Helpers;
+export default Helpers;
