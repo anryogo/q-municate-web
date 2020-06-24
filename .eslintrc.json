@@ -1,60 +1,61 @@
 {
-    "parser": "babel-eslint",
-    "extends": [
-        "airbnb-base",
-        "plugin:backbone/recommended"
-    ],
-    "env": {
-        "browser": true,
-        "commonjs": true,
-        "es6": true,
-        "node": true
-    },
-    "globals": {
-        "GMaps": "readonly",
-        "FB": "readonly"
-    },
-    "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "script"
-    },
-    "settings": {
-        "import/resolver": {
-            "webpack": {
-                "config": "configs/webpack.dev.js"
-            }
-        }
-    },
-    "plugins": [
-        "import",
-        "optimize-regex",
-        "no-loops",
-        "backbone"
-    ],
-    "rules": {
-        "func-names": ["error", "never"],
-        "space-before-function-paren": ["error", "never"],
-        "no-use-before-define": ["error", { "functions": false }],
-        "no-param-reassign": ["error", { "props": false }],
-
-        "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-        "optimize-regex/optimize-regex": "warn",
-        "no-loops/no-loops": "error",
-        "backbone/no-native-jquery": "off",
-        "backbone/initialize-on-top": ["warn", {
-            "View": [
-                "tagName",
-                "className",
-                "template",
-                "events"
-            ],
-            "Model": ["defaults"],
-            "Collection": ["model"]
-        }],
-        "backbone/events-on-top": ["warn", [
-            "tagName",
-            "className",
-            "template"
-        ]]
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb-base",
+    "plugin:backbone/recommended"
+  ],
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true
+  },
+  "globals": {
+    "GMaps": "readonly",
+    "FB": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "script"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {},
+      "webpack": {
+        "config": "configs/webpack.dev.js"
+      }
     }
+  },
+  "plugins": [
+    "import",
+    "optimize-regex",
+    "no-loops",
+    "backbone"
+  ],
+  "rules": {
+    "func-names": ["error", "never"],
+    "space-before-function-paren": ["error", "never"],
+    "no-use-before-define": ["error", { "functions": false }],
+    "no-param-reassign": ["error", { "props": false }],
+
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "optimize-regex/optimize-regex": "warn",
+    "no-loops/no-loops": "error",
+    "backbone/no-native-jquery": "off",
+    "backbone/initialize-on-top": ["warn", {
+      "View": [
+        "tagName",
+        "className",
+        "template",
+        "events"
+      ],
+      "Model": ["defaults"],
+      "Collection": ["model"]
+    }],
+    "backbone/events-on-top": ["warn", [
+      "tagName",
+      "className",
+      "template"
+    ]]
+  }
 }

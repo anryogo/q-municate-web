@@ -16,29 +16,29 @@ const banner = `
 `;
 
 module.exports = merge(common, {
-    mode: 'production',
+  mode: 'production',
 
-    optimization: {
-        minimizer: [
-            new TerserJSPlugin(),
-            new OptimizeCSSAssetsPlugin(),
-            new ImageminPlugin({
-                imageminOptions: {
-                    plugins: [
-                        'gifsicle',
-                        'jpegtran',
-                        'optipng',
-                        'svgo',
-                    ],
-                },
-            }),
-        ],
-    },
-
-    plugins: [
-        new webpack.BannerPlugin({
-            exclude: /vendor/,
-            banner,
-        }),
+  optimization: {
+    minimizer: [
+      new TerserJSPlugin(),
+      new OptimizeCSSAssetsPlugin(),
+      new ImageminPlugin({
+        imageminOptions: {
+          plugins: [
+            'gifsicle',
+            'jpegtran',
+            'optipng',
+            'svgo',
+          ],
+        },
+      }),
     ],
+  },
+
+  plugins: [
+    new webpack.BannerPlugin({
+      exclude: /vendor/,
+      banner,
+    }),
+  ],
 });

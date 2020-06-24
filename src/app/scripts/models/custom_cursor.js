@@ -4,87 +4,87 @@
  *
  */
 function Cursor() {
-    const self = this;
+  const self = this;
 
-    this.setCursorAfterElement = function(el) {
-        const range = document.createRange();
+  this.setCursorAfterElement = function(el) {
+    const range = document.createRange();
 
-        range.setStartAfter(el);
-        range.setEndAfter(el);
+    range.setStartAfter(el);
+    range.setEndAfter(el);
 
-        setRange(range);
-    };
+    setRange(range);
+  };
 
-    this.setCursorToEnd = function(el) {
-        const isSelectionAndRangeAvaible = typeof window.getSelection !== 'undefined'
+  this.setCursorToEnd = function(el) {
+    const isSelectionAndRangeAvaible = typeof window.getSelection !== 'undefined'
                                          && typeof document.createRange !== 'undefined';
-        const isTextRangeAvaible = typeof document.body.createTextRange !== 'undefined';
-        let range;
-        let textRange;
+    const isTextRangeAvaible = typeof document.body.createTextRange !== 'undefined';
+    let range;
+    let textRange;
 
-        el.focus();
+    el.focus();
 
-        if (isSelectionAndRangeAvaible) {
-            range = document.createRange();
+    if (isSelectionAndRangeAvaible) {
+      range = document.createRange();
 
-            range.selectNodeContents(el);
-            range.collapse(false);
-            setRange(range);
-        } else if (isTextRangeAvaible) {
-            textRange = document.body.createTextRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      setRange(range);
+    } else if (isTextRangeAvaible) {
+      textRange = document.body.createTextRange();
 
-            textRange.moveToElementText(el);
-            textRange.collapse(false);
-            textRange.select();
-        }
-    };
+      textRange.moveToElementText(el);
+      textRange.collapse(false);
+      textRange.select();
+    }
+  };
 
-    this.insertElement = function(element, newClassName) {
-        let sel;
-        let range;
-        let emoji;
+  this.insertElement = function(element, newClassName) {
+    let sel;
+    let range;
+    let emoji;
 
-        if (window.getSelection) {
-            sel = window.getSelection();
+    if (window.getSelection) {
+      sel = window.getSelection();
 
-            if (sel.getRangeAt && sel.rangeCount) {
-                range = getRange();
-                emoji = element.cloneNode(true);
+      if (sel.getRangeAt && sel.rangeCount) {
+        range = getRange();
+        emoji = element.cloneNode(true);
 
-                emoji.classList.add(newClassName);
-                range.insertNode(emoji);
-                self.setCursorAfterElement(emoji);
-            }
-        }
-    };
+        emoji.classList.add(newClassName);
+        range.insertNode(emoji);
+        self.setCursorAfterElement(emoji);
+      }
+    }
+  };
 
-    function getRange() {
-        let range;
-        let sel;
+  function getRange() {
+    let range;
+    let sel;
 
-        if (document.getSelection) {
-            sel = document.getSelection();
+    if (document.getSelection) {
+      sel = document.getSelection();
 
-            if (sel.rangeCount > 0) {
-                range = sel.getRangeAt(0);
-            }
-        } else {
-            range = false;
-        }
-
-        return range;
+      if (sel.rangeCount > 0) {
+        range = sel.getRangeAt(0);
+      }
+    } else {
+      range = false;
     }
 
-    function setRange(range) {
-        let sel;
+    return range;
+  }
 
-        if (document.getSelection) {
-            sel = window.getSelection();
+  function setRange(range) {
+    let sel;
 
-            sel.removeAllRanges();
-            sel.addRange(range);
-        }
+    if (document.getSelection) {
+      sel = window.getSelection();
+
+      sel.removeAllRanges();
+      sel.addRange(range);
     }
+  }
 }
 
 module.exports = Cursor;
