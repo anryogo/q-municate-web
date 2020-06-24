@@ -1,9 +1,7 @@
 const $ = require('jquery');
 const Ps = require('perfect-scrollbar');
-
 require('malihu-custom-scrollbar-plugin');
 require('jquery-mousewheel');
-
 const QMCONFIG = require('config');
 const Location = require('views/location');
 const Helpers = require('./helpers');

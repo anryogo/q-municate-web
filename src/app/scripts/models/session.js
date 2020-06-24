@@ -1,5 +1,4 @@
 const CryptoJS = require('crypto-js');
-
 const QMCONFIG = require('config');
 
 /*

@@ -1,7 +1,5 @@
 const $ = require('jquery');
-
 const QMCONFIG = require('config');
-
 const User = require('models/user');
 const Session = require('models/session');
 const Settings = require('models/settings');
@@ -14,7 +12,6 @@ const VideoChat = require('models/videochat');
 const Cursor = require('models/custom_cursor');
 const SyncTabs = require('models/sync_tabs');
 const FirebaseWidget = require('models/firebase_widget');
-
 const UserView = require('views/user');
 const SettingsView = require('views/settings');
 const DialogView = require('views/dialog');
@@ -23,7 +20,6 @@ const AttachView = require('views/attach');
 const ContactListView = require('views/contact_list');
 const VideoChatView = require('views/videochat');
 const QMPlayer = require('views/qmplayer');
-
 const Events = require('./events');
 const Helpers = require('./helpers');
 const QBApiCalls = require('./qbApiCalls');

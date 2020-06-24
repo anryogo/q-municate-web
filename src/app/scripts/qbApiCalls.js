@@ -1,6 +1,5 @@
 const $ = require('jquery');
 const QB = require('quickblox');
-
 const QMCONFIG = require('config');
 const Location = require('views/location');
 const Entities = require('./entities');

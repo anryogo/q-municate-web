@@ -2,7 +2,6 @@ const $ = require('jquery');
 const _ = require('underscore');
 const Backbone = require('backbone');
 const QB = require('quickblox');
-
 const QMCONFIG = require('config');
 const Helpers = require('../helpers');
 

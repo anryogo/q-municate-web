@@ -1,5 +1,4 @@
 const _ = require('underscore');
-
 const Helpers = require('../helpers');
 
 /*

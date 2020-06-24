@@ -1,7 +1,6 @@
 const $ = require('jquery');
 const _ = require('underscore');
 const QB = require('quickblox');
-
 const QMCONFIG = require('config');
 const ProgressBar = require('progressbar');
 const Helpers = require('../helpers');

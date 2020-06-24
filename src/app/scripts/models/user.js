@@ -1,9 +1,7 @@
 const $ = require('jquery');
 const _ = require('underscore');
 const firebase = require('firebase/app');
-
 require('firebase/auth');
-
 const QMCONFIG = require('config');
 const FirebaseWidget = require('models/firebase_widget');
 const Person = require('models/person');

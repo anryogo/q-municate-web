@@ -1,9 +1,7 @@
 const $ = require('jquery');
 const _ = require('underscore');
 const QBNotification = require('web-notifications');
-
 require('timeago');
-
 const QMCONFIG = require('config');
 
 /**
@@ -262,7 +260,7 @@ Helpers.log = function(...args) {
     } else {
       console.group('[Q-MUNICATE debug mode]:');
 
-      // eslint-disable-next-line no-plusplus, no-loops/no-loops
+      // eslint-disable-next-line no-plusplus
       for (i = 0; i < args.length; i++) {
         if ((typeof args[i] === 'string') && (typeof args[i + 1] !== 'string')) {
           console.log(args[i], args[i + 1]);

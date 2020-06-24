@@ -2,11 +2,9 @@ const $ = require('jquery');
 const _ = require('underscore');
 const QB = require('quickblox');
 const Ps = require('perfect-scrollbar');
-
 require('malihu-custom-scrollbar-plugin');
 require('jquery.nicescroll');
 require('jquery-mousewheel');
-
 const QMCONFIG = require('config');
 const minEmoji = require('minEmoji');
 const Entities = require('../entities');

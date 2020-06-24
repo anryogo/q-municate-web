@@ -1,5 +1,4 @@
 const QBMediaRecorder = require('media-recorder-js');
-
 const QMCONFIG = require('config');
 const Helpers = require('./helpers');
 

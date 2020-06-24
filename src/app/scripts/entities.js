@@ -2,7 +2,6 @@ const $ = require('jquery');
 const _ = require('underscore');
 const Backbone = require('backbone');
 const QB = require('quickblox');
-
 const QMCONFIG = require('config');
 const Helpers = require('./helpers');
 
@@ -200,7 +199,7 @@ entities.Models.Dialog = Backbone.Model.extend({
     let i;
 
     if (+curCount === 0) {
-      // eslint-disable-next-line no-plusplus, no-loops/no-loops
+      // eslint-disable-next-line no-plusplus
       for (i = 0; i < (msgCount - stack); i++) {
         messages.pop();
       }

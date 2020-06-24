@@ -5,13 +5,17 @@
   ],
   "rules": {
     "max-nesting-depth": 3,
-    "order/properties-alphabetical-order": null,
+
+    "declaration-property-value-blacklist": {
+      "/^border/": ["none"]
+    },
 
     "selector-max-id": 1,
     "selector-max-compound-selectors": 4,
+    "selector-class-pattern": null,
     "selector-no-qualifying-type": null,
 
-    "selector-class-pattern": null,
+    "order/properties-alphabetical-order": null,
     "scss/dollar-variable-pattern": null
   }
 }

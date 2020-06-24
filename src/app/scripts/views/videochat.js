@@ -1,7 +1,6 @@
 const $ = require('jquery');
 const QB = require('quickblox');
 const QBNotification = require('web-notifications');
-
 const QMCONFIG = require('config');
 const Entities = require('../entities');
 const Helpers = require('../helpers');

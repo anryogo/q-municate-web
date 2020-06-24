@@ -1,5 +1,4 @@
 const QB = require('quickblox');
-
 const QMCONFIG = require('config');
 
 /*

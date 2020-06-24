@@ -1,14 +1,11 @@
 const $ = require('jquery');
 const QBNotification = require('web-notifications');
-
 // the fetch polifil for IE 10+
 require('whatwg-fetch');
-
 const QMCONFIG = require('config');
 const minEmoji = require('minEmoji');
 const QM = require('./app');
 const Helpers = require('./helpers');
-
 require('../styles/main.scss');
 
 let APP;
