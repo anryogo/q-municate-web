@@ -66,7 +66,8 @@ module.exports = {
         use: {
           loader: 'exports-loader',
           options: {
-            exports: 'ProgressBar',
+            type: 'commonjs',
+            exports: 'single ProgressBar',
           },
         },
       },
