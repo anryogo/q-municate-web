@@ -12,7 +12,6 @@ function Contact(app) {
 }
 
 Contact.prototype = {
-
   create(qbUser) {
     return {
       id: qbUser.id,
@@ -25,12 +24,10 @@ Contact.prototype = {
       user_tags: qbUser.tag || qbUser.user_tags || null,
       avatar_url: getAvatar(qbUser),
       status: qbUser.status || getStatus(qbUser) || '',
-      user_jid: qbUser.user_jid
-                || QB.chat.helpers.getUserJid(qbUser.id, QMCONFIG.qbAccount.appId),
+      user_jid: qbUser.user_jid || QB.chat.helpers.getUserJid(qbUser.id, QMCONFIG.qbAccount.appId),
       custom_data: qbUser.custom_data || null,
     };
   },
-
 };
 
 /* Private

@@ -168,7 +168,7 @@
   font-weight: bold;
 }
 
-input.userProfile-filename.without_M[type=text] {
+input.userProfile-filename.without_M[type='text'] {
   width: 285px;
   padding: 5px 0;
   color: $color_mine_shaft_approx;
@@ -185,7 +185,7 @@ input.userProfile-filename.without_M[type=text] {
   }
 }
 
-input.userProfile-phone.without_M[type=text] {
+input.userProfile-phone.without_M[type='text'] {
   width: 330px;
   padding: 5px 0;
   border: 0;
@@ -287,7 +287,7 @@ input.userProfile-phone.without_M[type=text] {
   color: $color_japanese_laurel_approx;
 }
 
-input.form-input-password[type=password] {
+input.form-input-password[type='password'] {
   border-bottom: 2px solid $color_mountain_mist_approx;
 
   &:focus {

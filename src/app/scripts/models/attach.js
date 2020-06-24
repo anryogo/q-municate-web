@@ -11,17 +11,19 @@ function Attach(app) {
 }
 
 Attach.prototype = {
-
   upload(file, callback) {
     const self = this;
     const QBApiCalls = self.app.service;
 
-    QBApiCalls.createBlob({
-      file,
-      public: true,
-    }, (blob) => {
-      callback(blob);
-    });
+    QBApiCalls.createBlob(
+      {
+        file,
+        public: true,
+      },
+      (blob) => {
+        callback(blob);
+      }
+    );
   },
 
   create(blob, metadata) {
@@ -50,33 +52,29 @@ Attach.prototype = {
   },
 
   crop(file, params, callback) {
-    loadImage(
-      file,
-      (img) => {
-        const attr = {
-          crop: true,
-        };
+    loadImage(file, (img) => {
+      const attr = {
+        crop: true,
+      };
 
-        if (img.width > img.height) {
-          attr.maxWidth = params.w;
-        } else {
-          attr.maxHeight = params.h;
-        }
+      if (img.width > img.height) {
+        attr.maxWidth = params.w;
+      } else {
+        attr.maxHeight = params.h;
+      }
 
-        loadImage(
-          file,
-          (canvas) => {
-            canvas.toBlob((blob) => {
-              blob.name = file.name;
-              callback(blob);
-            }, file.type);
-          },
-          attr,
-        );
-      },
-    );
+      loadImage(
+        file,
+        (canvas) => {
+          canvas.toBlob((blob) => {
+            blob.name = file.name;
+            callback(blob);
+          }, file.type);
+        },
+        attr
+      );
+    });
   },
-
 };
 
 export default Attach;

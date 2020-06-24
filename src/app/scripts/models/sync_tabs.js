@@ -17,7 +17,7 @@ function SyncTabs(app) {
 
   this.app = app;
 
-  this.init = function(userId) {
+  this.init = function (userId) {
     currentUserId = userId;
 
     // set params to local storage
@@ -46,8 +46,8 @@ function SyncTabs(app) {
     });
   };
 
-  this.get = function() {
-    return (localStorage[mainTab] === curTab);
+  this.get = function () {
+    return localStorage[mainTab] === curTab;
   };
 
   function set() {
@@ -77,7 +77,7 @@ function SyncTabs(app) {
         // set new number for last tab if the number of tabs was changed
         curTab = +newVal;
         // set the number of existing tabs
-        localStorage.setItem(countTabs, (+localStorage[countTabs] - 1));
+        localStorage.setItem(countTabs, +localStorage[countTabs] - 1);
 
         if (localStorage[countTabs] < localStorage[mainTab]) {
           localStorage.setItem(mainTab, curTab);
@@ -86,7 +86,7 @@ function SyncTabs(app) {
     }
 
     // fire if user's settings was changed
-    if (key === (`QM.settings-${currentUserId}`)) {
+    if (key === `QM.settings-${currentUserId}`) {
       self.app.views.Settings.setUp(currentUserId);
     }
 

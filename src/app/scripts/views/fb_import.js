@@ -45,5 +45,4 @@ export default Backbone.View.extend({
     $('.tempHide').show();
     $('.tempHide').removeClass('tempHide');
   },
-
 });

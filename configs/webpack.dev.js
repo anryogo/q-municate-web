@@ -8,10 +8,7 @@ module.exports = merge(common, {
   devtool: 'cheap-module-source-map',
 
   devServer: {
-    contentBase: [
-      path.resolve('dist'),
-      path.resolve('src/assets'),
-    ],
+    contentBase: [path.resolve('dist'), path.resolve('src/assets')],
     port: 9000,
     hot: true,
     historyApiFallback: {
@@ -19,7 +16,5 @@ module.exports = merge(common, {
     },
   },
 
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-  ],
+  plugins: [new webpack.HotModuleReplacementPlugin()],
 });

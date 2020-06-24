@@ -9,7 +9,6 @@ import Helpers from '../helpers';
 let watchId;
 
 const Location = {
-
   getGeoCoordinates(watch, callback) {
     function success(pos) {
       const geoCoords = {
@@ -39,10 +38,12 @@ const Location = {
       lat: geoCoords.lat,
       lng: geoCoords.lng,
       zoom: (options && options.zoom) || 15,
-      markers: [{
-        lat: geoCoords.lat,
-        lng: geoCoords.lng,
-      }],
+      markers: [
+        {
+          lat: geoCoords.lat,
+          lng: geoCoords.lng,
+        },
+      ],
     };
 
     return GMaps.staticMapURL(params);
@@ -53,7 +54,7 @@ const Location = {
   },
 
   toggleGeoCoordinatesToLocalStorage(saveLocation, callback) {
-    const isCoords = !!((localStorage['QM.latitude'] && localStorage['QM.longitude']));
+    const isCoords = !!(localStorage['QM.latitude'] && localStorage['QM.longitude']);
     const $button = $('.j-send_location');
 
     if (saveLocation) {
@@ -62,8 +63,7 @@ const Location = {
           Helpers.log(err);
 
           if (err.indexOf('ERROR(1):') > -1) {
-            $('.j-geoInfo').addClass('is-overlay')
-              .parent('.j-overlay').addClass('is-overlay');
+            $('.j-geoInfo').addClass('is-overlay').parent('.j-overlay').addClass('is-overlay');
           }
 
           if (isCoords) {
@@ -80,7 +80,9 @@ const Location = {
 
           $button.addClass('btn_active');
 
-          callback(`Added coordinates to localStorage: latitude(${res.latitude}), longitude(${res.longitude})`);
+          callback(
+            `Added coordinates to localStorage: latitude(${res.latitude}), longitude(${res.longitude})`
+          );
         }
       });
     } else {
@@ -100,7 +102,7 @@ const Location = {
 
     $gmap.prepend('<div id="map" class="open_map j-open_map"></div>');
 
-    const isCoords = !!((localStorage['QM.latitude'] && localStorage['QM.longitude']));
+    const isCoords = !!(localStorage['QM.latitude'] && localStorage['QM.longitude']);
 
     const map = new GMaps({
       div: '#map',
@@ -137,7 +139,6 @@ const Location = {
       $('.j-send_map').addClass('is-active');
     });
   },
-
 };
 
 export default Location;

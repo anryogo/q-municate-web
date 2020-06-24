@@ -16,7 +16,7 @@ function Listeners(app) {
   self.disconnected = false;
   self.offline = false;
 
-  self.setChatState = function(state) {
+  self.setChatState = function (state) {
     if (typeof state === 'boolean') {
       chatConnection = state;
     } else {
@@ -25,11 +25,11 @@ function Listeners(app) {
     }
   };
 
-  self.getChatState = function() {
+  self.getChatState = function () {
     return chatConnection;
   };
 
-  self.setChatViewPosition = function(value) {
+  self.setChatViewPosition = function (value) {
     if (!self.blockChatViewPosition) {
       position = value;
     }
@@ -37,7 +37,7 @@ function Listeners(app) {
     self.blockChatViewPosition = false;
   };
 
-  self.getChatViewPosition = function() {
+  self.getChatViewPosition = function () {
     let direction = '';
     let value = 0;
 
@@ -49,12 +49,11 @@ function Listeners(app) {
       value += position;
     }
 
-    return (direction + value);
+    return direction + value;
   };
 }
 
 Listeners.prototype = {
-
   init() {
     window.addEventListener('online', self.onNetworkStatusListener);
     window.addEventListener('offline', self.onNetworkStatusListener);
@@ -94,14 +93,15 @@ Listeners.prototype = {
       QB.webrtc.onUpdateCallListener = VideoChatView.onUpdateCall;
       QB.webrtc.onRemoteStreamListener = VideoChatView.onRemoteStream;
       // eslint-disable-next-line max-len
-      QB.webrtc.onSessionConnectionStateChangedListener = VideoChatView.onSessionConnectionStateChangedListener;
+      QB.webrtc.onSessionConnectionStateChangedListener =
+        VideoChatView.onSessionConnectionStateChangedListener;
       QB.webrtc.onSessionCloseListener = VideoChatView.onSessionCloseListener;
       QB.webrtc.onUserNotAnswerListener = VideoChatView.onUserNotAnswerListener;
     }
   },
 
   listenToMediaElement(selector) {
-    document.querySelector(selector).onplaying = function(event) {
+    document.querySelector(selector).onplaying = function (event) {
       // pause all media sources except started one
       Helpers.pauseAllMedia(event.target);
     };
@@ -197,12 +197,14 @@ Listeners.prototype = {
   },
 
   onFullScreenChange(event) {
-    const fullscreenElement = document.fullscreenElement
-                                || document.mozFullscreenElement
-                                || document.webkitFullscreenElement;
-    const fullscreenEnabled = document.fullscreenEnabled
-                                || document.mozFullscreenEnabled
-                                || document.webkitFullscreenEnabled;
+    const fullscreenElement =
+      document.fullscreenElement ||
+      document.mozFullscreenElement ||
+      document.webkitFullscreenElement;
+    const fullscreenEnabled =
+      document.fullscreenEnabled ||
+      document.mozFullscreenEnabled ||
+      document.webkitFullscreenEnabled;
     const isVideoElementTag = event.target.tagName === 'VIDEO';
     let $scroll;
 

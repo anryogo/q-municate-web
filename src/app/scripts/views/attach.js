@@ -30,15 +30,15 @@ function AttachView(app) {
 }
 
 AttachView.prototype = {
-
   changeInput(objDom, recordedAudioFile) {
     const file = recordedAudioFile || objDom[0].files[0];
     const chat = $('.l-chat:visible .l-chat-content .mCSB_container');
     const id = _.uniqueId();
     const fileSize = file.size;
     // eslint-disable-next-line max-len
-    const fileSizeCrop = fileSize > (1024 * 1024) ? (fileSize / (1024 * 1024)).toFixed(1) : (fileSize / 1024).toFixed(1);
-    const fileSizeUnit = fileSize > (1024 * 1024) ? 'MB' : 'KB';
+    const fileSizeCrop =
+      fileSize > 1024 * 1024 ? (fileSize / (1024 * 1024)).toFixed(1) : (fileSize / 1024).toFixed(1);
+    const fileSizeUnit = fileSize > 1024 * 1024 ? 'MB' : 'KB';
     const metadata = readMetadata(file);
     let errMsg;
     let html;
@@ -66,12 +66,16 @@ AttachView.prototype = {
       fixScroll();
 
       if (file.type.indexOf('image') > -1) {
-        Attach.crop(file, {
-          w: 1000,
-          h: 1000,
-        }, (blob) => {
-          self.createProgressBar(id, fileSizeCrop, metadata, blob);
-        });
+        Attach.crop(
+          file,
+          {
+            w: 1000,
+            h: 1000,
+          },
+          (blob) => {
+            self.createProgressBar(id, fileSizeCrop, metadata, blob);
+          }
+        );
       } else {
         self.createProgressBar(id, fileSizeCrop, metadata, file);
       }
@@ -169,7 +173,10 @@ AttachView.prototype = {
     const dialogId = chat.data('dialog');
     const type = chat.is('.is-group') ? 'groupchat' : 'chat';
     const time = Math.floor(Date.now() / 1000);
-    const dialogItem = type === 'groupchat' ? $(`.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`) : $(`.l-list-wrap section:not(#searchList) .dialog-item[data-id="${id}"]`);
+    const dialogItem =
+      type === 'groupchat'
+        ? $(`.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`)
+        : $(`.l-list-wrap section:not(#searchList) .dialog-item[data-id="${id}"]`);
     const locationIsActive = $('.j-send_location').hasClass('btn_active');
     let copyDialogItem;
     let lastMessage;
@@ -191,9 +198,7 @@ AttachView.prototype = {
         save_to_history: 1,
         dialog_id: dialogId,
         date_sent: time,
-        attachments: [
-          attach,
-        ],
+        attachments: [attach],
       },
       markable: 1,
     };
@@ -306,12 +311,11 @@ AttachView.prototype = {
         errMsg = 'This audio format is not supported, only *.mp3';
       }
     } else if (type === 'file') {
-      errMsg = 'This file format isn\'t supported';
+      errMsg = "This file format isn't supported";
     }
 
     return errMsg;
   },
-
 };
 
 /* Private
@@ -344,7 +348,7 @@ function readMetadata(file) {
 
       image.src = WINDOW_URL.createObjectURL(file);
 
-      image.onload = function() {
+      image.onload = function () {
         metadata.width = this.width;
         metadata.height = this.height;
       };
@@ -356,7 +360,7 @@ function readMetadata(file) {
 
       audio.src = WINDOW_URL.createObjectURL(file);
 
-      audio.onloadedmetadata = function() {
+      audio.onloadedmetadata = function () {
         metadata.duration = Math.floor(this.duration);
       };
 
@@ -367,7 +371,7 @@ function readMetadata(file) {
 
       video.src = WINDOW_URL.createObjectURL(file);
 
-      video.onloadedmetadata = function() {
+      video.onloadedmetadata = function () {
         metadata.width = this.videoWidth;
         metadata.height = this.videoHeight;
         metadata.duration = Math.floor(this.duration);

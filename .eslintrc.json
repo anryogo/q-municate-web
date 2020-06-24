@@ -2,7 +2,8 @@
   "parser": "babel-eslint",
   "extends": [
     "airbnb-base",
-    "plugin:backbone/recommended"
+    "plugin:backbone/recommended",
+    "plugin:prettier/recommended"
   ],
   "plugins": [
     "optimize-regex",
@@ -23,7 +24,6 @@
   "rules": {
     "no-console": "error",
     "func-names": ["error", "never"],
-    "space-before-function-paren": ["error", "never"],
     "no-use-before-define": ["error", { "functions": false }],
     "no-param-reassign": ["error", { "props": false }],
     "padding-line-between-statements": [

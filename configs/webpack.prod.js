@@ -23,12 +23,7 @@ module.exports = merge(common, {
       new OptimizeCSSAssetsPlugin(),
       new ImageminPlugin({
         imageminOptions: {
-          plugins: [
-            'gifsicle',
-            'jpegtran',
-            'optipng',
-            'svgo',
-          ],
+          plugins: ['gifsicle', 'jpegtran', 'optipng', 'svgo'],
         },
       }),
     ],

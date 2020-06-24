@@ -29,10 +29,7 @@ module.exports = {
   },
 
   resolve: {
-    modules: [
-      `${basePath}/vendor`,
-      'node_modules',
-    ],
+    modules: [`${basePath}/vendor`, 'node_modules'],
     alias: {
       // libs
       minEmoji: 'emoji/js/minEmoji',
@@ -100,10 +97,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-        ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/,
@@ -145,10 +139,7 @@ module.exports = {
       filename: '404.html',
       template: `${basePath}/404.html`,
       minify: false,
-      excludeChunks: [
-        'main',
-        'vendor',
-      ],
+      excludeChunks: ['main', 'vendor'],
     }),
   ],
 };

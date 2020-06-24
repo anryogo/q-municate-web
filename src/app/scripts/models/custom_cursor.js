@@ -6,7 +6,7 @@
 function Cursor() {
   const self = this;
 
-  this.setCursorAfterElement = function(el) {
+  this.setCursorAfterElement = function (el) {
     const range = document.createRange();
 
     range.setStartAfter(el);
@@ -15,9 +15,9 @@ function Cursor() {
     setRange(range);
   };
 
-  this.setCursorToEnd = function(el) {
-    const isSelectionAndRangeAvaible = typeof window.getSelection !== 'undefined'
-                                         && typeof document.createRange !== 'undefined';
+  this.setCursorToEnd = function (el) {
+    const isSelectionAndRangeAvaible =
+      typeof window.getSelection !== 'undefined' && typeof document.createRange !== 'undefined';
     const isTextRangeAvaible = typeof document.body.createTextRange !== 'undefined';
     let range;
     let textRange;
@@ -39,7 +39,7 @@ function Cursor() {
     }
   };
 
-  this.insertElement = function(element, newClassName) {
+  this.insertElement = function (element, newClassName) {
     let sel;
     let range;
     let emoji;

@@ -68,13 +68,13 @@
 
 .firebase__inputs {
   .intl-tel-input {
-    input.input_tel[type=tel] {
+    input.input_tel[type='tel'] {
       width: 244px;
       padding: 10px 10px 10px 60px;
       transition: boreder-color 1s;
     }
 
-    input.input_tel[type=tel].error_highlight {
+    input.input_tel[type='tel'].error_highlight {
       border-color: $red;
     }
 

@@ -40,11 +40,15 @@ function QBApiCalls(app) {
 }
 
 QBApiCalls.prototype = {
-
   init(token) {
     if (typeof token === 'undefined') {
       // eslint-disable-next-line max-len
-      QB.init(QMCONFIG.qbAccount.appId, QMCONFIG.qbAccount.authKey, QMCONFIG.qbAccount.authSecret, QMCONFIG.QBconf);
+      QB.init(
+        QMCONFIG.qbAccount.appId,
+        QMCONFIG.qbAccount.authKey,
+        QMCONFIG.qbAccount.authSecret,
+        QMCONFIG.QBconf
+      );
     } else {
       QB.init(token, QMCONFIG.qbAccount.appId, null, QMCONFIG.QBconf);
       QB.service.qbInst.session.application_id = QMCONFIG.qbAccount.appId;
@@ -61,7 +65,7 @@ QBApiCalls.prototype = {
   },
 
   checkSession(callback) {
-    if ((new Date()).toISOString() > Session.expirationTime) {
+    if (new Date().toISOString() > Session.expirationTime) {
       // recovery session
       if (Session.authParams.provider === 'facebook') {
         UserView.getFBStatus((token) => {
@@ -324,29 +328,32 @@ QBApiCalls.prototype = {
     this.checkSession(() => {
       const password = Session.token;
 
-      QB.chat.connect({
-        jid,
-        password,
-      }, (err, roster) => {
-        if (err) {
-          Helpers.log(err);
+      QB.chat.connect(
+        {
+          jid,
+          password,
+        },
+        (err, roster) => {
+          if (err) {
+            Helpers.log(err);
 
-          fail(err.detail);
-        } else {
-          Listeners.stateActive = true;
-          Listeners.setChatState(true);
+            fail(err.detail);
+          } else {
+            Listeners.stateActive = true;
+            Listeners.setChatState(true);
 
-          Session.update({
-            date: new Date(),
-          });
+            Session.update({
+              date: new Date(),
+            });
 
-          ContactList.saveRoster(roster);
+            ContactList.saveRoster(roster);
 
-          setRecoverySessionInterval();
+            setRecoverySessionInterval();
 
-          callback();
+            callback();
+          }
         }
-      });
+      );
     });
   },
 
@@ -499,13 +506,12 @@ QBApiCalls.prototype = {
       callback(roster);
     });
   },
-
 };
 
 /* Private
 ---------------------------------------------------------------------- */
 function setRecoverySessionInterval() {
-// update QB session every one hour
+  // update QB session every one hour
   timer = setTimeout(() => {
     QB.getSession((err) => {
       if (err) {
@@ -523,20 +529,20 @@ function setRecoverySessionInterval() {
   }, 3600 * 1000);
 }
 
-fail = function(errMsg) {
+fail = function (errMsg) {
   UserView.removeSpinner();
   $('section:visible .text_error').addClass('is-error').text(errMsg);
   $('section:visible input:password').val('');
 };
 
-failForgot = function() {
+failForgot = function () {
   const errMsg = QMCONFIG.errors.notFoundEmail;
 
   $('section:visible input[type="email"]').addClass('is-error');
   fail(errMsg);
 };
 
-failSearch = function() {
+failSearch = function () {
   $('.popup:visible .note').removeClass('is-hidden').siblings('.popup-elem').addClass('is-hidden');
   ContactListView.removeDataSpinner();
 };

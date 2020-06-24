@@ -13,7 +13,6 @@ function SettingsView(app) {
 }
 
 SettingsView.prototype = {
-
   // set users settings from localStorage or create default (default - all is ON)
   setUp(userId) {
     Settings.init(userId);
@@ -33,7 +32,6 @@ SettingsView.prototype = {
     Settings.set(newStatus);
     Settings.save();
   },
-
 };
 
 export default SettingsView;

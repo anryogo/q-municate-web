@@ -31,7 +31,7 @@ $(() => {
   }
 
   // emoji smiles run
-  $('.smiles-group').each(function() {
+  $('.smiles-group').each(function () {
     const obj = $(this);
 
     obj.html(minEmoji(obj.text(), true));

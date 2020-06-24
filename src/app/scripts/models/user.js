@@ -28,7 +28,6 @@ function User(app) {
 }
 
 User.prototype = {
-
   initProfile() {
     const currentUser = new Person(_.clone(self.contact), {
       app: self.app,
@@ -91,19 +90,22 @@ User.prototype = {
 
     // NOTE!! You should use FB.login method instead FB.getLoginStatus
     // and your browser won't block FB Login popup
-    FB.login((response) => {
-      if (response.authResponse && response.status === 'connected') {
-        self.connectFB(response.authResponse.accessToken);
+    FB.login(
+      (response) => {
+        if (response.authResponse && response.status === 'connected') {
+          self.connectFB(response.authResponse.accessToken);
 
-        isFacebookCalled = false;
-        Helpers.log('FB authResponse', response);
-      } else {
-        isFacebookCalled = false;
-        Helpers.log('User cancelled login or did not fully authorize.');
+          isFacebookCalled = false;
+          Helpers.log('FB authResponse', response);
+        } else {
+          isFacebookCalled = false;
+          Helpers.log('User cancelled login or did not fully authorize.');
+        }
+      },
+      {
+        scope: QMCONFIG.fbAccount.scope,
       }
-    }, {
-      scope: QMCONFIG.fbAccount.scope,
-    });
+    );
   },
 
   connectFB(token) {
@@ -211,11 +213,13 @@ User.prototype = {
 
     customData.is_import = '1';
     customData = JSON.stringify(customData);
-    QBApiCalls.updateUser(user.id, {
-      custom_data: customData,
-    }, () => {
-
-    });
+    QBApiCalls.updateUser(
+      user.id,
+      {
+        custom_data: customData,
+      },
+      () => {}
+    );
   },
 
   signup() {
@@ -269,32 +273,41 @@ User.prototype = {
     const { Attach } = this.app.models;
     let customData;
 
-    Attach.crop(tempParams.blob, {
-      w: 1000,
-      h: 1000,
-    }, (file) => {
-      QBApiCalls.createBlob({
-        file,
-        public: true,
-      }, (blob) => {
-        self.contact.blob_id = blob.id;
-        self.contact.avatar_url = blob.path;
+    Attach.crop(
+      tempParams.blob,
+      {
+        w: 1000,
+        h: 1000,
+      },
+      (file) => {
+        QBApiCalls.createBlob(
+          {
+            file,
+            public: true,
+          },
+          (blob) => {
+            self.contact.blob_id = blob.id;
+            self.contact.avatar_url = blob.path;
 
-        UserView.successFormCallback();
-        DialogView.prepareDownloading();
-        DialogView.downloadDialogs();
+            UserView.successFormCallback();
+            DialogView.prepareDownloading();
+            DialogView.downloadDialogs();
 
-        customData = JSON.stringify({
-          avatar_url: blob.path,
-        });
-        QBApiCalls.updateUser(self.contact.id, {
-          blob_id: blob.id,
-          custom_data: customData,
-        }, () => {
-
-        });
-      });
-    });
+            customData = JSON.stringify({
+              avatar_url: blob.path,
+            });
+            QBApiCalls.updateUser(
+              self.contact.id,
+              {
+                blob_id: blob.id,
+                custom_data: customData,
+              },
+              () => {}
+            );
+          }
+        );
+      }
+    );
   },
 
   login() {
@@ -406,7 +419,6 @@ User.prototype = {
       window.location.reload();
     });
   },
-
 };
 
 /* Private
@@ -420,7 +432,7 @@ function validate(form, user) {
   let errMsg;
 
   tempParams = {};
-  form.find('input:not(:file, :checkbox)').each(function() {
+  form.find('input:not(:file, :checkbox)').each(function () {
     // fix requeired pattern
     this.value = this.value.trim();
 
@@ -447,7 +459,10 @@ function validate(form, user) {
         } else {
           errMsg = QMCONFIG.errors.invalidName;
         }
-      } else if (this.validity.patternMismatch && (errName === 'Password' || errName === 'New password')) {
+      } else if (
+        this.validity.patternMismatch &&
+        (errName === 'Password' || errName === 'New password')
+      ) {
         if (value.length < 8) {
           errMsg = QMCONFIG.errors.shortPass;
         } else if (value.length > 40) {

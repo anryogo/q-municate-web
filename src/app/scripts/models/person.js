@@ -84,15 +84,19 @@ export default Backbone.Model.extend({
       App = options.app;
     }
 
-    _.each(data, function(val, key) {
-      const isHasKey = _.has(this.defaults, key);
+    _.each(
+      data,
+      function (val, key) {
+        const isHasKey = _.has(this.defaults, key);
 
-      if (key !== 'id' && !isHasKey) {
-        delete data[key];
-      } else if (typeof val === 'string') {
-        data[key] = val.trim();
-      }
-    }, this);
+        if (key !== 'id' && !isHasKey) {
+          delete data[key];
+        } else if (typeof val === 'string') {
+          data[key] = val.trim();
+        }
+      },
+      this
+    );
 
     return data;
   },
@@ -105,7 +109,11 @@ export default Backbone.Model.extend({
     const customData = (currentUser.custom_data && JSON.parse(currentUser.custom_data)) || {}; // eslint-disable-line max-len
     const self = this;
 
-    if (Object.keys(data).length === 0 || (Object.keys(data).length === 1 && Object.keys(data)[0] === 'avatar' && !data.avatar)) return;
+    if (
+      Object.keys(data).length === 0 ||
+      (Object.keys(data).length === 1 && Object.keys(data)[0] === 'avatar' && !data.avatar)
+    )
+      return;
 
     if (data.full_name) {
       currentUser.full_name = data.full_name;
@@ -138,7 +146,10 @@ export default Backbone.Model.extend({
         params.custom_data = JSON.stringify(customData);
 
         $(`.profileUserName[data-id="${currentUser.id}"]`).text(currentUser.full_name);
-        $(`.profileUserAvatar[data-id="${currentUser.id}"]`).css('background-image', `url(${currentUser.avatar_url})`);
+        $(`.profileUserAvatar[data-id="${currentUser.id}"]`).css(
+          'background-image',
+          `url(${currentUser.avatar_url})`
+        );
         App.models.User.rememberMe();
 
         QBApiCalls.updateUser(currentUser.id, params, (res) => {
@@ -159,17 +170,24 @@ export default Backbone.Model.extend({
     const QBApiCalls = App.service;
     const { Attach } = App.models;
 
-    Attach.crop(avatar, {
-      w: 1000,
-      h: 1000,
-    }, (file) => {
-      QBApiCalls.createBlob({
-        file,
-        public: true,
-      }, (blob) => {
-        callback(blob);
-      });
-    });
+    Attach.crop(
+      avatar,
+      {
+        w: 1000,
+        h: 1000,
+      },
+      (file) => {
+        QBApiCalls.createBlob(
+          {
+            file,
+            public: true,
+          },
+          (blob) => {
+            callback(blob);
+          }
+        );
+      }
+    );
   },
 
   changeQBPass(data, callback) {
@@ -185,12 +203,15 @@ export default Backbone.Model.extend({
     QBApiCalls.updateUser(currentUser.id, params, (res, err) => {
       if (res) {
         Helpers.log('update of user', res);
-        Session.update({
-          authParams: Session.encrypt({
-            email: currentUser.email,
-            password: params.password,
-          }),
-        }, true);
+        Session.update(
+          {
+            authParams: Session.encrypt({
+              email: currentUser.email,
+              password: params.password,
+            }),
+          },
+          true
+        );
         self.set('password', '');
         callback(null, res);
       } else {
@@ -227,7 +248,10 @@ export default Backbone.Model.extend({
         currentUser.facebook_id = fbId;
         currentUser.custom_data = params.custom_data;
 
-        $(`.profileUserAvatar[data-id="${currentUser.id}"]`).css('background-image', `url(${currentUser.avatar_url})`);
+        $(`.profileUserAvatar[data-id="${currentUser.id}"]`).css(
+          'background-image',
+          `url(${currentUser.avatar_url})`
+        );
         App.models.User.rememberMe();
 
         // import friends
@@ -285,5 +309,4 @@ export default Backbone.Model.extend({
       FBImport.render().openPopup();
     });
   },
-
 });

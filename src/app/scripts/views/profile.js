@@ -27,7 +27,7 @@ export default Backbone.View.extend({
   render() {
     const renderObj = this.model.toJSON();
 
-    if (renderObj.phone && (renderObj.full_name === 'Unknown user')) {
+    if (renderObj.phone && renderObj.full_name === 'Unknown user') {
       renderObj.full_name = renderObj.phone;
     }
 
@@ -109,9 +109,11 @@ export default Backbone.View.extend({
         self.validateError(self.model, QMCONFIG.errors.FBAccountExists);
         self.$el.find('.btn_userProfile_connect').prop('disabled', false);
       } else {
-        self.$el.find('.userProfile-field-facebook').html(
-          '<span class="userDetails-label">Facebook:</span><span class="userProfile-facebook">Connected</span>',
-        );
+        self.$el
+          .find('.userProfile-field-facebook')
+          .html(
+            '<span class="userDetails-label">Facebook:</span><span class="userProfile-facebook">Connected</span>'
+          );
         self.$el.find('.userProfile-errors, .userProfile-success').text('');
       }
     });

@@ -8,7 +8,7 @@ function Settings() {
   let options;
   const self = this;
 
-  this.init = function(currentUserId) {
+  this.init = function (currentUserId) {
     userId = currentUserId;
     options = {
       messages_notify: true,
@@ -19,17 +19,17 @@ function Settings() {
     sync();
   };
 
-  this.set = function(params) {
+  this.set = function (params) {
     Object.keys(params).forEach((key) => {
       options[key] = params[key];
     });
   };
 
-  this.get = function(prop) {
+  this.get = function (prop) {
     return options[prop];
   };
 
-  this.save = function() {
+  this.save = function () {
     localStorage.setItem(`QM.settings-${userId}`, JSON.stringify(options));
   };
 

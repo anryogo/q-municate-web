@@ -146,11 +146,11 @@ label.settings_label {
   }
 }
 
-input[type=checkbox]:not(:disabled) ~ .lever:active::after {
+input[type='checkbox']:not(:disabled) ~ .lever:active::after {
   box-shadow: initial;
 }
 
-.switch label input[type=checkbox]:checked + .lever {
+.switch label input[type='checkbox']:checked + .lever {
   width: 36px;
   height: 14px;
   border-radius: 7px;
@@ -165,8 +165,8 @@ input[type=checkbox]:not(:disabled) ~ .lever:active::after {
   }
 }
 
-input[type=checkbox]:not(:disabled).tabbed:focus ~ .lever::after,
-input[type=checkbox]:checked:not(:disabled) ~ .lever:active::after,
-input[type=checkbox]:checked:not(:disabled).tabbed:focus ~ .lever::after {
+input[type='checkbox']:not(:disabled).tabbed:focus ~ .lever::after,
+input[type='checkbox']:checked:not(:disabled) ~ .lever:active::after,
+input[type='checkbox']:checked:not(:disabled).tabbed:focus ~ .lever::after {
   box-shadow: initial;
 }

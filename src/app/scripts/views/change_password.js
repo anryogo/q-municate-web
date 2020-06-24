@@ -37,10 +37,12 @@ export default Backbone.View.extend({
   },
 
   validateError(model, error) {
-    if (error === "Fields mustn't be empty"
-                || error === QMCONFIG.errors.oldPass
-                || error === QMCONFIG.errors.invalidPass
-                || error === QMCONFIG.errors.shortPass) {
+    if (
+      error === "Fields mustn't be empty" ||
+      error === QMCONFIG.errors.oldPass ||
+      error === QMCONFIG.errors.invalidPass ||
+      error === QMCONFIG.errors.shortPass
+    ) {
       model.set('password', '');
       this.remove();
       this.render().openPopup();
@@ -90,11 +92,14 @@ export default Backbone.View.extend({
     if (!params.oldPass || !params.newPass) {
       this.validateError(this.model, "Fields mustn't be empty");
     } else {
-      this.model.set({
-        password: params.newPass,
-      }, {
-        validate: true,
-      });
+      this.model.set(
+        {
+          password: params.newPass,
+        },
+        {
+          validate: true,
+        }
+      );
       Helpers.log(this.model);
 
       if (!this.model.validationError) {
@@ -104,7 +109,9 @@ export default Backbone.View.extend({
           } else {
             self.remove();
             $('.profileWrap .userProfile-errors').text('');
-            $('.profileWrap .userProfile-success').text('Your password has been successfully changed');
+            $('.profileWrap .userProfile-success').text(
+              'Your password has been successfully changed'
+            );
             $('.profileWrap').show();
           }
         });

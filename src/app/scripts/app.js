@@ -83,9 +83,12 @@ QM.prototype = {
 
     // QB SDK initialization
     // Checking if autologin was chosen
-    if (localStorage['QM.session'] && localStorage['QM.user']
-            // new QB release account (13.02.2015)
-            && localStorage[IS_RELEASE_QB_ACCOUNT]) {
+    if (
+      localStorage['QM.session'] &&
+      localStorage['QM.user'] &&
+      // new QB release account (13.02.2015)
+      localStorage[IS_RELEASE_QB_ACCOUNT]
+    ) {
       session = JSON.parse(localStorage['QM.session']);
       token = session && session.token;
       this.service.init(token);

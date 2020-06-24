@@ -35,7 +35,6 @@ function ContactListView(app) {
 }
 
 ContactListView.prototype = {
-
   createDataSpinner(list) {
     let spinnerBlock = '';
 
@@ -59,11 +58,7 @@ ContactListView.prototype = {
     const popup = $('#popupSearch');
 
     openPopup(popup);
-    popup.find('.popup-elem')
-      .addClass('is-hidden')
-      .siblings('form')
-      .find('input')
-      .val('');
+    popup.find('.popup-elem').addClass('is-hidden').siblings('form').find('input').val('');
     popup.find('.mCSB_container').empty();
   },
 
@@ -104,9 +99,7 @@ ContactListView.prototype = {
     $popup.find('.popup-elem').addClass('is-hidden');
     $popup.find('.mCSB_container').empty();
 
-    $('.popup:visible .spinner_bounce')
-      .removeClass('is-hidden')
-      .addClass('is-empty');
+    $('.popup:visible .spinner_bounce').removeClass('is-hidden').addClass('is-empty');
   },
 
   addContactsToChat(objDom, type, dialogId, isPrivate) {
@@ -129,13 +122,16 @@ ContactListView.prototype = {
     popup.find('.btn').removeClass('is-hidden');
 
     // get your friends which are sorted by alphabet
-    const sortedContacts = _.pluck(_.sortBy(contacts, (user) => {
-      if (user.full_name) {
-        return user.full_name.toLowerCase();
-      }
+    const sortedContacts = _.pluck(
+      _.sortBy(contacts, (user) => {
+        if (user.full_name) {
+          return user.full_name.toLowerCase();
+        }
 
-      return user.full_name;
-    }), 'id').map(String);
+        return user.full_name;
+      }),
+      'id'
+    ).map(String);
 
     friends = _.filter(sortedContacts, (el) => roster[el] && roster[el].subscription !== 'none');
     Helpers.log('Friends', friends);
@@ -199,7 +195,9 @@ ContactListView.prototype = {
     const $dialogItem = $(`.dialog-item[data-id="${id}"]`);
     let dialogItem = $dialogItem[0];
     const requestItem = $(`#requestsList .list-item[data-jid="${jid}"]`);
-    const notConfirmed = localStorage['QM.notConfirmed'] ? JSON.parse(localStorage['QM.notConfirmed']) : {};
+    const notConfirmed = localStorage['QM.notConfirmed']
+      ? JSON.parse(localStorage['QM.notConfirmed'])
+      : {};
     const time = Math.floor(Date.now() / 1000);
     let message;
     const that = this;
@@ -277,7 +275,9 @@ ContactListView.prototype = {
     const $chat = $(`.l-chat[data-id="${id}"]`);
     let list = $objDom.parents('ul.j-requestsList');
     const { roster } = ContactList;
-    const notConfirmed = localStorage['QM.notConfirmed'] ? JSON.parse(localStorage['QM.notConfirmed']) : {};
+    const notConfirmed = localStorage['QM.notConfirmed']
+      ? JSON.parse(localStorage['QM.notConfirmed'])
+      : {};
     const hiddenDialogs = JSON.parse(sessionStorage['QM.hiddenDialogs']);
     const time = Math.floor(Date.now() / 1000);
     const { dialogs } = Entities.Collections;
@@ -365,7 +365,9 @@ ContactListView.prototype = {
     const id = QB.chat.helpers.getIdFromNode(jid);
     const $objDom = $(`.j-incomingContactRequest[data-jid="${jid}"]`);
     const { roster } = ContactList;
-    const notConfirmed = localStorage['QM.notConfirmed'] ? JSON.parse(localStorage['QM.notConfirmed']) : {};
+    const notConfirmed = localStorage['QM.notConfirmed']
+      ? JSON.parse(localStorage['QM.notConfirmed'])
+      : {};
     const hiddenDialogs = JSON.parse(sessionStorage['QM.hiddenDialogs']);
     const time = Math.floor(Date.now() / 1000);
 
@@ -450,39 +452,52 @@ ContactListView.prototype = {
     const jid = QB.chat.helpers.getUserJid(id, QMCONFIG.qbAccount.appId);
     const $requestList = $('.j-requestsList');
     const $recentList = $('.j-recentList');
-    const notConfirmed = localStorage['QM.notConfirmed'] ? JSON.parse(localStorage['QM.notConfirmed']) : {};
+    const notConfirmed = localStorage['QM.notConfirmed']
+      ? JSON.parse(localStorage['QM.notConfirmed'])
+      : {};
     let duplicate;
 
     // update notConfirmed people list
     notConfirmed[id] = true;
     ContactList.saveNotConfirmed(notConfirmed);
 
-    ContactList.add([id], null, () => {
-      duplicate = $requestList.find(`.j-incomingContactRequest[data-jid="${jid}"]`).length;
+    ContactList.add(
+      [id],
+      null,
+      () => {
+        duplicate = $requestList.find(`.j-incomingContactRequest[data-jid="${jid}"]`).length;
 
-      html = `<li class="list-item j-incomingContactRequest" data-jid="${jid}">`;
-      html += '<a class="contact l-flexbox" href="#">';
-      html += '<div class="l-flexbox_inline">';
-      html += `<div class="contact-avatar avatar profileUserAvatar" style="background-image:url(${typeof contacts[id] !== 'undefined' ? contacts[id].avatar_url : ''})" data-id="${id}"></div>`;
-      html += `<span class="name profileUserName" data-id="${id}">${typeof contacts[id] !== 'undefined' ? contacts[id].full_name : ''}</span>`;
-      html += '</div><div class="request-controls l-flexbox">';
-      html += '<button class="request-button request-button_cancel j-requestCancel">&#10005;</button>';
-      html += '<button class="request-button request-button_ok j-requestConfirm">&#10003;</button>';
-      html += '</div></a></li>';
+        html = `<li class="list-item j-incomingContactRequest" data-jid="${jid}">`;
+        html += '<a class="contact l-flexbox" href="#">';
+        html += '<div class="l-flexbox_inline">';
+        html += `<div class="contact-avatar avatar profileUserAvatar" style="background-image:url(${
+          typeof contacts[id] !== 'undefined' ? contacts[id].avatar_url : ''
+        })" data-id="${id}"></div>`;
+        html += `<span class="name profileUserName" data-id="${id}">${
+          typeof contacts[id] !== 'undefined' ? contacts[id].full_name : ''
+        }</span>`;
+        html += '</div><div class="request-controls l-flexbox">';
+        html +=
+          '<button class="request-button request-button_cancel j-requestCancel">&#10005;</button>';
+        html +=
+          '<button class="request-button request-button_ok j-requestConfirm">&#10003;</button>';
+        html += '</div></a></li>';
 
-      if (!duplicate) {
-        $requestList.prepend(html);
-      }
+        if (!duplicate) {
+          $requestList.prepend(html);
+        }
 
-      $('#requestsList').removeClass('is-hidden');
-      $('#emptyList').addClass('is-hidden');
+        $('#requestsList').removeClass('is-hidden');
+        $('#emptyList').addClass('is-hidden');
 
-      if ($recentList.find(`.list-item[data-id="${id}"]`).length) {
-        $recentList.find(`.list-item[data-id="${id}"]`).remove();
-        self.autoConfirm(id);
-        Helpers.Dialogs.isSectionEmpty($recentList);
-      }
-    }, 'subscribe');
+        if ($recentList.find(`.list-item[data-id="${id}"]`).length) {
+          $recentList.find(`.list-item[data-id="${id}"]`).remove();
+          self.autoConfirm(id);
+          Helpers.Dialogs.isSectionEmpty($recentList);
+        }
+      },
+      'subscribe'
+    );
   },
 
   onConfirm(id) {
@@ -511,7 +526,9 @@ ContactListView.prototype = {
     const request = $(`#requestsList .list-item[data-jid="${jid}"]`);
     const list = request && request.parents('ul');
     const { roster } = ContactList;
-    const notConfirmed = localStorage['QM.notConfirmed'] ? JSON.parse(localStorage['QM.notConfirmed']) : {};
+    const notConfirmed = localStorage['QM.notConfirmed']
+      ? JSON.parse(localStorage['QM.notConfirmed'])
+      : {};
 
     // reset recorder state
     VoiceMessage.resetRecord(dialogItem.data('dialog'));
@@ -572,7 +589,9 @@ ContactListView.prototype = {
 
   autoConfirm(id) {
     const jid = QB.chat.helpers.getUserJid(id, QMCONFIG.qbAccount.appId);
-    const notConfirmed = localStorage['QM.notConfirmed'] ? JSON.parse(localStorage['QM.notConfirmed']) : {};
+    const notConfirmed = localStorage['QM.notConfirmed']
+      ? JSON.parse(localStorage['QM.notConfirmed'])
+      : {};
     const hiddenDialogs = notConfirmed[id] ? JSON.parse(sessionStorage['QM.hiddenDialogs']) : null;
     const dialogId = hiddenDialogs[id] || null;
     const activeId = Entities.active;
@@ -587,7 +606,6 @@ ContactListView.prototype = {
       $(`.j-dialogItem[data-dialog="${dialogId}"] > .contact`).click();
     }
   },
-
 };
 
 /* Private
@@ -659,7 +677,9 @@ function ajaxDownloading(list, selfObj) {
 
 function createListResults(list, results, selfObj) {
   const { roster } = ContactList;
-  const notConfirmed = localStorage['QM.notConfirmed'] ? JSON.parse(localStorage['QM.notConfirmed']) : {};
+  const notConfirmed = localStorage['QM.notConfirmed']
+    ? JSON.parse(localStorage['QM.notConfirmed'])
+    : {};
   let item;
 
   if (results.length > 0) {
@@ -673,9 +693,17 @@ function createListResults(list, results, selfObj) {
       item += `<span class="name profileUserName" data-id="${contact.id}">${contact.full_name}</span>`;
       item += '</div>';
 
-      if (!rosterItem || (rosterItem && rosterItem.subscription === 'none' && !rosterItem.ask && !notConfirmed[contact.id])) {
-        item += '<button class="send-request j-sendRequest"><img class="icon-normal" src="images/icon-request.svg" alt="request">';
-        item += '<img class="icon-active" src="images/icon-request_active.svg" alt="request"></button>';
+      if (
+        !rosterItem ||
+        (rosterItem &&
+          rosterItem.subscription === 'none' &&
+          !rosterItem.ask &&
+          !notConfirmed[contact.id])
+      ) {
+        item +=
+          '<button class="send-request j-sendRequest"><img class="icon-normal" src="images/icon-request.svg" alt="request">';
+        item +=
+          '<img class="icon-active" src="images/icon-request_active.svg" alt="request"></button>';
       }
 
       if (rosterItem && rosterItem.subscription === 'none' && rosterItem.ask) {
@@ -688,7 +716,11 @@ function createListResults(list, results, selfObj) {
       list.removeClass('is-hidden').siblings('.popup-elem').addClass('is-hidden');
     });
   } else {
-    list.parents('.popup_search').find('.note').removeClass('is-hidden').siblings('.popup-elem')
+    list
+      .parents('.popup_search')
+      .find('.note')
+      .removeClass('is-hidden')
+      .siblings('.popup-elem')
       .addClass('is-hidden');
   }
 

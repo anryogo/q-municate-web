@@ -49,7 +49,7 @@ QMPlayer.View = Backbone.View.extend({
   },
 });
 
-QMPlayer.init = function(id) {
+QMPlayer.init = function (id) {
   const audioEl = document.querySelector(`#audio_${id}`);
   const controlEl = document.querySelector(`#qm_player_control_${id}`);
   const setterEl = document.querySelector(`#qm_player_setter_${id}`);
@@ -58,11 +58,11 @@ QMPlayer.init = function(id) {
   const fullLength = document.querySelector(`#qm_player_wrap_${id}`).offsetWidth;
   let durationTime;
 
-  setterEl.onclick = function(e) {
+  setterEl.onclick = function (e) {
     audioEl.currentTime = audioEl.duration * (e.offsetX / fullLength);
   };
 
-  controlEl.onclick = function() {
+  controlEl.onclick = function () {
     if (this.classList.contains('is-paused')) {
       audioEl.play();
       controlEl.classList.add('is-playing');
@@ -72,21 +72,21 @@ QMPlayer.init = function(id) {
     }
   };
 
-  audioEl.onended = function() {
+  audioEl.onended = function () {
     audioEl.pause();
   };
 
-  audioEl.onpause = function() {
+  audioEl.onpause = function () {
     controlEl.classList.add('is-paused');
     controlEl.classList.remove('is-playing');
   };
 
-  audioEl.oncanplay = function() {
+  audioEl.oncanplay = function () {
     durationTime = setTime(audioEl.duration);
     timeEl.innerHTML = `00:00 / ${durationTime}`;
   };
 
-  audioEl.ontimeupdate = function() {
+  audioEl.ontimeupdate = function () {
     const currentTime = setTime(audioEl.currentTime);
     const length = Math.round(fullLength * (audioEl.currentTime / audioEl.duration));
 
@@ -104,7 +104,7 @@ QMPlayer.init = function(id) {
     sec = Math.floor(time % 60);
     sec = sec >= 10 ? sec : `0${sec}`;
 
-    return (`${min}:${sec}`);
+    return `${min}:${sec}`;
   }
 };
 

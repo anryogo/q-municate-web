@@ -119,7 +119,7 @@
   }
 }
 
-.btn_audio_record[data-balloon-length=medium] {
+.btn_audio_record[data-balloon-length='medium'] {
   &::after {
     width: 170px;
   }

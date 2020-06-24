@@ -52,15 +52,16 @@ entities.Models.Message = Backbone.Model.extend({
     const readIds = this.get('read_ids');
     const isOpen = dialog.get('opened');
     const myUserId = entities.app.models.User.contact.id;
-    const isActive = (dialogId === entities.active);
-    const isHidden = (isActive && !window.isQMAppActive);
-    const isFromOtherUser = (myUserId !== senderId);
-    const isUnreadMessage = (readIds.length < 2);
+    const isActive = dialogId === entities.active;
+    const isHidden = isActive && !window.isQMAppActive;
+    const isFromOtherUser = myUserId !== senderId;
+    const isUnreadMessage = readIds.length < 2;
 
     if (isOpen) {
       // save as uread if dialog isn't active
       if ((!isActive || isHidden) && isFromOtherUser) {
-        new entities.Models.UnreadMessage({ // eslint-disable-line no-new
+        // eslint-disable-next-line no-new
+        new entities.Models.UnreadMessage({
           userId: senderId,
           dialogId,
           messageId,
@@ -71,7 +72,7 @@ entities.Models.Message = Backbone.Model.extend({
           dialogId,
           messageId,
         });
-      } else if ((type === 'groupchat') && !isFromOtherUser) {
+      } else if (type === 'groupchat' && !isFromOtherUser) {
         QB.chat.sendDeliveredStatus({
           userId: senderId,
           dialogId,
@@ -93,7 +94,6 @@ entities.Models.Message = Backbone.Model.extend({
       collection.push(this);
     }
   },
-
 });
 
 /**
@@ -115,9 +115,9 @@ entities.Collections.Messages = Backbone.Collection.extend({
     let unreadCount = dialog.get('unread_count');
 
     if (
-      ((this.length > stack) && (unreadCount < stack))
-            // eslint-disable-next-line no-plusplus
-            || ((unreadCount >= stack) && (this.length > ++unreadCount))
+      (this.length > stack && unreadCount < stack) ||
+      // eslint-disable-next-line no-plusplus
+      (unreadCount >= stack && this.length > ++unreadCount)
     ) {
       this.pop();
     }
@@ -201,7 +201,7 @@ entities.Models.Dialog = Backbone.Model.extend({
 
     if (+curCount === 0) {
       // eslint-disable-next-line no-plusplus
-      for (i = 0; i < (msgCount - stack); i++) {
+      for (i = 0; i < msgCount - stack; i++) {
         messages.pop();
       }
     }
@@ -246,12 +246,16 @@ entities.Collections.Dialogs = Backbone.Collection.extend({
 
     // read all dialog's messages on REST
     if (+unreadCount > 0) {
-      QB.chat.message.update(null, {
-        chat_dialog_id: dialogId,
-        read: 1,
-      }, () => {
-        dialog.set('unread_count', '');
-      });
+      QB.chat.message.update(
+        null,
+        {
+          chat_dialog_id: dialogId,
+          read: 1,
+        },
+        () => {
+          dialog.set('unread_count', '');
+        }
+      );
     }
   },
 
@@ -343,7 +347,7 @@ entities.Views.Chat = Backbone.View.extend({
  */
 
 // select and open dialog
-$('.list_contextmenu').on('click', '.contact', function() {
+$('.list_contextmenu').on('click', '.contact', function () {
   const dialogId = $(this).parent().data('dialog');
 
   if (entities.active !== dialogId) {
@@ -364,7 +368,7 @@ $(window).focus(() => {
 
 // unselect all dialogs
 $('.j-home').on('click', () => {
-// clear active dialog id
+  // clear active dialog id
   entities.Collections.dialogs.saveDraft();
   entities.active = '';
 });

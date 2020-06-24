@@ -87,16 +87,19 @@ VoiceMessage.prototype = {
   },
 
   startStream(callback) {
-    navigator.mediaDevices.getUserMedia({
-      audio: true,
-    }).then((stream) => {
-      self.stream = stream;
-      callback();
-    }).catch((err) => {
-      self.resetRecord();
-      self.blockRecorder('(microphone wasn\'t found)');
-      throw err;
-    });
+    navigator.mediaDevices
+      .getUserMedia({
+        audio: true,
+      })
+      .then((stream) => {
+        self.stream = stream;
+        callback();
+      })
+      .catch((err) => {
+        self.resetRecord();
+        self.blockRecorder("(microphone wasn't found)");
+        throw err;
+      });
   },
 
   stopStream() {
@@ -221,7 +224,7 @@ VoiceMessage.prototype = {
     const button = document.querySelector('.j-btn_audio_record');
     const activeDialogId = self.app.entities.active;
 
-    if ((dialogId && (dialogId !== activeDialogId)) || !button) {
+    if ((dialogId && dialogId !== activeDialogId) || !button) {
       return;
     }
 

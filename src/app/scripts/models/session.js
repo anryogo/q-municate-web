@@ -12,7 +12,6 @@ function Session(app) {
 }
 
 Session.prototype = {
-
   create(params) {
     this.token = params.token;
     this.expirationTime = params.expirationTime || null;
@@ -35,11 +34,14 @@ Session.prototype = {
         this.expirationTime = date.toISOString();
       }
 
-      localStorage.setItem('QM.session', JSON.stringify({
-        token: this.token,
-        expirationTime: this.expirationTime,
-        authParams: this.authParams,
-      }));
+      localStorage.setItem(
+        'QM.session',
+        JSON.stringify({
+          token: this.token,
+          expirationTime: this.expirationTime,
+          authParams: this.authParams,
+        })
+      );
     }
   },
 
@@ -53,9 +55,10 @@ Session.prototype = {
   // crypto methods for password
   encrypt(params) {
     if (params && params.password) {
-      params.password = CryptoJS.AES
-        .encrypt(params.password, QMCONFIG.qbAccount.authSecret)
-        .toString();
+      params.password = CryptoJS.AES.encrypt(
+        params.password,
+        QMCONFIG.qbAccount.authSecret
+      ).toString();
     }
 
     return params;
@@ -63,14 +66,14 @@ Session.prototype = {
 
   decrypt(params) {
     if (params && params.password) {
-      params.password = CryptoJS.AES
-        .decrypt(params.password, QMCONFIG.qbAccount.authSecret)
-        .toString(CryptoJS.enc.Utf8);
+      params.password = CryptoJS.AES.decrypt(
+        params.password,
+        QMCONFIG.qbAccount.authSecret
+      ).toString(CryptoJS.enc.Utf8);
     }
 
     return params;
   },
-
 };
 
 export default Session;

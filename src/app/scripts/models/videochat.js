@@ -18,7 +18,7 @@ function VideoChat(app) {
   self = this;
 }
 
-VideoChat.prototype.getUserMedia = function(options, callType, callback) {
+VideoChat.prototype.getUserMedia = function (options, callType, callback) {
   const { User } = this.app.models;
   const params = {
     audio: true,
@@ -36,13 +36,10 @@ VideoChat.prototype.getUserMedia = function(options, callType, callback) {
         [options.opponentId],
         QB.webrtc.CallType.VIDEO,
         null,
-        { bandwidth: 512 },
+        { bandwidth: 512 }
       );
     } else {
-      self.session = QB.webrtc.createNewSession(
-        [options.opponentId],
-        QB.webrtc.CallType.AUDIO,
-      );
+      self.session = QB.webrtc.createNewSession([options.opponentId], QB.webrtc.CallType.AUDIO);
     }
   }
 
@@ -83,7 +80,15 @@ VideoChat.prototype.getUserMedia = function(options, callType, callback) {
 };
 
 // eslint-disable-next-line max-len
-VideoChat.prototype.sendMessage = function(userId, state, callDuration, dialogId, callType, isErrorMessage, sessionID) {
+VideoChat.prototype.sendMessage = function (
+  userId,
+  state,
+  callDuration,
+  dialogId,
+  callType,
+  isErrorMessage,
+  sessionID
+) {
   const jid = QB.chat.helpers.getUserJid(userId, QMCONFIG.qbAccount.appId);
   const { User } = this.app.models;
   const { Message } = this.app.models;
@@ -91,19 +96,31 @@ VideoChat.prototype.sendMessage = function(userId, state, callDuration, dialogId
   const VideoChatView = this.app.views.VideoChat;
   const DialogView = this.app.views.Dialog;
   const time = Math.floor(Date.now() / 1000);
-  const $dialogItem = $(`.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`);
+  const $dialogItem = $(
+    `.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`
+  );
   const selected = $(`[data-dialog = ${dialogId}]`).is('.is-selected');
-  let unread = parseInt($dialogItem.length > 0
-            && $dialogItem.find('.unread').text().length > 0
-    ? $dialogItem.find('.unread').text() : 0, 10);
+  let unread = parseInt(
+    $dialogItem.length > 0 && $dialogItem.find('.unread').text().length > 0
+      ? $dialogItem.find('.unread').text()
+      : 0,
+    10
+  );
   let extension;
 
   if (!isErrorMessage) {
     extension = {
       save_to_history: 1,
       date_sent: time,
-      // eslint-disable-next-line no-nested-ternary
-      callType: state === '2' ? (callType === 'video' ? '2' : '1') : (VideoChatView.type === 'video' ? '2' : '1'),
+      callType:
+        // eslint-disable-next-line no-nested-ternary
+        state === '2'
+          ? callType === 'video'
+            ? '2'
+            : '1'
+          : VideoChatView.type === 'video'
+          ? '2'
+          : '1',
       callState: state === '1' && !callDuration ? '2' : state,
       caller: state === '2' ? userId : self.caller,
       callee: state === '2' ? User.contact.id : self.callee,

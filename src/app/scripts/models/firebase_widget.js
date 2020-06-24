@@ -14,7 +14,7 @@ import 'intlTelInputUtils';
  */
 let widget;
 
-const FirebaseWidget = function(login) {
+const FirebaseWidget = function (login) {
   FirebaseWidget.init();
 
   widget = this;
@@ -43,31 +43,35 @@ const FirebaseWidget = function(login) {
   widget.createFirebasePhoneNumberForm();
 };
 
-FirebaseWidget.init = function() {
+FirebaseWidget.init = function () {
   if (!FirebaseWidget.started) {
     FirebaseWidget.started = true;
     firebase.initializeApp(QMCONFIG.firebase);
   }
 };
 
-FirebaseWidget.prototype.sendSMS = function() {
-  firebase.auth()
+FirebaseWidget.prototype.sendSMS = function () {
+  firebase
+    .auth()
     .signInWithPhoneNumber(widget.fullPhoneNumber, widget.recaptchaVerifier)
     .then((confirmationResult) => {
       widget.createFirebaseDigitsNumberForm();
       widget.confirmationResult = confirmationResult;
-    }).catch((error) => {
+    })
+    .catch((error) => {
       Helpers.log('Error:', error);
       if (error.message) throw error.message;
     });
 };
 
-FirebaseWidget.prototype.confirmPhone = function(code) {
-  widget.confirmationResult.confirm(code)
+FirebaseWidget.prototype.confirmPhone = function (code) {
+  widget.confirmationResult
+    .confirm(code)
     .then((result) => {
       widget.closeWidget();
       widget.login(result.user);
-    }).catch((error) => {
+    })
+    .catch((error) => {
       Helpers.log('Error:', error);
       if (error.message) throw error.message;
     });
@@ -131,7 +135,7 @@ FirebaseWidget.prototype.firebasePhoneNumberForm = Backbone.View.extend({
           callback(widget.countryCode);
         } else {
           $.get('https://ipinfo.io', () => {}, 'jsonp').always((resp) => {
-            widget.countryCode = (resp && resp.country) ? resp.country : '';
+            widget.countryCode = resp && resp.country ? resp.country : '';
             callback(widget.countryCode);
           });
         }
@@ -228,32 +232,32 @@ FirebaseWidget.prototype.firebaseDigitsNumberForm = Backbone.View.extend({
   },
 });
 
-FirebaseWidget.prototype.createFirebasePhoneNumberForm = function() {
+FirebaseWidget.prototype.createFirebasePhoneNumberForm = function () {
   widget.closeWidget();
   widget.show();
   new widget.firebasePhoneNumberForm(); // eslint-disable-line no-new, new-cap
 };
 
-FirebaseWidget.prototype.createFirebaseDigitsNumberForm = function() {
+FirebaseWidget.prototype.createFirebaseDigitsNumberForm = function () {
   widget.closeWidget();
   widget.show();
   new widget.firebaseDigitsNumberForm(); // eslint-disable-line no-new, new-cap
 };
 
-FirebaseWidget.prototype.closeWidget = function() {
+FirebaseWidget.prototype.closeWidget = function () {
   widget.cleanup();
   widget.hide();
 };
 
-FirebaseWidget.prototype.show = function() {
+FirebaseWidget.prototype.show = function () {
   widget.container.css('visibility', 'visible');
 };
 
-FirebaseWidget.prototype.hide = function() {
+FirebaseWidget.prototype.hide = function () {
   widget.container.css('visibility', 'hidden');
 };
 
-FirebaseWidget.prototype.cleanup = function() {
+FirebaseWidget.prototype.cleanup = function () {
   if (widget.phoneNumberForm) {
     widget.phoneNumberForm.remove();
     widget.phoneNumberForm = null;
@@ -269,19 +273,19 @@ FirebaseWidget.prototype.cleanup = function() {
   widget.confirmationResult = null;
 };
 
-FirebaseWidget.prototype.recaptchaBuilder = function(target, size) {
+FirebaseWidget.prototype.recaptchaBuilder = function (target, size) {
   widget.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(target, {
     size,
     callback() {
       widget.verified = true;
     },
-    'expired-callback': function() {
+    'expired-callback': function () {
       widget.verified = false;
     },
   });
 };
 
-FirebaseWidget.prototype.setDisableState = function() {
+FirebaseWidget.prototype.setDisableState = function () {
   const { verified } = widget.states;
   const { filled } = widget.states;
   const button = widget.currentSubmitButton;

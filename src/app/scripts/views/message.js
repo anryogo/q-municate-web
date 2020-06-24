@@ -43,7 +43,6 @@ function MessageView(app) {
 }
 
 MessageView.prototype = {
-
   // this needs only for group chats: check if user exist in group chat
   checkSenderId(senderId, callback) {
     if (senderId !== User.contact.id) {
@@ -70,7 +69,10 @@ MessageView.prototype = {
       updateDialogItem(message);
     }
 
-    if (typeof $chat[0] === 'undefined' || (!message.notification_type && !message.callType && !message.attachment && !message.body)) {
+    if (
+      typeof $chat[0] === 'undefined' ||
+      (!message.notification_type && !message.callType && !message.attachment && !message.body)
+    ) {
       return;
     }
 
@@ -89,20 +91,40 @@ MessageView.prototype = {
     }
 
     this.checkSenderId(senderID, () => {
-      const type = message.notification_type || (message.callState && (parseInt(message.callState, 10) + 7).toString()) || 'message';
-      const attachType = (message.attachment && message.attachment['content-type']) || (message.attachment && message.attachment.type) || null;
+      const type =
+        message.notification_type ||
+        (message.callState && (parseInt(message.callState, 10) + 7).toString()) ||
+        'message';
+      const attachType =
+        (message.attachment && message.attachment['content-type']) ||
+        (message.attachment && message.attachment.type) ||
+        null;
       // eslint-disable-next-line max-len
-      const attachUrl = message.attachment && (QB.content.privateUrl(message.attachment.id) || message.attachment.url || null);
-      const geolocation = (message.latitude && message.longitude) ? {
-        lat: message.latitude,
-        lng: message.longitude,
-      } : null;
-      const geoCoords = (message.attachment && message.attachment.type === 'location') ? getLocationFromAttachment(message.attachment) : null;
-      const mapAttachImage = geoCoords ? Location.getStaticMapUrl(geoCoords, {
-        size: [380, 200],
-      }) : null;
+      const attachUrl =
+        message.attachment &&
+        (QB.content.privateUrl(message.attachment.id) || message.attachment.url || null);
+      const geolocation =
+        message.latitude && message.longitude
+          ? {
+              lat: message.latitude,
+              lng: message.longitude,
+            }
+          : null;
+      const geoCoords =
+        message.attachment && message.attachment.type === 'location'
+          ? getLocationFromAttachment(message.attachment)
+          : null;
+      const mapAttachImage = geoCoords
+        ? Location.getStaticMapUrl(geoCoords, {
+            size: [380, 200],
+          })
+        : null;
       const mapAttachLink = geoCoords ? Location.getMapUrl(geoCoords) : null;
-      const recipientFullName = (message.recipient_id && contacts[message.recipient_id] && contacts[message.recipient_id].full_name) || 'this user';
+      const recipientFullName =
+        (message.recipient_id &&
+          contacts[message.recipient_id] &&
+          contacts[message.recipient_id].full_name) ||
+        'this user';
       let occupantsNames = '';
       let addedOccupantIds;
       let occupantsIds;
@@ -126,17 +148,23 @@ MessageView.prototype = {
 
       switch (type) {
         case '1':
-          addedOccupantIds = _.without(message.added_occupant_ids.split(',').map(Number), contact.id);
+          addedOccupantIds = _.without(
+            message.added_occupant_ids.split(',').map(Number),
+            contact.id
+          );
           // eslint-disable-next-line max-len
           occupantsNames = Helpers.Messages.getOccupantsNames(addedOccupantIds, User, contacts);
 
           html = `<article class="message message_service l-flexbox l-flexbox_alignstretch" data-id="${message.sender_id}" data-type="${type}">`;
           html += '<span class="message-avatar request-button_pending"></span>';
           html += '<div class="message-container-wrap">';
-          html += '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
+          html +=
+            '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
           html += '<div class="message-content">';
           html += `<h4 class="message-author"><span class="profileUserName" data-id="${message.sender_id}">${contact.full_name}</span> has added ${occupantsNames} to the group chat</h4>`;
-          html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(message.date_sent)}</time>`;
+          html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(
+            message.date_sent
+          )}</time>`;
           html += '<div class="info_indent"></div></div></div></div></article>';
           break;
 
@@ -144,7 +172,8 @@ MessageView.prototype = {
           html = `<article id="${message.id}" class="message message_service l-flexbox l-flexbox_alignstretch" data-id="${message.sender_id}" data-type="${type}">`;
           html += '<span class="message-avatar request-button_pending"></span>';
           html += '<div class="message-container-wrap">';
-          html += '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
+          html +=
+            '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
           html += '<div class="message-content">';
 
           if (message.added_occupant_ids) {
@@ -167,7 +196,9 @@ MessageView.prototype = {
             html += `<h4 class="message-author"><span class="profileUserName" data-id="${message.sender_id}">${contact.full_name}</span> has changed the chat picture</h4>`;
           }
 
-          html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(message.date_sent)}</time>`;
+          html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(
+            message.date_sent
+          )}</time>`;
           html += '<div class="info_indent"></div></div></div></div></article>';
           break;
 
@@ -175,7 +206,8 @@ MessageView.prototype = {
           html = `<article id="${message.id}" class="message message_service l-flexbox l-flexbox_alignstretch" data-id="${message.sender_id}" data-type="${type}">`;
           html += '<span class="message-avatar request-button_pending"></span>';
           html += '<div class="message-container-wrap">';
-          html += '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
+          html +=
+            '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
           html += '<div class="message-content">';
 
           if (isMyUser) {
@@ -184,7 +216,9 @@ MessageView.prototype = {
             html += `<h4 class="message-author"><span class="profileUserName" data-id="${message.sender_id}">${contact.full_name}</span> has sent a request to you</h4>`;
           }
 
-          html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(message.date_sent)}</time>`;
+          html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(
+            message.date_sent
+          )}</time>`;
           html += '<div class="info_indent"></div></div></div></div></article>';
           break;
 
@@ -192,7 +226,8 @@ MessageView.prototype = {
           html = `<article id="${message.id}" class="message message_service l-flexbox l-flexbox_alignstretch" data-id="${message.sender_id}" data-type="${type}">`;
           html += '<span class="message-avatar request-button_ok j-requestConfirm">&#10003;</span>';
           html += '<div class="message-container-wrap">';
-          html += '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
+          html +=
+            '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
           html += '<div class="message-content">';
 
           if (isMyUser) {
@@ -201,15 +236,19 @@ MessageView.prototype = {
             html += '<h4 class="message-author">Your request has been accepted</h4>';
           }
 
-          html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(message.date_sent)}</time>`;
+          html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(
+            message.date_sent
+          )}</time>`;
           html += '<div class="info_indent"></div></div></div></div></article>';
           break;
 
         case '6':
           html = `<article id="${message.id}" class="message message_service l-flexbox l-flexbox_alignstretch" data-id="${message.sender_id}" data-type="${type}">`;
-          html += '<span class="message-avatar request-button_cancel j-requestCancel">&#10005;</span>';
+          html +=
+            '<span class="message-avatar request-button_cancel j-requestCancel">&#10005;</span>';
           html += '<div class="message-container-wrap">';
-          html += '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
+          html +=
+            '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
           html += '<div class="message-content">';
 
           if (isMyUser) {
@@ -217,11 +256,14 @@ MessageView.prototype = {
           } else {
             html += '<h4 class="message-author">Your request has been rejected</h4>';
             html += '<button class="btn btn_request_again j-requestAgain">';
-            html += '<img class="btn-icon btn-icon_request" src="images/icon-request.svg" alt="request">Send Request Again';
+            html +=
+              '<img class="btn-icon btn-icon_request" src="images/icon-request.svg" alt="request">Send Request Again';
             html += '</button>';
           }
 
-          html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(message.date_sent)}</time>`;
+          html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(
+            message.date_sent
+          )}</time>`;
           html += '<div class="info_indent"></div></div></div></div></article>';
           break;
 
@@ -229,43 +271,59 @@ MessageView.prototype = {
           html = `<article id="${message.id}" class="message message_service l-flexbox l-flexbox_alignstretch" data-id="${message.sender_id}" data-type="${type}">`;
           html += '<span class="message-avatar request-button_pending"></span>';
           html += '<div class="message-container-wrap">';
-          html += '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
+          html +=
+            '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
           html += '<div class="message-content">';
 
           if (isMyUser) {
             html += `<h4 class="message-author">You have deleted ${recipientFullName} from your contact list`;
           } else {
             html += '<h4 class="message-author">You have been deleted from the contact list</h4>';
-            html += '<button class="btn btn_request_again btn_request_again_delete j-requestAgain">';
-            html += '<img class="btn-icon btn-icon_request" src="images/icon-request.svg" alt="request">Send Request Again</button>';
+            html +=
+              '<button class="btn btn_request_again btn_request_again_delete j-requestAgain">';
+            html +=
+              '<img class="btn-icon btn-icon_request" src="images/icon-request.svg" alt="request">Send Request Again</button>';
           }
 
-          html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(message.date_sent)}</time>`;
+          html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(
+            message.date_sent
+          )}</time>`;
           html += '<div class="info_indent"></div></div></div></div></article>';
           break;
 
-          // calls messages
+        // calls messages
         case '8':
           if (message.caller) {
             html = `<article id="${message.id}" class="message message_service l-flexbox l-flexbox_alignstretch" data-id="${message.sender_id}" data-type="${type}" data-session="${message.sessionID}">`;
 
             if (message.caller === User.contact.id) {
-              html += `<span class="message-avatar request-call ${message.callType === '2' ? 'request-video_outgoing' : 'request-audio_outgoing'}"></span>`;
+              html += `<span class="message-avatar request-call ${
+                message.callType === '2' ? 'request-video_outgoing' : 'request-audio_outgoing'
+              }"></span>`;
             } else {
-              html += `<span class="message-avatar request-call ${message.callType === '2' ? 'request-video_incoming' : 'request-audio_incoming'}"></span>`;
+              html += `<span class="message-avatar request-call ${
+                message.callType === '2' ? 'request-video_incoming' : 'request-audio_incoming'
+              }"></span>`;
             }
 
             html += '<div class="message-container-wrap">';
-            html += '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
+            html +=
+              '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
             html += '<div class="message-content">';
 
             if (message.caller === User.contact.id) {
-              html += `<h4 class="message-author">Outgoing ${message.callType === '2' ? 'Video' : ''} Call, ${Helpers.getDuration(message.callDuration)}`;
+              html += `<h4 class="message-author">Outgoing ${
+                message.callType === '2' ? 'Video' : ''
+              } Call, ${Helpers.getDuration(message.callDuration)}`;
             } else {
-              html += `<h4 class="message-author">Incoming ${message.callType === '2' ? 'Video' : ''} Call, ${Helpers.getDuration(message.callDuration)}`;
+              html += `<h4 class="message-author">Incoming ${
+                message.callType === '2' ? 'Video' : ''
+              } Call, ${Helpers.getDuration(message.callDuration)}`;
             }
 
-            html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(message.date_sent)}</time>`;
+            html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(
+              message.date_sent
+            )}</time>`;
             html += '<div class="info_indent"></div></div></div></div></article>';
           }
 
@@ -276,22 +334,31 @@ MessageView.prototype = {
             html = `<article id="${message.id}" class="message message_service l-flexbox l-flexbox_alignstretch" data-id="${message.sender_id}" data-type="${type}">`;
 
             if (message.caller === User.contact.id) {
-              html += `<span class="message-avatar request-call ${message.callType === '2' ? 'request-video_ended' : 'request-audio_ended'}"></span>`;
+              html += `<span class="message-avatar request-call ${
+                message.callType === '2' ? 'request-video_ended' : 'request-audio_ended'
+              }"></span>`;
             } else {
-              html += `<span class="message-avatar request-call ${message.callType === '2' ? 'request-video_missed' : 'request-audio_missed'}"></span>`;
+              html += `<span class="message-avatar request-call ${
+                message.callType === '2' ? 'request-video_missed' : 'request-audio_missed'
+              }"></span>`;
             }
 
             html += '<div class="message-container-wrap">';
-            html += '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
+            html +=
+              '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
             html += '<div class="message-content">';
 
             if (message.caller === User.contact.id) {
               html += '<h4 class="message-author">No Answer';
             } else {
-              html += `<h4 class="message-author">Missed ${message.callType === '2' ? 'Video' : ''} Call`;
+              html += `<h4 class="message-author">Missed ${
+                message.callType === '2' ? 'Video' : ''
+              } Call`;
             }
 
-            html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(message.date_sent)}</time>`;
+            html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(
+              message.date_sent
+            )}</time>`;
             html += '<div class="info_indent"></div></div></div></div></article>';
           }
 
@@ -300,42 +367,60 @@ MessageView.prototype = {
         case '10':
           if (message.caller) {
             html = `<article id="${message.id}" class="message message_service l-flexbox l-flexbox_alignstretch" data-id="${message.sender_id}" data-type="${type}">`;
-            html += `<span class="message-avatar request-call ${message.callType === '2' ? 'request-video_ended' : 'request-audio_ended'}"></span>`;
+            html += `<span class="message-avatar request-call ${
+              message.callType === '2' ? 'request-video_ended' : 'request-audio_ended'
+            }"></span>`;
             html += '<div class="message-container-wrap">';
-            html += '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
+            html +=
+              '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
             html += '<div class="message-content">';
 
             if (message.caller === User.contact.id) {
-              html += `<h4 class="message-author">${contacts[message.callee].full_name} doesn't have camera and/or microphone.`;
+              html += `<h4 class="message-author">${
+                contacts[message.callee].full_name
+              } doesn't have camera and/or microphone.`;
             } else {
               html += '<h4 class="message-author">Camera and/or microphone wasn\'t found.';
             }
 
-            html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(message.date_sent)}</time>`;
+            html += `</div><div class="message-info"><time class="message-time">${Helpers.getTime(
+              message.date_sent
+            )}</time>`;
             html += '<div class="info_indent"></div></div></div></div></article>';
           }
 
           break;
 
         default:
-
           status = isOnline ? message.status : 'Not delivered yet';
 
           if (isMyUser) {
-            html = `<article id="${message.id}" class="message is-own l-flexbox l-flexbox_alignstretch${
-              message.stack ? ' without_border' : ''}" data-id="${message.sender_id}" data-type="${type}">`;
+            html = `<article id="${
+              message.id
+            }" class="message is-own l-flexbox l-flexbox_alignstretch${
+              message.stack ? ' without_border' : ''
+            }" data-id="${message.sender_id}" data-type="${type}">`;
           } else {
             html = `<article id="${message.id}" class="message l-flexbox l-flexbox_alignstretch${
-              message.stack ? ' without_border' : ''}" data-id="${message.sender_id}" data-type="${type}">`;
+              message.stack ? ' without_border' : ''
+            }" data-id="${message.sender_id}" data-type="${type}">`;
           }
 
-          // eslint-disable-next-line no-nested-ternary
-          html += `<div class="message-avatar avatar profileUserAvatar${message.stack ? ' is-hidden' : (isUserMenu ? ' userMenu j-userMenu' : '')
-          }" style="background-image:url(${contact.avatar_url})" data-id="${message.sender_id}"></div>`;
+          html += `<div class="message-avatar avatar profileUserAvatar${
+            // eslint-disable-next-line no-nested-ternary
+            message.stack ? ' is-hidden' : isUserMenu ? ' userMenu j-userMenu' : ''
+          }" style="background-image:url(${contact.avatar_url})" data-id="${
+            message.sender_id
+          }"></div>`;
           html += '<div class="message-container-wrap">';
-          html += '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
+          html +=
+            '<div class="message-container l-flexbox l-flexbox_flexbetween l-flexbox_alignstretch">';
           html += `<div class="message-content${message.stack ? ' indent' : ''}">`;
-          html += `<h4 class="message-author${message.stack ? ' is-hidden' : ''}"><span class="profileUserName" data-id="${message.sender_id}">${contact.full_name}</span></h4>`;
+          html += `<h4 class="message-author${
+            message.stack ? ' is-hidden' : ''
+          }"><span class="profileUserName" data-id="${message.sender_id}">${
+            contact.full_name
+          }</span></h4>`;
 
           if (attachType && attachType.indexOf('image') > -1) {
             html += '<div class="message-body">';
@@ -345,8 +430,9 @@ MessageView.prototype = {
             html += `<div class="message-body"><div id="audio_player_${message.id}" class="audio_player"></div></div></div>`;
           } else if (attachType && attachType.indexOf('video') > -1) {
             html += `<div class="message-body"><div class="media_title">${message.attachment.name}</div>`;
-            html += `<video id="video_${message.id}" class="video_player j-videoPlayer" preload="none" data-source="${attachUrl}" poster="images/ic-play-video.svg">`
-                                + '</video></div></div>';
+            html +=
+              `<video id="video_${message.id}" class="video_player j-videoPlayer" preload="none" data-source="${attachUrl}" poster="images/ic-play-video.svg">` +
+              '</video></div></div>';
           } else if (attachType && attachType.indexOf('location') > -1) {
             html += '<div class="message-body">';
             html += `<a class="open_googlemaps" href="${mapAttachLink}" target="_blank">`;
@@ -354,12 +440,18 @@ MessageView.prototype = {
           } else if (attachType && attachType.indexOf('file') > -1) {
             html += '<div class="message-body">';
             html += `<a id="attach_${message.id}" class="attach-file" href="${attachUrl}" download="${message.attachment.name}">${message.attachment.name}</a>`;
-            html += `<span class="attach-size">${getFileSize(message.attachment.size)}</span></div></div>`;
+            html += `<span class="attach-size">${getFileSize(
+              message.attachment.size
+            )}</span></div></div>`;
           } else {
-            html += `<div class="message-body">${minEmoji(Helpers.Messages.parser(message.body))}</div></div>`;
+            html += `<div class="message-body">${minEmoji(
+              Helpers.Messages.parser(message.body)
+            )}</div></div>`;
           }
 
-          html += `<div class="message-info"><time class="message-time" data-time="${message.date_sent}">${Helpers.getTime(message.date_sent)}</time>`;
+          html += `<div class="message-info"><time class="message-time" data-time="${
+            message.date_sent
+          }">${Helpers.getTime(message.date_sent)}</time>`;
           html += `<div class="message-status is-hidden">${status}</div>`;
           html += '<div class="message-geo j-showlocation"></div></div>';
           html += '</div></div></article>';
@@ -405,11 +497,11 @@ MessageView.prototype = {
         self.updateMediaElement(attachParams);
       }
 
-      if ((message.sender_id === User.contact.id) && (message.delivered_ids.length > 0)) {
+      if (message.sender_id === User.contact.id && message.delivered_ids.length > 0) {
         self.addStatusMessages(message.id, message.dialog_id, 'delivered', false);
       }
 
-      if ((message.sender_id === User.contact.id) && (message.read_ids.length > 1)) {
+      if (message.sender_id === User.contact.id && message.read_ids.length > 1) {
         self.addStatusMessages(message.id, message.dialog_id, 'displayed', false);
       }
 
@@ -419,8 +511,12 @@ MessageView.prototype = {
 
   addStatusMessages(messageId, dialogId, messageStatus, isListener) {
     const $chat = $(`.l-chat[data-dialog="${dialogId}"]`);
-    const time = $chat.find(`article#${messageId} .message-container-wrap .message-container .message-time`);
-    const statusHtml = $chat.find(`article#${messageId} .message-container-wrap .message-container .message-status`);
+    const time = $chat.find(
+      `article#${messageId} .message-container-wrap .message-container .message-time`
+    );
+    const statusHtml = $chat.find(
+      `article#${messageId} .message-container-wrap .message-container .message-status`
+    );
 
     if (messageStatus === 'displayed') {
       if (statusHtml.hasClass('delivered')) {
@@ -457,7 +553,10 @@ MessageView.prototype = {
     const type = form.parents('.l-chat').is('.is-group') ? 'groupchat' : 'chat';
     const $chat = $(`.l-chat[data-dialog="${dialogId}"]`);
     const $newMessages = $(`.j-newMessages[data-dialog="${dialogId}"]`);
-    const locationIsActive = ($('.j-send_location').hasClass('btn_active') && localStorage['QM.latitude'] && localStorage['QM.longitude']);
+    const locationIsActive =
+      $('.j-send_location').hasClass('btn_active') &&
+      localStorage['QM.latitude'] &&
+      localStorage['QM.longitude'];
     const { dialogs } = Entities.Collections;
     const dialog = dialogs.get(dialogId);
     let lastMessage;
@@ -465,7 +564,7 @@ MessageView.prototype = {
     let msg;
 
     if ($smiles.length > 0) {
-      $smiles.each(function() {
+      $smiles.each(function () {
         $(this).after($(this).data('unicode')).remove();
       });
       val = $textarea.html();
@@ -555,34 +654,55 @@ MessageView.prototype = {
     /* eslint-disable vars-on-top */
     const DialogView = self.app.views.Dialog;
     const ContactListView = self.app.views.ContactList;
-    const hiddenDialogs = sessionStorage['QM.hiddenDialogs'] ? JSON.parse(sessionStorage['QM.hiddenDialogs']) : {};
+    const hiddenDialogs = sessionStorage['QM.hiddenDialogs']
+      ? JSON.parse(sessionStorage['QM.hiddenDialogs'])
+      : {};
     const { dialogs } = Entities.Collections;
     const { contacts } = ContactList;
     const notificationType = message.extension && message.extension.notification_type;
     const dialogId = message.extension && message.extension.dialog_id;
     // eslint-disable-next-line max-len
-    const recipientId = message.recipient_id || (message.extension && message.extension.recipient_id) || null;
+    const recipientId =
+      message.recipient_id || (message.extension && message.extension.recipient_id) || null;
     const recipientJid = recipientId ? makeJid(recipientId) : null;
     const roomName = message.extension && message.extension.room_name;
     const roomPhoto = message.extension && message.extension.room_photo;
     let deletedId = message.extension && message.extension.deleted_occupant_ids;
     let newIds = message.extension && message.extension.added_occupant_ids;
     let occupantsIds = message.extension && message.extension.current_occupant_ids;
-    const dialogItem = message.type === 'groupchat' ? $(`.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`) : $(`.l-list-wrap section:not(#searchList) .dialog-item[data-id="${id}"]`);
+    const dialogItem =
+      message.type === 'groupchat'
+        ? $(`.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`)
+        : $(`.l-list-wrap section:not(#searchList) .dialog-item[data-id="${id}"]`);
     const contactRequest = $(`.j-incomingContactRequest[data-jid="${makeJid(id)}"]`);
-    const $chat = message.type === 'groupchat' ? $(`.l-chat[data-dialog="${dialogId}"]`) : $(`.l-chat[data-id="${id}"]`);
+    const $chat =
+      message.type === 'groupchat'
+        ? $(`.l-chat[data-dialog="${dialogId}"]`)
+        : $(`.l-chat[data-id="${id}"]`);
     const isHiddenChat = $chat.is(':hidden') || !$chat.length;
     const { roster } = ContactList;
-    const isExistent = Boolean(dialogItem.length || contactRequest.length || roster[id]) || (notificationType === '4');
-    let unread = parseInt(dialogItem.length > 0 && dialogItem.find('.unread').text().length > 0 ? dialogItem.find('.unread').text() : 0, 10);
+    const isExistent =
+      Boolean(dialogItem.length || contactRequest.length || roster[id]) || notificationType === '4';
+    let unread = parseInt(
+      dialogItem.length > 0 && dialogItem.find('.unread').text().length > 0
+        ? dialogItem.find('.unread').text()
+        : 0,
+      10
+    );
     const audioSignal = $('#newMessageSignal')[0];
     const isOfflineStorage = message.delay;
     const selected = $(`[data-dialog = ${dialogId}]`).is('.is-selected');
     const isBottom = Helpers.isBeginOfChat();
-    const otherChat = !selected && dialogItem.length > 0 && notificationType !== '1' && (!isOfflineStorage || message.type === 'groupchat');
+    const otherChat =
+      !selected &&
+      dialogItem.length > 0 &&
+      notificationType !== '1' &&
+      (!isOfflineStorage || message.type === 'groupchat');
     const isNotMyUser = id !== User.contact.id;
     const readBadge = `QM.${User.contact.id}_readBadge`;
-    const $newMessages = $(`<div class="new_messages j-newMessages" data-dialog="${dialogId}"><span class="newMessages">New messages</span></div>`);
+    const $newMessages = $(
+      `<div class="new_messages j-newMessages" data-dialog="${dialogId}"><span class="newMessages">New messages</span></div>`
+    );
     const $label = $chat.find('.j-newMessages');
     const isNewMessages = $label.length;
     const dialog = dialogs.get(dialogId);
@@ -623,8 +743,12 @@ MessageView.prototype = {
     // add or remove label about new messages
     if ($chat.length && !isHiddenChat && window.isQMAppActive && isNewMessages) {
       $label.remove();
-    } else if ((isHiddenChat || !window.isQMAppActive)
-                    && $chat.length && !isNewMessages && isNotMyUser) {
+    } else if (
+      (isHiddenChat || !window.isQMAppActive) &&
+      $chat.length &&
+      !isNewMessages &&
+      isNotMyUser
+    ) {
       $chat.find('.l-chat-content .mCSB_container').append($newMessages);
     }
 
@@ -686,7 +810,7 @@ MessageView.prototype = {
         $chat.find('.addToGroupChat').data('ids', dialog.get('occupants_ids'));
       }
 
-      if (deletedId && (deletedId[0] === User.contact.id)) {
+      if (deletedId && deletedId[0] === User.contact.id) {
         DialogView.deleteChat(dialogId, true);
         DialogView.decUnreadCounter(dialogId);
         dialogs.remove(dialog);
@@ -694,8 +818,7 @@ MessageView.prototype = {
 
       // change name
       if (roomName) {
-        $chat.find('.name_chat').text(roomName)
-          .attr('title', roomName);
+        $chat.find('.name_chat').text(roomName).attr('title', roomName);
         $chat.find('.j-scaleAvatar').data('name', roomName);
         dialogItem.find('.name').text(roomName);
       }
@@ -735,7 +858,7 @@ MessageView.prototype = {
     }
 
     const isHidden = isHiddenChat || !window.isQMAppActive;
-    const sentToMe = (message.type !== 'groupchat') || (msg.sender_id !== User.contact.id);
+    const sentToMe = message.type !== 'groupchat' || msg.sender_id !== User.contact.id;
     const isSoundOn = Settings.get('sounds_notify');
     const isMainTab = SyncTabs.get();
 
@@ -759,7 +882,7 @@ MessageView.prototype = {
       });
     }
 
-    if ((msg.sender_id === User.contact.id) && recipientJid) {
+    if (msg.sender_id === User.contact.id && recipientJid) {
       syncContactRequestInfo({
         notification_type: notificationType,
         recipient_jid: recipientJid,
@@ -776,10 +899,22 @@ MessageView.prototype = {
     const roomName = message.extension && message.extension.room_name;
     const roomPhoto = message.extension && message.extension.room_photo;
     const roomUpdatedAt = message.extension && message.extension.room_updated_date;
-    const occupantsIds = message.extension && message.extension.current_occupant_ids ? message.extension.current_occupant_ids.split(',').map(Number) : null;
-    let dialogItem = $(`.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`);
-    let dialogGroupItem = $(`.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`);
-    let unread = parseInt(dialogItem.length > 0 && dialogItem.find('.unread').text().length > 0 ? dialogItem.find('.unread').text() : 0, 10);
+    const occupantsIds =
+      message.extension && message.extension.current_occupant_ids
+        ? message.extension.current_occupant_ids.split(',').map(Number)
+        : null;
+    let dialogItem = $(
+      `.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`
+    );
+    let dialogGroupItem = $(
+      `.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`
+    );
+    let unread = parseInt(
+      dialogItem.length > 0 && dialogItem.find('.unread').text().length > 0
+        ? dialogItem.find('.unread').text()
+        : 0,
+      10
+    );
     const { dialogs } = Entities.Collections;
     let dialog;
     let msg;
@@ -805,7 +940,9 @@ MessageView.prototype = {
       ContactList.add(occupantsIds, null, () => {
         // don't create a duplicate dialog in contact list
         // eslint-disable-next-line prefer-destructuring
-        dialogItem = $(`.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`)[0];
+        dialogItem = $(
+          `.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`
+        )[0];
 
         if (dialogItem) {
           return;
@@ -819,7 +956,9 @@ MessageView.prototype = {
 
         DialogView.addDialogItem(dialog);
         unread += 1;
-        dialogGroupItem = $(`.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`);
+        dialogGroupItem = $(
+          `.l-list-wrap section:not(#searchList) .dialog-item[data-dialog="${dialogId}"]`
+        );
 
         message.online = true;
         msg = Message.create(message);
@@ -840,7 +979,10 @@ MessageView.prototype = {
     const ContactListMsg = self.app.models.ContactList;
     const { contacts } = ContactListMsg;
     const contact = contacts[userId];
-    const $chat = dialogId === null ? $(`.l-chat[data-id="${userId}"]`) : $(`.l-chat[data-dialog="${dialogId}"]`);
+    const $chat =
+      dialogId === null
+        ? $(`.l-chat[data-id="${userId}"]`)
+        : $(`.l-chat[data-dialog="${dialogId}"]`);
     const recipient = userId !== User.contact.id;
     const visible = $chat.is(':visible');
 
@@ -887,7 +1029,8 @@ MessageView.prototype = {
     if (params.type && params.type.indexOf('audio') > -1) {
       duration = Number.isNaN(params.duration) ? 0 : Number(params.duration);
 
-      new QMPlayer({ // eslint-disable-line no-new
+      // eslint-disable-next-line no-new
+      new QMPlayer({
         id: params.id,
         name: params.name,
         source: params.url,
@@ -902,13 +1045,12 @@ MessageView.prototype = {
     function toStringTime(time) {
       const m = Math.floor(time / 60);
       const s = time % 60;
-      const min = (m < 10) ? (`0${m}`) : m;
-      const sec = (s < 10) ? (`0${s}`) : s;
+      const min = m < 10 ? `0${m}` : m;
+      const sec = s < 10 ? `0${s}` : s;
 
       return `${min}:${sec}`;
     }
   },
-
 };
 
 /* Private
@@ -928,7 +1070,9 @@ function getStatus(status, html) {
 }
 
 function getFileSize(size) {
-  return size > (1024 * 1024) ? `${(size / (1024 * 1024)).toFixed(1)} MB` : `${(size / 1024).toFixed(1)}KB`;
+  return size > 1024 * 1024
+    ? `${(size / (1024 * 1024)).toFixed(1)} MB`
+    : `${(size / 1024).toFixed(1)}KB`;
 }
 
 function smartScroll() {
@@ -1005,7 +1149,7 @@ function createAndShowNotification(msg, isHiddenChat) {
   const dialog = dialogs.get(msg.dialog_id);
   const cancelNotify = !Settings.get('messages_notify');
   const isNotMainTab = !SyncTabs.get();
-  const isCurrentUser = (msg.sender_id === User.contact.id);
+  const isCurrentUser = msg.sender_id === User.contact.id;
 
   if (cancelNotify || isNotMainTab || isCurrentUser) {
     return;
@@ -1042,7 +1186,8 @@ function getLocationFromAttachment(attachment) {
   let geocoords;
 
   if (geodata) {
-    geodata = geodata.replace(/&amp;/gi, '&')
+    geodata = geodata
+      .replace(/&amp;/gi, '&')
       .replace(/&quot;/gi, '"')
       .replace(/&#10;/gi, '');
     geocoords = JSON.parse(geodata);
@@ -1147,10 +1292,12 @@ function getUrlPreview(id) {
   }
 
   const $message = $(`#${id}.message`).find('.message-body');
-  const $hyperText = $message.find('a:not(a.open_googlemaps, a.file-download, a.qm_player_download)');
+  const $hyperText = $message.find(
+    'a:not(a.open_googlemaps, a.file-download, a.qm_player_download)'
+  );
 
   if ($hyperText.length) {
-    $hyperText.each(function(index) {
+    $hyperText.each(function (index) {
       const $this = $(this);
       let params;
       let $elem;
@@ -1162,39 +1309,40 @@ function getUrlPreview(id) {
       const url = $this.attr('href');
 
       if (urlCache[url] !== null && Helpers.isImageUrl(url)) {
-        $elem = $this.clone()
-          .addClass('image_preview')
-          .html(`<img src="${url}" alt="picture"/>`);
+        $elem = $this.clone().addClass('image_preview').html(`<img src="${url}" alt="picture"/>`);
       } else if (urlCache[url] !== null && Helpers.isValidUrl(url)) {
         $elem = $this.clone().addClass('og_block');
 
         if (urlCache[url]) {
           $elem.html(QMHtml.Messages.urlPreview(urlCache[url]));
         } else {
-          Helpers.getOpenGraphInfo({
-            url,
-            token: JSON.parse(localStorage['QM.session']).token,
-          }, (error, result) => {
-            if (result && (result.ogTitle || result.ogDescription)) {
-              params = {
-                title: result.ogTitle || result.ogUrl || '',
-                description: result.ogDescription || result.ogUrl || url,
-                picture: (result.ogImage && result.ogImage.url) || '',
-              };
+          Helpers.getOpenGraphInfo(
+            {
+              url,
+              token: JSON.parse(localStorage['QM.session']).token,
+            },
+            (error, result) => {
+              if (result && (result.ogTitle || result.ogDescription)) {
+                params = {
+                  title: result.ogTitle || result.ogUrl || '',
+                  description: result.ogDescription || result.ogUrl || url,
+                  picture: (result.ogImage && result.ogImage.url) || '',
+                };
 
-              urlCache[url] = params;
-            } else {
-              params = {
-                title: 'Error 404 (Not Found)',
-                description: url,
-                picture: '',
-              };
+                urlCache[url] = params;
+              } else {
+                params = {
+                  title: 'Error 404 (Not Found)',
+                  description: url,
+                  picture: '',
+                };
 
-              urlCache[url] = null;
+                urlCache[url] = null;
+              }
+
+              $elem.html(QMHtml.Messages.urlPreview(params));
             }
-
-            $elem.html(QMHtml.Messages.urlPreview(params));
-          });
+          );
         }
       }
 
@@ -1223,7 +1371,7 @@ function setAttachSize(params) {
 
   if (height < 215) {
     $container.height(height);
-  } else if ((height > width) && (height > 285)) {
+  } else if (height > width && height > 285) {
     $container.height(285);
   }
 

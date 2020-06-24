@@ -30,7 +30,6 @@ function UserView(app) {
 }
 
 UserView.prototype = {
-
   signupQB() {
     switchPage($('#signUpPage'));
   },
@@ -98,7 +97,9 @@ UserView.prototype = {
     const $profileAvatar = $('#avatar-container');
 
     this.removeSpinner();
-    $profileAvatar.addClass('profileUserAvatar').css('background-image', `url(${User.contact.avatar_url})`);
+    $profileAvatar
+      .addClass('profileUserAvatar')
+      .css('background-image', `url(${User.contact.avatar_url})`);
     $profileAvatar.attr('data-id', User.contact.id);
     $profileAvatar.attr('data-name', User.contact.full_name);
     switchPage($('#mainPage'));
@@ -109,7 +110,8 @@ UserView.prototype = {
     let alert = '<div class="j-success_callback note l-form l-flexbox l-flexbox_column">';
 
     alert += '<span class="text text_alert text_alert_success">Success!</span>';
-    alert += '<span class="text">Please check your email and click a link in the letter in order to reset your password</span>';
+    alert +=
+      '<span class="text">Please check your email and click a link in the letter in order to reset your password</span>';
     alert += '</div>';
 
     this.removeSpinner();
@@ -160,15 +162,17 @@ UserView.prototype = {
     const { roster } = ContactList;
     const { dialogs } = Entities.Collections;
     const dialog = dialogs.get(dialogId).toJSON();
-    const htmlTpl = QMHtml.User.contactPopover({
-      dialogId,
-      dialogType: dialog.type,
-      occupantsIds: dialog.occupants_ids,
-      ids,
-    }, roster[ids]);
+    const htmlTpl = QMHtml.User.contactPopover(
+      {
+        dialogId,
+        dialogType: dialog.type,
+        occupantsIds: dialog.occupants_ids,
+        ids,
+      },
+      roster[ids]
+    );
 
-    objDom.after(htmlTpl)
-      .parent().addClass('is-contextmenu');
+    objDom.after(htmlTpl).parent().addClass('is-contextmenu');
 
     appearAnimation();
 
@@ -187,8 +191,7 @@ UserView.prototype = {
       listViewPort += element.offsetHeight;
     });
 
-    if ((botElemPosition <= dropListElemCount * 50)
-            && (elemPositionInList > dropListElemCount * 40)) {
+    if (botElemPosition <= dropListElemCount * 50 && elemPositionInList > dropListElemCount * 40) {
       dropList.addClass('margin-up');
     }
 
@@ -202,10 +205,13 @@ UserView.prototype = {
     const jid = QB.chat.helpers.getUserJid(id, QMCONFIG.qbAccount.appId);
     const { roster } = ContactList;
     const position = e.currentTarget.getBoundingClientRect();
-    const htmlTpl = QMHtml.User.occupantPopover({
-      id,
-      jid,
-    }, roster[id]);
+    const htmlTpl = QMHtml.User.occupantPopover(
+      {
+        id,
+        jid,
+      },
+      roster[id]
+    );
 
     $('body').append(htmlTpl);
 
@@ -214,7 +220,7 @@ UserView.prototype = {
     objDom.addClass('is-active');
 
     $('.list-actions_occupants').offset({
-      top: (29 + position.top),
+      top: 29 + position.top,
       left: position.left,
     });
   },
@@ -229,24 +235,34 @@ UserView.prototype = {
       popup.find('.userDetails-controls button').css('padding', '0 12px');
     }
 
-    popup.find('.userDetails-avatar').attr('data-id', userId).css('background-image', `url(${contact.avatar_url})`);
+    popup
+      .find('.userDetails-avatar')
+      .attr('data-id', userId)
+      .css('background-image', `url(${contact.avatar_url})`);
     popup.find('.userDetails-filename').attr('data-id', userId).text(contact.full_name);
 
     popup.find('.userDetails-status').attr('data-id', userId).text(contact.status);
 
     if (chatStatus && chatStatus.status) {
-      popup.find('.userDetails-chatStatus').html('<span class="status status_online"></span><span class="status_text">Online</span>');
+      popup
+        .find('.userDetails-chatStatus')
+        .html('<span class="status status_online"></span><span class="status_text">Online</span>');
     } else {
-      popup.find('.userDetails-chatStatus').html('<span class="status"></span><span class="status_text">Offline</span>');
+      popup
+        .find('.userDetails-chatStatus')
+        .html('<span class="status"></span><span class="status_text">Offline</span>');
     }
 
     popup.find('.writeMessage').data('id', userId);
 
-    popup.find('.userDetails-field').attr('data-id', userId).html(
-      contact.phone
-        ? `<span class="userDetails-label">Phone:</span><span class="userDetails-phone">${contact.phone}</span>`
-        : '',
-    );
+    popup
+      .find('.userDetails-field')
+      .attr('data-id', userId)
+      .html(
+        contact.phone
+          ? `<span class="userDetails-label">Phone:</span><span class="userDetails-phone">${contact.phone}</span>`
+          : ''
+      );
 
     this.getNewProfile(userId);
   },
@@ -265,11 +281,14 @@ UserView.prototype = {
 
       if (contact.phone) {
         $(`.profileUserPhone[data-id="${contact.id}"]`).html(
-          `<span class="userDetails-label">Phone:</span><span class="userDetails-phone">${contact.phone}</span>`,
+          `<span class="userDetails-label">Phone:</span><span class="userDetails-phone">${contact.phone}</span>`
         );
       }
 
-      $(`.profileUserAvatar[data-id="${contact.id}"]`).css('background-image', `url(${contact.avatar_url})`);
+      $(`.profileUserAvatar[data-id="${contact.id}"]`).css(
+        'background-image',
+        `url(${contact.avatar_url})`
+      );
 
       localStorage.setItem(`QM.contact-${contact.id}`, JSON.stringify(contact));
     });
@@ -300,22 +319,24 @@ UserView.prototype = {
       $('#searchList').removeClass('is-hidden').siblings('section').addClass('is-hidden');
       $('#searchList ul').html('').add('#searchList .note').removeClass('is-hidden');
 
-      $('#recentList, #historyList, #oldHistoryList').find('.dialog-item').each(function() {
-        const name = $(this).find('.name').text().toLowerCase();
-        const li = $(this).clone();
+      $('#recentList, #historyList, #oldHistoryList')
+        .find('.dialog-item')
+        .each(function () {
+          const name = $(this).find('.name').text().toLowerCase();
+          const li = $(this).clone();
 
-        if (name.indexOf(val) > -1) {
-          $('#searchList ul').append(li);
-          $('#searchList .note').addClass('is-hidden');
-        }
-      });
+          if (name.indexOf(val) > -1) {
+            $('#searchList ul').append(li);
+            $('#searchList .note').addClass('is-hidden');
+          }
+        });
 
       if ($('#searchList ul').find('li').length === 0) {
         $('#searchList .note').removeClass('is-hidden').siblings('ul').addClass('is-hidden');
       }
     } else {
       $('#searchList').addClass('is-hidden');
-      $notSearchLists.each(function() {
+      $notSearchLists.each(function () {
         const $this = $(this);
 
         if ($this.find('.list-item').length > 0) {
@@ -341,7 +362,7 @@ UserView.prototype = {
     result.find('ul li').removeClass('is-hidden');
 
     if (val.length > 0) {
-      result.find('ul li').each(function() {
+      result.find('ul li').each(function () {
         const name = $(this).find('.name').text().toLowerCase();
         const li = $(this);
 
@@ -355,16 +376,15 @@ UserView.prototype = {
       }
     }
   },
-
 };
 
 /* Private
 ---------------------------------------------------------------------- */
-clearErrors = function() {
+clearErrors = function () {
   $('.is-error').removeClass('is-error');
 };
 
-switchPage = function(page) {
+switchPage = function (page) {
   $('body').removeClass('is-welcome');
   page.removeClass('is-hidden').siblings('section').addClass('is-hidden');
 
@@ -375,7 +395,11 @@ switchPage = function(page) {
 
   if (!page.is('#mainPage')) {
     page.find('form').removeClass('is-hidden').next('.l-form').remove(); // reset Forgot form after success sending of letter
-    page.find('input:file').prev().find('.avatar').css('background-image', `url(${QMCONFIG.defAvatar.url})`)
+    page
+      .find('input:file')
+      .prev()
+      .find('.avatar')
+      .css('background-image', `url(${QMCONFIG.defAvatar.url})`)
       .siblings('span')
       .text(QMCONFIG.defAvatar.caption);
     page.find('input:checkbox').prop('checked', false);
@@ -392,12 +416,12 @@ switchPage = function(page) {
   }
 };
 
-switchOnWelcomePage = function() {
+switchOnWelcomePage = function () {
   $('body').addClass('is-welcome');
   $('#welcomePage').removeClass('is-hidden').siblings('section').addClass('is-hidden');
 };
 
-appearAnimation = function() {
+appearAnimation = function () {
   $('.popover:not(.j-popover_const)').fadeIn(150);
 };
 

@@ -17,7 +17,6 @@ function Dialog(app) {
 
 // noinspection JSAnnotator
 Dialog.prototype = {
-
   download(params, callback) {
     const QBApiCalls = this.app.service;
 
@@ -38,16 +37,15 @@ Dialog.prototype = {
       room_name: params.name || null,
       room_photo: (params.photo && params.photo.replace('http://', 'https://')) || '',
       occupants_ids: _.uniq(_.without(params.occupants_ids, User.contact.id)),
-      last_message: params.last_message || ((params.type === 2) ? 'Notification message' : 'Contact request'),
+      last_message:
+        params.last_message || (params.type === 2 ? 'Notification message' : 'Contact request'),
       last_message_date_sent: params.last_message_date_sent || time,
-      room_updated_date: Date.parse(params.updated_at)
-                || params.room_updated_date
-                || time,
+      room_updated_date: Date.parse(params.updated_at) || params.room_updated_date || time,
       unread_count: params.unread_messages_count || '',
       unread_messages: new Entities.Collections.UnreadMessages(),
       messages: new Entities.Collections.Messages(),
       opened: params.opened || false,
-      joined: (params.type === 3),
+      joined: params.type === 3,
     };
 
     new Entities.Models.Dialog(dialog); // eslint-disable-line no-new
@@ -60,19 +58,22 @@ Dialog.prototype = {
     const QBApiCalls = this.app.service;
     const DialogView = this.app.views.Dialog;
     const { ContactList } = this.app.models;
-    const id = (idOrJid.indexOf('@') > -1) ? QB.chat.helpers.getIdFromNode(idOrJid) : idOrJid;
+    const id = idOrJid.indexOf('@') > -1 ? QB.chat.helpers.getIdFromNode(idOrJid) : idOrJid;
 
     if (dialogId) {
       QB.chat.dialog.list({ _id: dialogId }, (err, resDialogs) => {
         addContactRequestDialogItem(resDialogs.items[0]);
       });
     } else {
-      QBApiCalls.createDialog({
-        type: 3,
-        occupants_ids: id,
-      }, (res) => {
-        addContactRequestDialogItem(res, true);
-      });
+      QBApiCalls.createDialog(
+        {
+          type: 3,
+          occupants_ids: id,
+        },
+        (res) => {
+          addContactRequestDialogItem(res, true);
+        }
+      );
     }
 
     function addContactRequestDialogItem(objDialog, isClick) {
@@ -124,36 +125,39 @@ Dialog.prototype = {
         const msgId = QB.chat.helpers.getBsonObjectId();
         const time = Math.floor(Date.now() / 1000);
 
-        QB.chat.addListener({
-          name: 'message',
-          type: 'groupchat',
-          id: msgId,
-        }, () => {
-          let id;
+        QB.chat.addListener(
+          {
+            name: 'message',
+            type: 'groupchat',
+            id: msgId,
+          },
+          () => {
+            let id;
 
-          dialog.set('occupants_ids', occupantsIds);
+            dialog.set('occupants_ids', occupantsIds);
 
-          DialogView.addDialogItem(dialog);
-          // send invites for all occupants
-          occupantsIds.forEach((item) => {
-            id = item;
-            QB.chat.sendSystemMessage(contacts[id].user_jid, {
-              body: 'Notification message',
-              extension: {
-                date_sent: time,
-                notification_type: '1',
-                dialog_id: dialog.get('id'),
-                room_name: dialog.get('room_name'),
-                room_updated_date: time,
-                current_occupant_ids: res.occupants_ids.join(),
-                added_occupant_ids: params.occupants_ids,
-                type: 2,
-              },
+            DialogView.addDialogItem(dialog);
+            // send invites for all occupants
+            occupantsIds.forEach((item) => {
+              id = item;
+              QB.chat.sendSystemMessage(contacts[id].user_jid, {
+                body: 'Notification message',
+                extension: {
+                  date_sent: time,
+                  notification_type: '1',
+                  dialog_id: dialog.get('id'),
+                  room_name: dialog.get('room_name'),
+                  room_updated_date: time,
+                  current_occupant_ids: res.occupants_ids.join(),
+                  added_occupant_ids: params.occupants_ids,
+                  type: 2,
+                },
+              });
             });
-          });
 
-          callback(dialog);
-        });
+            callback(dialog);
+          }
+        );
 
         // send message about added people for history
         QB.chat.send(dialog.get('room_jid'), {
@@ -181,18 +185,21 @@ Dialog.prototype = {
     const DialogView = this.app.views.Dialog;
     const self = this;
 
-    QBApiCalls.createDialog({
-      type: 3,
-      occupants_ids: id,
-    }, (res) => {
-      const { dialogs } = Entities.Collections;
-      const dialogId = self.create(res);
-      const dialog = dialogs.get(dialogId);
+    QBApiCalls.createDialog(
+      {
+        type: 3,
+        occupants_ids: id,
+      },
+      (res) => {
+        const { dialogs } = Entities.Collections;
+        const dialogId = self.create(res);
+        const dialog = dialogs.get(dialogId);
 
-      DialogView.addDialogItem(dialog, null, 'new_dialog');
+        DialogView.addDialogItem(dialog, null, 'new_dialog');
 
-      callback(dialog);
-    });
+        callback(dialog);
+      }
+    );
   },
 
   updateGroup(occupantsNames, params, callback) {
@@ -201,96 +208,107 @@ Dialog.prototype = {
     const { contacts } = ContactList;
     const self = this;
 
-    QBApiCalls.updateDialog(params.dialog_id, {
-      push_all: {
-        occupants_ids: [params.occupants_ids],
-      },
-    }, (res) => {
-      const dialogId = self.create(res);
-      const { dialogs } = Entities.Collections;
-      const dialog = dialogs.get(dialogId);
-      const msgId = QB.chat.helpers.getBsonObjectId();
-      const time = Math.floor(Date.now() / 1000);
-
-      Helpers.log('Dialog', dialog.toJSON());
-
-      QB.chat.addListener({
-        name: 'message',
-        type: 'groupchat',
-        id: msgId,
-      }, () => {
-        let id;
-
-        callback(dialog);
-
-        // send invites for all new occupants
-        params.new_ids.forEach((item) => {
-          id = item;
-
-          QB.chat.sendSystemMessage(contacts[id].user_jid, {
-            body: 'Notification message',
-            extension: {
-              date_sent: time,
-              notification_type: '1',
-              dialog_id: dialog.get('id'),
-              room_name: dialog.get('room_name'),
-              room_photo: dialog.get('room_photo'),
-              room_updated_date: time,
-              current_occupant_ids: res.occupants_ids.join(),
-              added_occupant_ids: params.new_ids.join(),
-              type: 2,
-            },
-          });
-        });
-      });
-
-      // send message about added people for history
-      QB.chat.send(dialog.get('room_jid'), {
-        id: msgId,
-        type: 'groupchat',
-        body: 'Notification message',
-        extension: {
-          date_sent: time,
-          save_to_history: 1,
-          notification_type: '2',
-          current_occupant_ids: res.occupants_ids.join(),
-          added_occupant_ids: params.new_ids.join(),
-          dialog_id: dialog.get('id'),
-          room_updated_date: time,
-          dialog_update_info: 3,
+    QBApiCalls.updateDialog(
+      params.dialog_id,
+      {
+        push_all: {
+          occupants_ids: [params.occupants_ids],
         },
-      });
-    });
+      },
+      (res) => {
+        const dialogId = self.create(res);
+        const { dialogs } = Entities.Collections;
+        const dialog = dialogs.get(dialogId);
+        const msgId = QB.chat.helpers.getBsonObjectId();
+        const time = Math.floor(Date.now() / 1000);
+
+        Helpers.log('Dialog', dialog.toJSON());
+
+        QB.chat.addListener(
+          {
+            name: 'message',
+            type: 'groupchat',
+            id: msgId,
+          },
+          () => {
+            let id;
+
+            callback(dialog);
+
+            // send invites for all new occupants
+            params.new_ids.forEach((item) => {
+              id = item;
+
+              QB.chat.sendSystemMessage(contacts[id].user_jid, {
+                body: 'Notification message',
+                extension: {
+                  date_sent: time,
+                  notification_type: '1',
+                  dialog_id: dialog.get('id'),
+                  room_name: dialog.get('room_name'),
+                  room_photo: dialog.get('room_photo'),
+                  room_updated_date: time,
+                  current_occupant_ids: res.occupants_ids.join(),
+                  added_occupant_ids: params.new_ids.join(),
+                  type: 2,
+                },
+              });
+            });
+          }
+        );
+
+        // send message about added people for history
+        QB.chat.send(dialog.get('room_jid'), {
+          id: msgId,
+          type: 'groupchat',
+          body: 'Notification message',
+          extension: {
+            date_sent: time,
+            save_to_history: 1,
+            notification_type: '2',
+            current_occupant_ids: res.occupants_ids.join(),
+            added_occupant_ids: params.new_ids.join(),
+            dialog_id: dialog.get('id'),
+            room_updated_date: time,
+            dialog_update_info: 3,
+          },
+        });
+      }
+    );
   },
 
   changeName(dialogId, name) {
     const QBApiCalls = this.app.service;
     const self = this;
 
-    QBApiCalls.updateDialog(dialogId, {
-      name,
-    }, (res) => {
-      const newDialogId = self.create(res);
-      const { dialogs } = Entities.Collections;
-      const dialog = dialogs.get(newDialogId);
+    QBApiCalls.updateDialog(
+      dialogId,
+      {
+        name,
+      },
+      (res) => {
+        const newDialogId = self.create(res);
+        const { dialogs } = Entities.Collections;
+        const dialog = dialogs.get(newDialogId);
 
-      Helpers.log('Dialog', dialog.toJSON());
+        Helpers.log('Dialog', dialog.toJSON());
 
-      // send notification about updating room
-      QB.chat.send(dialog.get('room_jid'), {
-        type: 'groupchat',
-        body: 'Notification message',
-        extension: {
-          date_sent: Math.floor(Date.now() / 1000),
-          save_to_history: 1,
-          notification_type: '2',
-          room_name: name,
-          dialog_id: dialog.get('id'),
-          room_updated_date: dialog.get('room_updated_date'),
-          dialog_update_info: 2,
-        },
-      });
-    });
+        // send notification about updating room
+        QB.chat.send(dialog.get('room_jid'), {
+          type: 'groupchat',
+          body: 'Notification message',
+          extension: {
+            date_sent: Math.floor(Date.now() / 1000),
+            save_to_history: 1,
+            notification_type: '2',
+            room_name: name,
+            dialog_id: dialog.get('id'),
+            room_updated_date: dialog.get('room_updated_date'),
+            dialog_update_info: 2,
+          },
+        });
+      }
+    );
   },
 
   changeAvatar(dialogId, objDom, callback) {
@@ -310,44 +328,56 @@ Dialog.prototype = {
 
       if (errMsg) {
         Helpers.log('Error', errMsg);
-        AttachView.pastErrorMessage(errMsg, objDom, $('.l-chat:visible .l-chat-content .mCSB_container'));
+        AttachView.pastErrorMessage(
+          errMsg,
+          objDom,
+          $('.l-chat:visible .l-chat-content .mCSB_container')
+        );
         callback(false);
       } else {
-        Attach.crop(file, {
-          w: 1000,
-          h: 1000,
-        }, (avatar) => {
-          Attach.upload(avatar, (blob) => {
-            const imgUrl = QB.content.publicUrl(blob.uid);
+        Attach.crop(
+          file,
+          {
+            w: 1000,
+            h: 1000,
+          },
+          (avatar) => {
+            Attach.upload(avatar, (blob) => {
+              const imgUrl = QB.content.publicUrl(blob.uid);
 
-            QBApiCalls.updateDialog(dialogId, {
-              photo: imgUrl,
-            }, (res) => {
-              const newDialogId = self.create(res);
-              const { dialogs } = Entities.Collections;
-              const dialog = dialogs.get(newDialogId);
-
-              Helpers.log('Dialog', dialog.toJSON());
-
-              // send notification about updating room
-              QB.chat.send(dialog.get('room_jid'), {
-                type: 'groupchat',
-                body: 'Notification message',
-                extension: {
-                  date_sent: Math.floor(Date.now() / 1000),
-                  save_to_history: 1,
-                  notification_type: '2',
-                  room_photo: imgUrl,
-                  dialog_id: dialog.get('id'),
-                  room_updated_date: dialog.get('room_updated_date'),
-                  dialog_update_info: 1,
+              QBApiCalls.updateDialog(
+                dialogId,
+                {
+                  photo: imgUrl,
                 },
-              });
+                (res) => {
+                  const newDialogId = self.create(res);
+                  const { dialogs } = Entities.Collections;
+                  const dialog = dialogs.get(newDialogId);
 
-              callback(imgUrl);
+                  Helpers.log('Dialog', dialog.toJSON());
+
+                  // send notification about updating room
+                  QB.chat.send(dialog.get('room_jid'), {
+                    type: 'groupchat',
+                    body: 'Notification message',
+                    extension: {
+                      date_sent: Math.floor(Date.now() / 1000),
+                      save_to_history: 1,
+                      notification_type: '2',
+                      room_photo: imgUrl,
+                      dialog_id: dialog.get('id'),
+                      room_updated_date: dialog.get('room_updated_date'),
+                      dialog_update_info: 1,
+                    },
+                  });
+
+                  callback(imgUrl);
+                }
+              );
             });
-          });
-        });
+          }
+        );
       }
     } else {
       callback(false);
@@ -386,7 +416,6 @@ Dialog.prototype = {
       Helpers.log(res);
     });
   },
-
 };
 
 export default Dialog;

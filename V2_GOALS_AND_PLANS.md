@@ -30,8 +30,9 @@
 16. ~~Update all dependencies to the latest versions~~
 17. ~~Move assets to separate folder~~
 18. ~~Migrate CommonJS to ES6 modules~~
-19. Split the project architecture according to component approach
-20. Refactor components (try to remove the backbone artifacts and jquery, then leave only the simple native JS components)
+19. ~~Add Prettier~~
+20. Split the project architecture according to component approach
+21. Refactor components (try to remove the backbone artifacts and jquery, then leave only the simple native JS components)
 
 **PHASE 2 (React app)**
 

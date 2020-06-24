@@ -58,7 +58,6 @@ function Events(app) {
 }
 
 Events.prototype = {
-
   init() {
     window.isQMAppActive = true;
 
@@ -97,13 +96,13 @@ Events.prototype = {
       }
     });
 
-    $('#signup-avatar:file').on('change', function() {
+    $('#signup-avatar:file').on('change', function () {
       changeInputFile($(this));
     });
 
     /* User Profile
         ----------------------------------------------------- */
-    $body.on('click', '.userDetails, .j-userMenu', function(event) {
+    $body.on('click', '.userDetails, .j-userMenu', function (event) {
       removePopover();
 
       const id = $(this).data('id');
@@ -145,7 +144,7 @@ Events.prototype = {
       changePassView.submitForm();
     });
 
-    $body.on('click', '.btn_userProfile_connect', function() {
+    $body.on('click', '.btn_userProfile_connect', function () {
       const profileView = App.views.Profile;
       const btn = $(this);
 
@@ -160,24 +159,23 @@ Events.prototype = {
           } else {
             btn.prop('disabled', false);
           }
-        }, {
-          scope: QMCONFIG.fbAccount.scope,
         },
+        {
+          scope: QMCONFIG.fbAccount.scope,
+        }
       );
     });
 
     /* smiles
         ----------------------------------------------------- */
-    $('.smiles-tab').on('click', function() {
+    $('.smiles-tab').on('click', function () {
       const $self = $(this);
       const smile = document.querySelector('.smiles-wrap');
       const group = $self.data('group');
 
-      $self.addClass('is-actived')
-        .siblings().removeClass('is-actived');
+      $self.addClass('is-actived').siblings().removeClass('is-actived');
 
-      $(`.smiles-group_${group}`).removeClass('is-hidden')
-        .siblings().addClass('is-hidden');
+      $(`.smiles-group_${group}`).removeClass('is-hidden').siblings().addClass('is-hidden');
 
       smile.scrollTop = 0;
       Ps.update(smile);
@@ -191,13 +189,13 @@ Events.prototype = {
       minScrollbarLength: 20,
     });
 
-    $workspace.on('click', '.j-em', function() {
+    $workspace.on('click', '.j-em', function () {
       Cursor.setCursorAfterElement($(this)[0]);
 
       return false;
     });
 
-    $('.j-em_wrap').on('click', function(event) {
+    $('.j-em_wrap').on('click', function (event) {
       const target = $(this).children()[0];
       const textarea = $('.l-chat:visible .textarea')[0];
 
@@ -213,22 +211,20 @@ Events.prototype = {
 
     /* attachments
         ----------------------------------------------------- */
-    $workspace.on('click', '.j-btn_input_attach', function() {
-      $(this).parents('.l-chat-footer')
-        .find('.attachment')
-        .click();
+    $workspace.on('click', '.j-btn_input_attach', function () {
+      $(this).parents('.l-chat-footer').find('.attachment').click();
     });
 
-    $workspace.on('change', '.attachment', function() {
+    $workspace.on('change', '.attachment', function () {
       AttachView.changeInput($(this));
     });
 
-    $workspace.on('click', '.attach-cancel', function(event) {
+    $workspace.on('click', '.attach-cancel', function (event) {
       event.preventDefault();
       AttachView.cancel($(this));
     });
 
-    $workspace.on('click', '.preview', function() {
+    $workspace.on('click', '.preview', function () {
       const $self = $(this);
       const name = $self.data('name');
       const url = $self.data('url');
@@ -259,7 +255,7 @@ Events.prototype = {
       }
     });
 
-    $workspace.on('click', '.j-btn_input_location', function() {
+    $workspace.on('click', '.j-btn_input_location', function () {
       const $self = $(this);
       const $gmap = $('.j-popover_gmap');
       const bool = $self.is('.is-active');
@@ -285,7 +281,7 @@ Events.prototype = {
     });
 
     $body.on('keypress', (e) => {
-      if ((e.keyCode === 13) && $('.j-open_map').length) {
+      if (e.keyCode === 13 && $('.j-open_map').length) {
         $('.j-send_map').click();
       }
     });
@@ -294,8 +290,7 @@ Events.prototype = {
         ----------------------------------------------------- */
     $body.on('click', '#userSettings', () => {
       removePopover();
-      $('.j-settings').addClass('is-overlay')
-        .parent('.j-overlay').addClass('is-overlay');
+      $('.j-settings').addClass('is-overlay').parent('.j-overlay').addClass('is-overlay');
 
       return false;
     });
@@ -306,7 +301,7 @@ Events.prototype = {
       return false;
     });
 
-    $('.j-toogle_settings').click(function() {
+    $('.j-toogle_settings').click(function () {
       const $target = $(this).find('.j-setings_notify')[0];
       const obj = {};
 
@@ -335,7 +330,7 @@ Events.prototype = {
       return false;
     });
 
-    $workspace.on('click', '.groupTitle .addToGroupChat', function(event) {
+    $workspace.on('click', '.groupTitle .addToGroupChat', function (event) {
       const $self = $(this);
       const dialogId = $self.data('dialog');
 
@@ -354,18 +349,24 @@ Events.prototype = {
     $workspace.on('mouseenter focus', '.groupTitle .name_chat', () => {
       const $chat = $('.l-chat:visible');
 
-      $chat.find('.triangle:visible').addClass('is-hover')
-        .siblings('.pencil').removeClass('is-hidden');
+      $chat
+        .find('.triangle:visible')
+        .addClass('is-hover')
+        .siblings('.pencil')
+        .removeClass('is-hidden');
 
       return false;
     });
 
-    $workspace.on('mouseleave', '.groupTitle .name_chat', function() {
+    $workspace.on('mouseleave', '.groupTitle .name_chat', function () {
       const $chat = $('.l-chat:visible');
 
       if (!$(this).is('.is-focus')) {
-        $chat.find('.triangle.is-hover').removeClass('is-hover')
-          .siblings('.pencil').addClass('is-hidden');
+        $chat
+          .find('.triangle.is-hover')
+          .removeClass('is-hover')
+          .siblings('.pencil')
+          .addClass('is-hidden');
       }
 
       return false;
@@ -377,14 +378,19 @@ Events.prototype = {
       if ($chat.find('.groupTitle .name_chat').is('.is-focus')) {
         $chat.find('.groupTitle .name_chat').removeClass('is-focus');
         $chat.find('.groupTitle .name_chat')[0].scrollLeft = 0;
-        $chat.find('.triangle.is-hover').removeClass('is-hover')
-          .siblings('.pencil').addClass('is-hidden');
+        $chat
+          .find('.triangle.is-hover')
+          .removeClass('is-hover')
+          .siblings('.pencil')
+          .addClass('is-hidden');
 
         if (editedChatName && !editedChatName.name) {
           $chat.find('.name_chat').text(chatName.name);
-        } else if (editedChatName
-                    && (editedChatName.name !== chatName.name)
-                    && (editedChatName.created_at > chatName.created_at)) {
+        } else if (
+          editedChatName &&
+          editedChatName.name !== chatName.name &&
+          editedChatName.created_at > chatName.created_at
+        ) {
           $chat.find('.name_chat').text(editedChatName.name).attr('title', editedChatName.name);
           Dialog.changeName($chat.data('dialog'), editedChatName.name);
         } else {
@@ -393,7 +399,7 @@ Events.prototype = {
       }
     });
 
-    $body.on('click', '.groupTitle .name_chat', function(event) {
+    $body.on('click', '.groupTitle .name_chat', function (event) {
       const $self = $(this);
 
       event.stopPropagation();
@@ -406,7 +412,7 @@ Events.prototype = {
       removePopover();
     });
 
-    $body.on('keypress', '.groupTitle .name_chat', function(event) {
+    $body.on('keypress', '.groupTitle .name_chat', function (event) {
       const $self = $(this);
       const code = event.keyCode;
 
@@ -428,13 +434,13 @@ Events.prototype = {
 
     /* change the chat avatar
         ----------------------------------------------------- */
-    $body.on('click', '.j-changePic', function() {
+    $body.on('click', '.j-changePic', function () {
       const dialogId = $(this).data('dialog');
 
       $(`input:file[data-dialog="${dialogId}"]`).click();
     });
 
-    $workspace.on('change', '.groupTitle .avatar_file', function() {
+    $workspace.on('change', '.groupTitle .avatar_file', function () {
       const $chat = $('.l-chat:visible');
 
       Dialog.changeAvatar($chat.data('dialog'), $(this), (avatar) => {
@@ -447,7 +453,7 @@ Events.prototype = {
       });
     });
 
-    $workspace.on('click', '.j-scaleAvatar', function() {
+    $workspace.on('click', '.j-scaleAvatar', function () {
       Helpers.scaleAvatar($(this));
     });
 
@@ -459,7 +465,7 @@ Events.prototype = {
         ----------------------------------------------------- */
     Events.intiAuthorizationInputs();
 
-    $('.j-btn_login_fb').on('click', function() {
+    $('.j-btn_login_fb').on('click', function () {
       if ($(this).hasClass('j-reloadPage')) {
         window.location.reload();
       }
@@ -467,14 +473,15 @@ Events.prototype = {
       if (window.FB) {
         UserView.logInFacebook();
       } else {
-        $('.j-btn_login_fb').addClass('not_allowed j-reloadPage')
+        $('.j-btn_login_fb')
+          .addClass('not_allowed j-reloadPage')
           .html('Login by Facebook failed.<br>Click to reload the page.');
       }
 
       return false;
     });
 
-    $('.j-firebasePhone').on('click', function() {
+    $('.j-firebasePhone').on('click', function () {
       if ($(this).hasClass('j-reloadPage')) {
         window.location.reload();
       }
@@ -549,7 +556,7 @@ Events.prototype = {
 
     /* popovers
         ----------------------------------------------------- */
-    $('#profile').on('click', function(event) {
+    $('#profile').on('click', function (event) {
       event.preventDefault();
       removePopover();
 
@@ -560,21 +567,21 @@ Events.prototype = {
       UserView.profilePopover($(this));
     });
 
-    $('.list_contextmenu').on('contextmenu', '.contact', function() {
+    $('.list_contextmenu').on('contextmenu', '.contact', function () {
       removePopover();
       UserView.contactPopover($(this));
 
       return false;
     });
 
-    $workspace.on('click', '.occupant', function(event) {
+    $workspace.on('click', '.occupant', function (event) {
       removePopover();
       UserView.occupantPopover($(this), event);
 
       return false;
     });
 
-    $workspace.on('click', '.j-btn_input_smile', function() {
+    $workspace.on('click', '.j-btn_input_smile', function () {
       const $self = $(this);
       const bool = $self.is('.is-active');
 
@@ -588,7 +595,7 @@ Events.prototype = {
       Cursor.setCursorToEnd($('.l-chat:visible .textarea')[0]);
     });
 
-    $workspace.on('click', '.j-btn_audio_record', function() {
+    $workspace.on('click', '.j-btn_audio_record', function () {
       const $self = $(this);
       const bool = $self.is('.is-active');
 
@@ -608,7 +615,7 @@ Events.prototype = {
     });
 
     // delete contact
-    $body.on('click', '.j-deleteContact', function() {
+    $body.on('click', '.j-deleteContact', function () {
       const $that = $(this);
 
       closePopup();
@@ -625,7 +632,7 @@ Events.prototype = {
       return false;
     });
 
-    $('.j-deleteContactConfirm').on('click', function() {
+    $('.j-deleteContactConfirm').on('click', function () {
       const id = $(this).parents('.j-popupDeleteContact').data('id');
 
       ContactListView.sendDelete(id, true);
@@ -633,12 +640,14 @@ Events.prototype = {
     });
 
     // delete chat
-    $('.list, .l-workspace-wrap').on('click', '.j-deleteChat', function() {
+    $('.list, .l-workspace-wrap').on('click', '.j-deleteChat', function () {
       const $self = $(this);
 
       closePopup();
 
-      const parent = $self.parents('.presence-listener')[0] ? $self.parents('.presence-listener') : $self.parents('.is-group');
+      const parent = $self.parents('.presence-listener')[0]
+        ? $self.parents('.presence-listener')
+        : $self.parents('.is-group');
       const dialogId = parent.data('dialog');
 
       openPopup($('.j-popupDeleteChat'), null, dialogId);
@@ -646,7 +655,7 @@ Events.prototype = {
       return false;
     });
 
-    $('.j-deleteChatConfirm').on('click', function() {
+    $('.j-deleteChatConfirm').on('click', function () {
       Helpers.log('Delete chat');
       DialogView.deleteChat($(this));
     });
@@ -656,7 +665,7 @@ Events.prototype = {
       UserView.logout();
     });
 
-    $('.popup-control-button, .btn_popup_private').on('click', function(event) {
+    $('.popup-control-button, .btn_popup_private').on('click', function (event) {
       const $self = $(this);
       const isProfile = $self.data('isprofile');
 
@@ -687,7 +696,7 @@ Events.prototype = {
       $('#globalSearch').submit();
     });
 
-    $('#mainPage').on('click', '.createGroupChat', function(event) {
+    $('#mainPage').on('click', '.createGroupChat', function (event) {
       const $self = $(this);
       const isPrivate = $self.data('private');
 
@@ -697,7 +706,7 @@ Events.prototype = {
       ContactListView.addContactsToChat($self, null, null, isPrivate);
     });
 
-    $('.l-sidebar').on('click', '.addToGroupChat', function(event) {
+    $('.l-sidebar').on('click', '.addToGroupChat', function (event) {
       const $self = $(this);
       const dialogId = $self.data('dialog');
 
@@ -709,7 +718,7 @@ Events.prototype = {
 
     /* search
         ----------------------------------------------------- */
-    $('.j-globalSearch').on('keyup search submit', function(event) {
+    $('.j-globalSearch').on('keyup search submit', function (event) {
       const $self = $(this);
       const code = event.keyCode;
       const isText = $self.find('.form-input-search').val().length;
@@ -720,9 +729,12 @@ Events.prototype = {
         clearTimeout(keyupSearch);
         startSearch();
       } else if (keyupSearch === undefined) {
-        keyupSearch = setTimeout(() => {
-          startSearch();
-        }, (code === 8) ? 0 : 1000);
+        keyupSearch = setTimeout(
+          () => {
+            startSearch();
+          },
+          code === 8 ? 0 : 1000
+        );
       } else {
         clearTimeout(keyupSearch);
         keyupSearch = setTimeout(() => {
@@ -744,7 +756,7 @@ Events.prototype = {
       return false;
     });
 
-    $('.localSearch').on('keyup search submit', function(event) {
+    $('.localSearch').on('keyup search submit', function (event) {
       const $self = $(this);
       const scrollbar = document.querySelector('.j-scrollbar_aside');
       const isText = $self.find('.form-input-search').val().length;
@@ -753,7 +765,7 @@ Events.prototype = {
       const { type } = event;
       const code = event.keyCode; // code=27 (Esc key), code=13 (Enter key)
 
-      if ((type === 'keyup' && code !== 27 && code !== 13) || (type === 'search')) {
+      if ((type === 'keyup' && code !== 27 && code !== 13) || type === 'search') {
         if (this.id === 'searchContacts') {
           UserView.localSearch($self);
         } else {
@@ -772,7 +784,7 @@ Events.prototype = {
       return false;
     });
 
-    $('.j-clean-button').on('click', function() {
+    $('.j-clean-button').on('click', function () {
       const $self = $(this);
       const $form = $self.parent('form.formSearch');
 
@@ -799,29 +811,29 @@ Events.prototype = {
       Helpers.log('send subscribe');
     }
 
-    $('.list_contacts').on('click', '.j-sendRequest', function() {
+    $('.list_contacts').on('click', '.j-sendRequest', function () {
       sendRequest(this);
     });
 
-    $workspace.on('click', '.j-requestAgain', function() {
+    $workspace.on('click', '.j-requestAgain', function () {
       const jid = $(this).parents('.j-chatItem').data('jid');
 
       ContactListView.sendSubscribe(jid, true);
       Helpers.log('send subscribe');
     });
 
-    $body.on('click', '.j-requestAction', function() {
+    $body.on('click', '.j-requestAction', function () {
       sendRequest(this);
     });
 
-    $('.list').on('click', '.j-requestConfirm', function() {
+    $('.list').on('click', '.j-requestConfirm', function () {
       const jid = $(this).parents('.j-incomingContactRequest').data('jid');
 
       ContactListView.sendConfirm(jid, true);
       Helpers.log('send confirm');
     });
 
-    $('.list').on('click', '.j-requestCancel', function() {
+    $('.list').on('click', '.j-requestCancel', function () {
       const jid = $(this).parents('.j-incomingContactRequest').data('jid');
 
       ContactListView.sendReject(jid, true);
@@ -836,7 +848,7 @@ Events.prototype = {
       }
     });
 
-    $('#popupContacts').on('click', '.contact', function() {
+    $('#popupContacts').on('click', '.contact', function () {
       const obj = $(this).parent();
       const popup = obj.parents('.popup');
 
@@ -886,7 +898,7 @@ Events.prototype = {
       }
     });
 
-    $body.on('click', '.writeMessage', function(event) {
+    $body.on('click', '.writeMessage', function (event) {
       const id = $(this).data('id');
       let dialogItem = $(`.j-dialogItem[data-id="${id}"]`).find('.contact');
 
@@ -908,7 +920,7 @@ Events.prototype = {
       DialogView.createGroupChat();
     });
 
-    $('#popupContacts .btn_popup_add').on('click', function() {
+    $('#popupContacts .btn_popup_add').on('click', function () {
       const dialogId = $(this).parents('.popup').data('dialog');
 
       DialogView.createGroupChat('add', dialogId);
@@ -931,7 +943,7 @@ Events.prototype = {
     });
 
     // show message status on hover event
-    $body.on('mouseenter', 'article.message.is-own', function() {
+    $body.on('mouseenter', 'article.message.is-own', function () {
       const $self = $(this);
       const time = $self.find('.message-time');
       const status = $self.find('.message-status');
@@ -940,7 +952,7 @@ Events.prototype = {
       status.removeClass('is-hidden');
     });
 
-    $body.on('mouseleave', 'article.message.is-own', function() {
+    $body.on('mouseleave', 'article.message.is-own', function () {
       const $self = $(this);
       const time = $self.find('.message-time');
       const status = $self.find('.message-status');
@@ -951,7 +963,7 @@ Events.prototype = {
 
     /* A button for the scroll to the bottom of chat
         ------------------------------------------------------ */
-    $body.on('click', '.j-refreshButton', function() {
+    $body.on('click', '.j-refreshButton', function () {
       const $this = $(this);
       const dialogId = $this.data('dialog');
 
@@ -966,7 +978,7 @@ Events.prototype = {
       return false;
     });
 
-    $workspace.on('click', '.j-toBottom', function() {
+    $workspace.on('click', '.j-toBottom', function () {
       $('.j-scrollbar_message').mCustomScrollbar('scrollTo', 'bottom');
       $(this).hide();
     });
@@ -992,9 +1004,9 @@ Events.prototype = {
     });
 
     // send typing statuses with keyup event
-    $workspace.on('keypress', '.j-message', function(event) {
+    $workspace.on('keypress', '.j-message', function (event) {
       const $self = $(this);
-      const isEnterKey = (event.keyCode === 13);
+      const isEnterKey = event.keyCode === 13;
       const { shiftKey } = event;
       const $chat = $self.parents('.l-chat');
       const jid = $chat.data('jid');
@@ -1080,8 +1092,7 @@ Events.prototype = {
 
       VoiceMessage.resetRecord();
 
-      $('.j-capBox').removeClass('is-hidden')
-        .siblings().removeClass('is-active');
+      $('.j-capBox').removeClass('is-hidden').siblings().removeClass('is-active');
       $('.j-chatWrap').addClass('is-hidden');
 
       if ($label.length) {
@@ -1104,10 +1115,10 @@ Events.prototype = {
   },
 };
 
-Events.intiAuthorizationInputs = function(el) {
+Events.intiAuthorizationInputs = function (el) {
   const $input = el || $('.form-input');
 
-  $input.on('focus', function() {
+  $input.on('focus', function () {
     const $this = $(this);
 
     if (!$this.val()) {
@@ -1117,7 +1128,7 @@ Events.intiAuthorizationInputs = function(el) {
     return false;
   });
 
-  $input.on('blur', function() {
+  $input.on('blur', function () {
     const $this = $(this);
 
     if (!$this.val()) {
@@ -1145,14 +1156,18 @@ function occupantScrollbar() {
 // Checking if the target is not an object run popover
 function clickBehaviour(e) {
   const objDom = $(e.target);
-  const selectors = '#profile, #profile *, .occupant, .occupant *, '
-            + '.j-btn_input_smile, .j-btn_input_smile *, .textarea, '
-            + '.textarea *, .j-popover_smile, .j-popover_smile *, '
-            + '.j-popover_gmap, .j-popover_gmap *, .j-btn_input_location, '
-            + '.j-btn_input_location *, '
-            + '.j-popover_record, .j-popover_record *, .j-btn_audio_record, '
-            + '.j-btn_audio_record *';
-  const googleImage = (objDom.context.src && objDom.context.src.indexOf('/maps.gstatic.com/mapfiles/api-3/images/mapcnt6.png')) || null;
+  const selectors =
+    '#profile, #profile *, .occupant, .occupant *, ' +
+    '.j-btn_input_smile, .j-btn_input_smile *, .textarea, ' +
+    '.textarea *, .j-popover_smile, .j-popover_smile *, ' +
+    '.j-popover_gmap, .j-popover_gmap *, .j-btn_input_location, ' +
+    '.j-btn_input_location *, ' +
+    '.j-popover_record, .j-popover_record *, .j-btn_audio_record, ' +
+    '.j-btn_audio_record *';
+  const googleImage =
+    (objDom.context.src &&
+      objDom.context.src.indexOf('/maps.gstatic.com/mapfiles/api-3/images/mapcnt6.png')) ||
+    null;
 
   if (objDom.is(selectors) || e.which === 3 || googleImage === 7) {
     return;
@@ -1167,7 +1182,11 @@ function changeInputFile(objDom) {
   const src = file ? URL.createObjectURL(file) : QMCONFIG.defAvatar.url;
   const fileName = file ? file.name : QMCONFIG.defAvatar.caption;
 
-  objDom.prev().find('.avatar').css('background-image', `url(${src})`).siblings('span')
+  objDom
+    .prev()
+    .find('.avatar')
+    .css('background-image', `url(${src})`)
+    .siblings('span')
     .text(fileName);
 }
 
@@ -1177,8 +1196,7 @@ function removePopover() {
   $('.is-contextmenu').removeClass('is-contextmenu');
   $('.popover').remove();
 
-  if ($('.j-start_record').hasClass('is-active')
-         || $('.j-start_record').hasClass('is-send')) {
+  if ($('.j-start_record').hasClass('is-active') || $('.j-start_record').hasClass('is-send')) {
     return;
   }
 
@@ -1190,7 +1208,7 @@ function removePopover() {
 }
 
 function openPopup(objDom, id, dialogId, isProfile) {
-// if it was the delete action
+  // if it was the delete action
   if (id) {
     objDom.data('id', id);
     objDom.find('.j-deleteContactConfirm').data('id', id);
@@ -1237,16 +1255,17 @@ function closePopup() {
 function setAttachType(type) {
   const otherType = type === 'photo' ? 'video' : 'photo';
 
-  $(`.attach-${type}`).removeClass('is-hidden')
-    .siblings(`.attach-${otherType}`).addClass('is-hidden');
+  $(`.attach-${type}`)
+    .removeClass('is-hidden')
+    .siblings(`.attach-${otherType}`)
+    .addClass('is-hidden');
 }
 
 function setTriagle(UpOrDown) {
   const $chat = $('.l-chat:visible');
   const $triangle = $chat.find(`.triangle_${UpOrDown}`);
 
-  $triangle.removeClass('is-hidden')
-    .siblings('.triangle').addClass('is-hidden');
+  $triangle.removeClass('is-hidden').siblings('.triangle').addClass('is-hidden');
 
   $chat.find('.chat-occupants-wrap').toggleClass('is-overlay');
   $chat.find('.l-chat-content').toggleClass('l-chat-content_min');

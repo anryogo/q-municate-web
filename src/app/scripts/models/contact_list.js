@@ -18,7 +18,6 @@ function ContactList(app) {
 }
 
 ContactList.prototype = {
-
   saveRoster(roster) {
     this.roster = roster;
   },
@@ -100,44 +99,47 @@ ContactList.prototype = {
 
     isExistingRequest = true;
 
-    QBApiCalls.getUser({
-      full_name: val,
-      page,
-      per_page: 20,
-    }, (data) => {
-      isExistingRequest = false;
+    QBApiCalls.getUser(
+      {
+        full_name: val,
+        page,
+        per_page: 20,
+      },
+      (data) => {
+        isExistingRequest = false;
 
-      if (data.items.length) {
-        contacts = self.getResults(data.items);
-      } else {
-        contacts = data.items;
-      }
-
-      page += 1;
-
-      sessionStorage.setItem('QM.search.allPages', Math.ceil(data.total_entries / data.per_page));
-      sessionStorage.setItem('QM.search.page', page);
-
-      contacts.sort((first, second) => {
-        const a = first.full_name.toLowerCase();
-        const b = second.full_name.toLowerCase();
-        let res;
-
-        if (a < b) {
-          res = -1;
-        } else if (a > b) {
-          res = 1;
+        if (data.items.length) {
+          contacts = self.getResults(data.items);
         } else {
-          res = 0;
+          contacts = data.items;
         }
 
-        return res;
-      });
+        page += 1;
 
-      Helpers.log('Search results', contacts);
+        sessionStorage.setItem('QM.search.allPages', Math.ceil(data.total_entries / data.per_page));
+        sessionStorage.setItem('QM.search.page', page);
 
-      callback(contacts);
-    });
+        contacts.sort((first, second) => {
+          const a = first.full_name.toLowerCase();
+          const b = second.full_name.toLowerCase();
+          let res;
+
+          if (a < b) {
+            res = -1;
+          } else if (a > b) {
+            res = 1;
+          } else {
+            res = 0;
+          }
+
+          return res;
+        });
+
+        Helpers.log('Search results', contacts);
+
+        callback(contacts);
+      }
+    );
   },
 
   getResults(data) {
@@ -188,7 +190,6 @@ ContactList.prototype = {
       callback(newIds);
     });
   },
-
 };
 
 /* Private
@@ -201,9 +202,10 @@ function getContacts() {
   if (ids.length > 0) {
     try {
       ids.forEach((item) => {
-        contacts[item] = typeof localStorage[`QM.contact-${item}`] !== 'undefined'
-          ? JSON.parse(localStorage[`QM.contact-${item}`])
-          : true;
+        contacts[item] =
+          typeof localStorage[`QM.contact-${item}`] !== 'undefined'
+            ? JSON.parse(localStorage[`QM.contact-${item}`])
+            : true;
 
         if (contacts[item] === true) {
           delete contacts[item];
