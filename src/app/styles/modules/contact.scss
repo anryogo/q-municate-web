@@ -1,143 +1,153 @@
 .contact {
-    position: relative;
-    height: 100%;
-    padding: 5px 15px 5px 10px;
+  position: relative;
+  height: 100%;
+  padding: 5px 15px 5px 10px;
 
-    &:hover {
-        opacity: 1;
-    }
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .name {
-    font-family: $fontRoboto;
-    font-size: 16px;
-    line-height: 20px;
-    color: $color_slate_gray_approx;
-    max-width: 180px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  font-family: $fontRoboto;
+  font-size: 16px;
+  line-height: 20px;
+  color: $color_slate_gray_approx;
+  max-width: 180px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 #requestsList {
-    .contact {
-        &:hover {
-            cursor: default;
-        }
+  .contact {
+    &:hover {
+      cursor: default;
     }
+  }
 
-    .name {
-        max-width: 162px;
-    }
+  .name {
+    max-width: 162px;
+  }
 }
 
 .contact-avatar.avatar {
-    margin-right: 15px;
-    width: 40px;
-    height: 40px;
+  margin-right: 15px;
+  width: 40px;
+  height: 40px;
 }
 
 .status {
-    border: 2px solid $color_desert_storm_approx;
-    width: 16px;
-    min-width: 16px;
-    height: 16px;
-    margin-left: 10px;
-    opacity: 0;
-    border-radius: 50%;
+  border: 2px solid $color_desert_storm_approx;
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  margin-left: 10px;
+  opacity: 0;
+  border-radius: 50%;
 }
 
 .status_request {
-    background: $white;
-    font-weight: bold;
-    color: $color_mountain_mist_approx;
-    opacity: 1;
-    text-align: center;
-    border-color: $white;
+  background: $white;
+  font-weight: bold;
+  color: $color_mountain_mist_approx;
+  opacity: 1;
+  text-align: center;
+  border-color: $white;
 
-    &::after {
-        content: '?';
-    }
+  &::after {
+    content: '?';
+  }
 }
 
 .status_online {
-    background: $color_malachite_approx;
-    opacity: 1;
+  background: $color_malachite_approx;
+  opacity: 1;
 }
 
 .occupant {
-    width: auto;
-    margin: 0 5px 5px 0;
-    padding: 0 15px;
-    background: $white;
-    border: 1px solid $color_wild_sand_approx;
-    border-radius: 4px;
+  width: auto;
+  margin: 0 5px 5px 0;
+  padding: 0 15px;
+  background: $white;
+  border: 1px solid $color_wild_sand_approx;
+  border-radius: 4px;
 
-    .status {
-        display: none;
-        margin: -1px 5px 0 -5px;
-    }
+  .status {
+    display: none;
+    margin: -1px 5px 0 -5px;
+  }
 
-    .status_request {
-        margin-top: -3px;
-        display: inline-block;
-    }
+  .status_request {
+    margin-top: -3px;
+    display: inline-block;
+  }
 
-    .status_online {
-        display: inline-block;
-    }
+  .status_online {
+    display: inline-block;
+  }
 }
 
 .chat-title {
-    .status_request {
-        background: none;
-        border: 0;
-    }
+  .status_request {
+    background: none;
+    border: 0;
+  }
 }
 
 .list-item {
-    .contact-avatar.avatar {
-        margin-right: 10px;
-    }
+  .contact-avatar.avatar {
+    margin-right: 10px;
+  }
 
+  .status {
+    border-color: $white;
+    position: absolute;
+    top: 36px;
+    left: 27px;
+  }
+
+  .status_request {
+    &::after {
+      font-size: 16px;
+      font-weight: bold;
+      position: absolute;
+      top: -1px;
+      left: 1px;
+    }
+  }
+
+  &:hover {
     .status {
-        border-color: $white;
-        position: absolute;
-        top: 36px;
-        left: 27px;
+      border-color: $color_wild_sand_approx;
     }
 
     .status_request {
-        &::after {
-            font-size: 16px;
-            font-weight: bold;
-            position: absolute;
-            top: -1px;
-            left: 1px;
-        }
+      background: $color_wild_sand_approx;
     }
-
-    &:hover {
-        .status {
-            border-color: $color_wild_sand_approx;
-        }
-
-        .status_request {
-            background: $color_wild_sand_approx;
-        }
-    }
+  }
 }
 
 .contact-avatar_signup {
-    margin-right: 1.5vh;
+  margin-right: 1.5vh;
 }
 
 .dialog_body {
-    max-width: 200px;
-    height: 45px;
+  max-width: 200px;
+  height: 45px;
 }
 
 .last_message_preview {
+  display: block;
+  height: 25px;
+  line-height: 25px;
+  font-size: 14px;
+  color: $color_mountain_mist_approx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  > a {
     display: block;
     height: 25px;
     line-height: 25px;
@@ -147,283 +157,273 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 
-    > a {
-        display: block;
-        height: 25px;
-        line-height: 25px;
-        font-size: 14px;
-        color: $color_mountain_mist_approx;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-
-        &:hover {
-            opacity: initial;
-        }
+    &:hover {
+      opacity: initial;
     }
+  }
 
-    > .em {
-        cursor: pointer;
-    }
+  > .em {
+    cursor: pointer;
+  }
 }
 
 .last_time_preview {
-    font-size: 12px;
-    color: $color_mountain_mist_approx;
-    position: absolute;
-    right: 15px;
-    top: 14px;
+  font-size: 12px;
+  color: $color_mountain_mist_approx;
+  position: absolute;
+  right: 15px;
+  top: 14px;
 }
 
 .list-item.is-selected {
-    .last_message_preview {
-        color: $color_wild_sand_approx;
+  .last_message_preview {
+    color: $color_wild_sand_approx;
 
-        > a {
-            color: $color_wild_sand_approx;
-        }
+    > a {
+      color: $color_wild_sand_approx;
     }
+  }
 
-    .status {
-        border-color: $color_malachite_approx;
-    }
+  .status {
+    border-color: $color_malachite_approx;
+  }
 
-    .status_request {
-        background: $color_malachite_approx;
-        color: $white;
-    }
+  .status_request {
+    background: $color_malachite_approx;
+    color: $white;
+  }
 
-    .last_time_preview {
-        color: $color_desert_storm_approx;
-    }
+  .last_time_preview {
+    color: $color_desert_storm_approx;
+  }
 }
 
 .avatar {
-    width: 40px;
-    min-width: 32px;
-    height: 40px;
-    border-radius: 50%;
-    background-size: cover;
-    background-position: 50%;
+  width: 40px;
+  min-width: 32px;
+  height: 40px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: 50%;
 }
 
 .avatar_signup {
-    width: 6vh;
-    min-width: 6vh;
-    height: 6vh;
+  width: 6vh;
+  min-width: 6vh;
+  height: 6vh;
 }
 
 .name.name_dialog {
-    display: block;
-    height: 20px;
-    margin-top: 2px;
+  display: block;
+  height: 20px;
+  margin-top: 2px;
 }
 
 .name_signup {
-    font-size: 2vh;
-    color: $color_mountain_mist_approx;
+  font-size: 2vh;
+  color: $color_mountain_mist_approx;
 }
 
 .name_chat {
-    font-size: 16px;
-    line-height: 24px;
-    max-width: 455px;
+  font-size: 16px;
+  line-height: 24px;
+  max-width: 455px;
 }
 
 .name_occupant {
-    font-size: 14px;
-    line-height: 26px;
+  font-size: 14px;
+  line-height: 26px;
 }
 
 .status.icon_videocall {
-    min-width: 25px;
-    height: 25px;
-    left: 21px;
-    top: 27px;
-    background: $urlIcnCurrentVideocall no-repeat center;
-    background-size: 85%;
-    background-color: $white;
-    opacity: 1;
+  min-width: 25px;
+  height: 25px;
+  left: 21px;
+  top: 27px;
+  background: $urlIcnCurrentVideocall no-repeat center;
+  background-size: 85%;
+  background-color: $white;
+  opacity: 1;
 }
 
 .status.status_online.icon_videocall {
-    min-width: 25px;
-    height: 25px;
-    left: 21px;
-    top: 27px;
-    background: $urlIcnCurrentVideocall no-repeat center;
-    background-size: 85%;
-    background-color: $white;
-    opacity: 1;
+  min-width: 25px;
+  height: 25px;
+  left: 21px;
+  top: 27px;
+  background: $urlIcnCurrentVideocall no-repeat center;
+  background-size: 85%;
+  background-color: $white;
+  opacity: 1;
 }
 
 .status.icon_audiocall {
-    min-width: 25px;
-    height: 25px;
-    left: 21px;
-    top: 27px;
-    background: $urlIcnCurrentAudiocall no-repeat center;
-    background-size: 65%;
-    background-color: $white;
-    opacity: 1;
+  min-width: 25px;
+  height: 25px;
+  left: 21px;
+  top: 27px;
+  background: $urlIcnCurrentAudiocall no-repeat center;
+  background-size: 65%;
+  background-color: $white;
+  opacity: 1;
 }
 
 .status.status_online.icon_audiocall {
-    min-width: 25px;
-    height: 25px;
-    left: 21px;
-    top: 27px;
-    background: $urlIcnCurrentAudiocall no-repeat center;
-    background-size: 65%;
-    background-color: $white;
-    opacity: 1;
+  min-width: 25px;
+  height: 25px;
+  left: 21px;
+  top: 27px;
+  background: $urlIcnCurrentAudiocall no-repeat center;
+  background-size: 65%;
+  background-color: $white;
+  opacity: 1;
 }
 
 .unread {
-    position: absolute;
-    bottom: 8px;
-    right: 15px;
-    padding: 0 6px;
-    font-size: 13px;
-    line-height: 18px;
-    color: $white;
-    background: $color_malachite_approx;
-    border-radius: 4px;
+  position: absolute;
+  bottom: 8px;
+  right: 15px;
+  padding: 0 6px;
+  font-size: 13px;
+  line-height: 18px;
+  color: $white;
+  background: $color_malachite_approx;
+  border-radius: 4px;
 }
 
 .request-controls {
-    min-width: 70px;
-    background: $white;
-    border: 1px solid $color_wild_sand_approx;
-    border-radius: 8px;
+  min-width: 70px;
+  background: $white;
+  border: 1px solid $color_wild_sand_approx;
+  border-radius: 8px;
 }
 
 .request-button {
-    padding: 0 9px;
-    line-height: 32px;
-    background: none;
-    border-right: 1px solid $color_wild_sand_approx;
+  padding: 0 9px;
+  line-height: 32px;
+  background: none;
+  border-right: 1px solid $color_wild_sand_approx;
 
-    &:hover {
-        background: $color_wild_sand_approx;
-    }
+  &:hover {
+    background: $color_wild_sand_approx;
+  }
 
-    &:last-child {
-        border-right: 0;
-    }
+  &:last-child {
+    border-right: 0;
+  }
 }
 
 .request-button_attach {
-    width: 20px;
-    min-width: 20px;
-    margin: 0 5px 0 10px;
-    text-align: center;
+  width: 20px;
+  min-width: 20px;
+  margin: 0 5px 0 10px;
+  text-align: center;
 }
 
 .request-button_pending {
-    width: 20px;
-    min-width: 20px;
-    height: 20px;
-    font-size: 14px;
-    font-weight: bold;
-    line-height: 20px;
-    color: $white;
-    text-align: center;
-    background: $color_silver_approx;
-    border-radius: 50%;
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 20px;
+  color: $white;
+  text-align: center;
+  background: $color_silver_approx;
+  border-radius: 50%;
 
-    &::after {
-        content: 'i';
-    }
+  &::after {
+    content: 'i';
+  }
 }
 
 .request-call {
-    margin-left: 7px;
-    width: 25px;
-    min-width: 25px;
-    height: 21px;
+  margin-left: 7px;
+  width: 25px;
+  min-width: 25px;
+  height: 21px;
 }
 
 .request-video_incoming {
-    background: $urlIcnVideoIncoming no-repeat center;
+  background: $urlIcnVideoIncoming no-repeat center;
 }
 
 .request-video_outgoing {
-    background: $urlIcnVideoOutgoing no-repeat center;
+  background: $urlIcnVideoOutgoing no-repeat center;
 }
 
 .request-video_missed {
-    background: $urlIcnVideoMissed no-repeat center;
+  background: $urlIcnVideoMissed no-repeat center;
 }
 
 .request-video_ended {
-    background: $urlIcnVideoEnded no-repeat center;
+  background: $urlIcnVideoEnded no-repeat center;
 }
 
 .request-audio_incoming {
-    background: $urlIcnAudioIncoming no-repeat center;
+  background: $urlIcnAudioIncoming no-repeat center;
 }
 
 .request-audio_outgoing {
-    background: $urlIcnAudioOutgoing no-repeat center;
+  background: $urlIcnAudioOutgoing no-repeat center;
 }
 
 .request-audio_missed {
-    background: $urlIcnAudioMissed no-repeat center;
+  background: $urlIcnAudioMissed no-repeat center;
 }
 
 .request-audio_ended {
-    background: $urlIcnAudioEnded no-repeat center;
+  background: $urlIcnAudioEnded no-repeat center;
 }
 
 .request-button_cancel {
-    font-size: 20px;
-    color: $color_guardsman_red_approx;
+  font-size: 20px;
+  color: $color_guardsman_red_approx;
 }
 
 .message-avatar.request-button_cancel {
-    width: 20px;
-    min-width: 20px;
-    height: 20px;
-    color: $color_guardsman_red_approx;
-    text-align: center;
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  color: $color_guardsman_red_approx;
+  text-align: center;
 }
 
 .request-button_ok {
-    font-size: 20px;
-    color: $color_malachite_approx;
+  font-size: 20px;
+  color: $color_malachite_approx;
 }
 
 .message-avatar.request-button_ok {
-    width: 20px;
-    min-width: 20px;
-    height: 20px;
-    color: $color_malachite_approx;
-    text-align: center;
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  color: $color_malachite_approx;
+  text-align: center;
 }
 
 .send-request {
-    margin-left: 10px;
-    font-size: 15px;
-    color: $color_silver_approx;
+  margin-left: 10px;
+  font-size: 15px;
+  color: $color_silver_approx;
 
-    &:hover {
-        opacity: 1;
-    }
+  &:hover {
+    opacity: 1;
+  }
 
-    img {
-        float: right;
-    }
+  img {
+    float: right;
+  }
 }
 
 span.send-request {
-    display: inline-block;
-    min-width: 120px;
-    height: 45px;
-    line-height: 45px;
-    text-align: right;
+  display: inline-block;
+  min-width: 120px;
+  height: 45px;
+  line-height: 45px;
+  text-align: right;
 }
 
 .userMenu {
-    cursor: pointer;
+  cursor: pointer;
 }

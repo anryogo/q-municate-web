@@ -1,259 +1,259 @@
 .form-header {
-    margin: 7vh 0 5vh;
-    font-size: 3.4vh;
-    font-weight: normal;
-    color: $color_mine_shaft_approx;
+  margin: 7vh 0 5vh;
+  font-size: 3.4vh;
+  font-weight: normal;
+  color: $color_mine_shaft_approx;
 }
 
 .input-field {
-    margin: 0 0 8px;
+  margin: 0 0 8px;
 
-    label {
-        left: 0;
-        top: 18px;
-        color: $color_mountain_mist_approx;
-    }
+  label {
+    left: 0;
+    top: 18px;
+    color: $color_mountain_mist_approx;
+  }
 }
 
 .input_field {
-    width: 304px;
-    height: 56px;
-    background-color: $white;
+  width: 304px;
+  height: 56px;
+  background-color: $white;
 }
 
 input.input_email[type=email] {
-    width: 304px;
-    height: 17px;
-    margin: 0 0 7px;
-    padding: 20px 0 10px;
-    background-color: $white;
-    font-family: $fontRoboto;
-    font-size: 16px;
-    font-weight: normal;
-    color: $color_log_cabin_approx;
-    border-bottom: 2px solid $color_mountain_mist_approx;
-    box-shadow: inset 0 99px 0 0 $white;
+  width: 304px;
+  height: 17px;
+  margin: 0 0 7px;
+  padding: 20px 0 10px;
+  background-color: $white;
+  font-family: $fontRoboto;
+  font-size: 16px;
+  font-weight: normal;
+  color: $color_log_cabin_approx;
+  border-bottom: 2px solid $color_mountain_mist_approx;
+  box-shadow: inset 0 99px 0 0 $white;
 
-    &:focus {
-        &:not([readonly]) {
-            border-bottom: 2px solid $color_malachite_approx;
-            box-shadow: inset 0 99px 0 0 $white;
+  &:focus {
+    &:not([readonly]) {
+      border-bottom: 2px solid $color_malachite_approx;
+      box-shadow: inset 0 99px 0 0 $white;
 
-            + label {
-                color: $color_malachite_approx;
-            }
-        }
+      + label {
+        color: $color_malachite_approx;
+      }
     }
+  }
 }
 
 input.input_pass[type=password] {
-    width: 304px;
-    height: 17px;
-    margin: 0 0 7px;
-    padding: 20px 0 10px;
-    background-color: $white;
-    font-family: $fontRoboto;
-    font-size: 16px;
-    font-weight: normal;
-    color: $color_log_cabin_approx;
-    border-bottom: 2px solid $color_mountain_mist_approx;
-    box-shadow: inset 0 99px 0 0 $white;
+  width: 304px;
+  height: 17px;
+  margin: 0 0 7px;
+  padding: 20px 0 10px;
+  background-color: $white;
+  font-family: $fontRoboto;
+  font-size: 16px;
+  font-weight: normal;
+  color: $color_log_cabin_approx;
+  border-bottom: 2px solid $color_mountain_mist_approx;
+  box-shadow: inset 0 99px 0 0 $white;
 
-    &:focus {
-        &:not([readonly]) {
-            border-bottom: 2px solid $color_malachite_approx;
-            box-shadow: inset 0 99px 0 0 $white;
+  &:focus {
+    &:not([readonly]) {
+      border-bottom: 2px solid $color_malachite_approx;
+      box-shadow: inset 0 99px 0 0 $white;
 
-            + label {
-                color: $color_malachite_approx;
-            }
-        }
+      + label {
+        color: $color_malachite_approx;
+      }
     }
+  }
 }
 
 input.input_tel[type=tel] {
-    width: 304px;
-    height: 17px;
-    margin: 0 0 7px;
-    padding: 20px 0 10px;
-    background-color: $white;
-    font-family: $fontRoboto;
-    font-size: 16px;
-    font-weight: normal;
-    color: $color_log_cabin_approx;
-    border-bottom: 2px solid $color_mountain_mist_approx;
-    box-shadow: inset 0 99px 0 0 $white;
+  width: 304px;
+  height: 17px;
+  margin: 0 0 7px;
+  padding: 20px 0 10px;
+  background-color: $white;
+  font-family: $fontRoboto;
+  font-size: 16px;
+  font-weight: normal;
+  color: $color_log_cabin_approx;
+  border-bottom: 2px solid $color_mountain_mist_approx;
+  box-shadow: inset 0 99px 0 0 $white;
 
-    &:focus {
-        &:not([readonly]) {
-            border-bottom: 2px solid $color_malachite_approx;
-            box-shadow: inset 0 99px 0 0 $white;
+  &:focus {
+    &:not([readonly]) {
+      border-bottom: 2px solid $color_malachite_approx;
+      box-shadow: inset 0 99px 0 0 $white;
 
-            + label {
-                color: $color_malachite_approx;
-            }
-        }
+      + label {
+        color: $color_malachite_approx;
+      }
     }
+  }
 }
 
 input.input_text[type=text] {
-    width: 304px;
-    height: 17px;
-    margin: 0 0 7px;
-    padding: 20px 0 10px;
-    background-color: $white;
-    font-family: $fontRoboto;
-    font-size: 16px;
-    font-weight: normal;
-    color: $color_log_cabin_approx;
-    border-bottom: 2px solid $color_mountain_mist_approx;
-    box-shadow: inset 0 99px 0 0 $white;
+  width: 304px;
+  height: 17px;
+  margin: 0 0 7px;
+  padding: 20px 0 10px;
+  background-color: $white;
+  font-family: $fontRoboto;
+  font-size: 16px;
+  font-weight: normal;
+  color: $color_log_cabin_approx;
+  border-bottom: 2px solid $color_mountain_mist_approx;
+  box-shadow: inset 0 99px 0 0 $white;
 
-    &:focus {
-        &:not([readonly]) {
-            border-bottom: 2px solid $color_malachite_approx;
-            box-shadow: inset 0 99px 0 0 $white;
+  &:focus {
+    &:not([readonly]) {
+      border-bottom: 2px solid $color_malachite_approx;
+      box-shadow: inset 0 99px 0 0 $white;
 
-            + label {
-                color: $color_malachite_approx;
-            }
-        }
+      + label {
+        color: $color_malachite_approx;
+      }
     }
+  }
 }
 
 input.form-input-search.without_M[type=search] {
-    appearance: none;
-    width: 100%;
-    height: 32px;
-    padding: 5px 16px 5px 10px;
-    font-size: 15px;
-    line-height: 20px;
-    border: 0;
-    border-radius: 4px;
-    background-color: $color_wild_sand_approx;
-    background-image: $urlIcnSearch;
-    background-repeat: no-repeat;
-    background-position: 9px 6px;
-    background-size: 20px 20px;
+  appearance: none;
+  width: 100%;
+  height: 32px;
+  padding: 5px 16px 5px 10px;
+  font-size: 15px;
+  line-height: 20px;
+  border: 0;
+  border-radius: 4px;
+  background-color: $color_wild_sand_approx;
+  background-image: $urlIcnSearch;
+  background-repeat: no-repeat;
+  background-position: 9px 6px;
+  background-size: 20px 20px;
 
-    &:focus {
-        &:not([readonly]) {
-            appearance: none;
-            width: 100%;
-            height: 32px;
-            padding: 5px 16px 5px 10px;
-            font-size: 15px;
-            line-height: 20px;
-            border: 0;
-            border-radius: 4px;
-            background-color: $color_wild_sand_approx;
-            background-repeat: no-repeat;
-            background-position: 9px 6px;
-            background-size: 20px 20px;
-            border-color: $color_malachite_approx;
-            background-image: none;
-        }
+  &:focus {
+    &:not([readonly]) {
+      appearance: none;
+      width: 100%;
+      height: 32px;
+      padding: 5px 16px 5px 10px;
+      font-size: 15px;
+      line-height: 20px;
+      border: 0;
+      border-radius: 4px;
+      background-color: $color_wild_sand_approx;
+      background-repeat: no-repeat;
+      background-position: 9px 6px;
+      background-size: 20px 20px;
+      border-color: $color_malachite_approx;
+      background-image: none;
     }
+  }
 }
 
 .formSearch {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .clean-button {
-    position: absolute;
-    display: none;
-    width: 22px;
-    height: 22px;
-    top: 15px;
-    right: 15px;
-    color: $color_celeste_approx;
-    cursor: pointer;
+  position: absolute;
+  display: none;
+  width: 22px;
+  height: 22px;
+  top: 15px;
+  right: 15px;
+  color: $color_celeste_approx;
+  cursor: pointer;
 }
 
 #searchContacts {
-    .clean-button {
-        right: 104px;
-        top: 18px;
-    }
+  .clean-button {
+    right: 104px;
+    top: 18px;
+  }
 }
 
 .form-input-message {
-    width: 96%;
-    height: 100%;
-    margin: 0 auto;
-    padding: 8px 40px 5px 5px;
-    font-size: 15px;
-    line-height: 20px;
-    border-bottom: 1px solid $color_silver_approx;
-    resize: none;
-    word-wrap: break-word;
-    user-select: text;
+  width: 96%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 8px 40px 5px 5px;
+  font-size: 15px;
+  line-height: 20px;
+  border-bottom: 1px solid $color_silver_approx;
+  resize: none;
+  word-wrap: break-word;
+  user-select: text;
 
-    &::placeholder {
-        position: relative;
-        color: $color_celeste_approx;
-        line-height: 33px;
-    }
+  &::placeholder {
+    position: relative;
+    color: $color_celeste_approx;
+    line-height: 33px;
+  }
 }
 
 .form-label {
-    display: block;
-    margin: 1vh 0 5vh;
-    font-size: 2vh;
-    color: $color_storm_dust_approx;
+  display: block;
+  margin: 1vh 0 5vh;
+  font-size: 2vh;
+  color: $color_storm_dust_approx;
 }
 
 .form-checkbox {
-    margin-left: 1vh;
-    vertical-align: middle;
+  margin-left: 1vh;
+  vertical-align: middle;
 }
 
 .form-checkbox[type='checkbox'] {
-    &:checked {
-        position: relative;
-        left: initial;
-        opacity: initial;
-    }
+  &:checked {
+    position: relative;
+    left: initial;
+    opacity: initial;
+  }
 
-    &:not(:checked) {
-        position: relative;
-        left: initial;
-        opacity: initial;
-    }
+  &:not(:checked) {
+    position: relative;
+    left: initial;
+    opacity: initial;
+  }
 }
 
 .form-file-custom {
-    height: 100%;
+  height: 100%;
 }
 
 .form-file {
-    position: relative;
-    width: 100%;
-    height: 6vh;
-    margin: 2vh 0 4vh;
+  position: relative;
+  width: 100%;
+  height: 6vh;
+  margin: 2vh 0 4vh;
 
-    &:hover {
-        .form-file-custom {
-            opacity: 0.6;
-        }
+  &:hover {
+    .form-file-custom {
+      opacity: 0.6;
     }
+  }
 }
 
 .form-file-default {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
 }
 
 input.without_M[type=search] {
-    box-sizing: inherit !important;
+  box-sizing: inherit !important;
 }
 
 input.without_M:not([type]),
@@ -269,25 +269,25 @@ input.without_M[type=text],
 input.without_M[type=time],
 input.without_M[type=url],
 textarea.without_M.materialize-textarea {
-    background-color: transparent;
-    border: 0;
-    border-bottom: 0;
-    border-radius: initial;
-    outline: none;
-    height: auto;
-    width: auto;
-    font-size: initial;
-    margin: auto;
-    padding: initial;
-    box-shadow: none;
-    box-sizing: initial;
-    transition: initial;
+  background-color: transparent;
+  border: 0;
+  border-bottom: 0;
+  border-radius: initial;
+  outline: none;
+  height: auto;
+  width: auto;
+  font-size: initial;
+  margin: auto;
+  padding: initial;
+  box-shadow: none;
+  box-sizing: initial;
+  transition: initial;
 
-    &:focus {
-        &:not([readonly]) {
-            border-bottom: 0;
-            outline: 0;
-            box-shadow: none;
-        }
+  &:focus {
+    &:not([readonly]) {
+      border-bottom: 0;
+      outline: 0;
+      box-shadow: none;
     }
+  }
 }

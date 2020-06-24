@@ -1,267 +1,267 @@
 .is-hidden {
-    display: none;
+  display: none;
 }
 
 .is-hover {
-    display: none;
+  display: none;
 }
 
 .is-notVisible {
-    opacity: 0;
-    visibility: hidden;
+  opacity: 0;
+  visibility: hidden;
 }
 
 body.is-welcome {
-    .l-wrapper {
-        border-left: 1px solid $color_wild_sand_approx;
-        border-right: 1px solid $color_wild_sand_approx;
-        background: $color_romance_approx;
-    }
+  .l-wrapper {
+    border-left: 1px solid $color_wild_sand_approx;
+    border-right: 1px solid $color_wild_sand_approx;
+    background: $color_romance_approx;
+  }
 
-    .l-app-version {
-        right: 25px;
-    }
+  .l-app-version {
+    right: 25px;
+  }
 }
 
 span.is-error {
-    opacity: 1;
+  opacity: 1;
 }
 
 input.is-error {
-    border-color: $color_chestnut_rose_approx;
+  border-color: $color_chestnut_rose_approx;
 
-    &:focus {
-        border-color: $color_chestnut_rose_approx;
-        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(205, 87, 92, 0.6);
-    }
+  &:focus {
+    border-color: $color_chestnut_rose_approx;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(205, 87, 92, 0.6);
+  }
 }
 
 .list-item.is-chosen {
-    background: $color_wild_sand_approx;
-    position: relative;
+  background: $color_wild_sand_approx;
+  position: relative;
 }
 
 .list-item.is-contextmenu {
-    background: $color_wild_sand_approx;
-    position: relative;
+  background: $color_wild_sand_approx;
+  position: relative;
 }
 
 .list-item.is-selected {
+  background: $color_malachite_approx;
+
+  &:hover {
     background: $color_malachite_approx;
+  }
 
-    &:hover {
-        background: $color_malachite_approx;
-    }
-
-    .name {
-        color: $white;
-    }
+  .name {
+    color: $white;
+  }
 }
 
 .popup_search .list-item {
-    &:hover {
-        background: $white;
-    }
+  &:hover {
+    background: $white;
+  }
 
-    a {
-        cursor: default;
-    }
+  a {
+    cursor: default;
+  }
 }
 
 .list-actions_occupants .list-item:hover {
-    background: $color_desert_storm_approx;
+  background: $color_desert_storm_approx;
 }
 
 .occupant.is-active {
-    background: $color_malachite_approx;
-    border: 1px solid $color_malachite_approx;
+  background: $color_malachite_approx;
+  border: 1px solid $color_malachite_approx;
 
-    &:hover {
-        opacity: 1;
-    }
+  &:hover {
+    opacity: 1;
+  }
 
-    .name {
-        color: $white;
-    }
+  .name {
+    color: $white;
+  }
 }
 
 .btn_message_smile.is-active {
-    opacity: 1 !important;
+  opacity: 1 !important;
 }
 
 .smiles-tab.is-actived {
-    opacity: 1 !important;
+  opacity: 1 !important;
 }
 
 .is-disconnect {
-    visibility: visible;
-    opacity: 1;
-    z-index: 3;
+  visibility: visible;
+  opacity: 1;
+  z-index: 3;
 }
 
 .is-overlay {
-    visibility: visible;
-    opacity: 1;
-    z-index: 3;
+  visibility: visible;
+  opacity: 1;
+  z-index: 3;
 }
 
 .popup.is-overlay {
-    top: 50%;
+  top: 50%;
 }
 
 .spinner_bounce.is-empty {
-    margin: 10% auto;
+  margin: 10% auto;
 }
 
 .spinner_bounce.is-creating {
-    margin: 22px auto;
+  margin: 22px auto;
 }
 
 .l-chat {
-    .spinner_bounce.is-empty {
-        margin: 0 auto;
-        position: absolute;
-        top: 20px;
-        left: 46%;
-    }
+  .spinner_bounce.is-empty {
+    margin: 0 auto;
+    position: absolute;
+    top: 20px;
+    left: 46%;
+  }
 
-    .spinner_bounce.is-ajaxDownload {
-        position: static;
-    }
+  .spinner_bounce.is-ajaxDownload {
+    position: static;
+  }
 }
 
 .message.is-own {
-    background: $alabaster;
+  background: $alabaster;
 }
 
 .is-request {
-    .btn_chat_add,
-    .btn_chat_audiocall,
-    .btn_chat_videocall,
-    .l-chat-footer {
-        display: none;
-    }
+  .btn_chat_add,
+  .btn_chat_audiocall,
+  .btn_chat_videocall,
+  .l-chat-footer {
+    display: none;
+  }
 }
 
 .is-group {
-    .btn_chat_audiocall,
-    .btn_chat_profile,
-    .btn_chat_videocall {
-        display: none;
-    }
+  .btn_chat_audiocall,
+  .btn_chat_profile,
+  .btn_chat_videocall {
+    display: none;
+  }
 }
 
 .is-contenteditable {
-    &::before {
-        content: '';
-        line-height: normal;
-    }
+  &::before {
+    content: '';
+    line-height: normal;
+  }
 }
 
 .ps-container {
-    > .ps-scrollbar-x-rail {
-        height: 10px;
+  > .ps-scrollbar-x-rail {
+    height: 10px;
 
-        > .ps-scrollbar-x {
-            border: 1px solid $white;
-            height: 6px;
-            bottom: 0;
-        }
-
-        &:hover {
-            > .ps-scrollbar-x {
-                border: 1px solid $white;
-                height: 8px;
-            }
-        }
-
-        &:active {
-            > .ps-scrollbar-x {
-                border: 1px solid $white;
-                height: 8px;
-            }
-        }
-    }
-
-    > .ps-scrollbar-y-rail {
-        width: 10px;
-
-        > .ps-scrollbar-y {
-            border: 1px solid $white;
-            width: 6px;
-            right: 0;
-        }
-
-        &:hover {
-            > .ps-scrollbar-y {
-                border: 1px solid $white;
-                width: 8px;
-            }
-        }
-
-        &:active {
-            > .ps-scrollbar-y {
-                border: 1px solid $white;
-                width: 8px;
-            }
-        }
+    > .ps-scrollbar-x {
+      border: 1px solid $white;
+      height: 6px;
+      bottom: 0;
     }
 
     &:hover {
-        > .ps-scrollbar-x-rail {
-            &:hover {
-                background-color: transparent;
-            }
-        }
-
-        > .ps-scrollbar-y-rail {
-            &:hover {
-                background-color: transparent;
-            }
-        }
+      > .ps-scrollbar-x {
+        border: 1px solid $white;
+        height: 8px;
+      }
     }
 
-    &.ps-in-scrolling.ps-x {
-        > .ps-scrollbar-x-rail {
-            background-color: transparent;
+    &:active {
+      > .ps-scrollbar-x {
+        border: 1px solid $white;
+        height: 8px;
+      }
+    }
+  }
 
-            > .ps-scrollbar-x {
-                border: 1px solid $white;
-                height: 8px;
-            }
-        }
+  > .ps-scrollbar-y-rail {
+    width: 10px;
+
+    > .ps-scrollbar-y {
+      border: 1px solid $white;
+      width: 6px;
+      right: 0;
     }
 
-    &.ps-in-scrolling.ps-y {
-        > .ps-scrollbar-y-rail {
-            background-color: transparent;
-
-            > .ps-scrollbar-y {
-                border: 1px solid $white;
-                width: 8px;
-            }
-        }
+    &:hover {
+      > .ps-scrollbar-y {
+        border: 1px solid $white;
+        width: 8px;
+      }
     }
 
-    &:hover.ps-in-scrolling.ps-x {
-        > .ps-scrollbar-x-rail {
-            background-color: transparent;
+    &:active {
+      > .ps-scrollbar-y {
+        border: 1px solid $white;
+        width: 8px;
+      }
+    }
+  }
 
-            > .ps-scrollbar-x {
-                border: 1px solid $white;
-                height: 8px;
-            }
-        }
+  &:hover {
+    > .ps-scrollbar-x-rail {
+      &:hover {
+        background-color: transparent;
+      }
     }
 
-    &:hover.ps-in-scrolling.ps-y {
-        > .ps-scrollbar-y-rail {
-            background-color: transparent;
-
-            > .ps-scrollbar-y {
-                border: 1px solid $white;
-                width: 8px;
-            }
-        }
+    > .ps-scrollbar-y-rail {
+      &:hover {
+        background-color: transparent;
+      }
     }
+  }
+
+  &.ps-in-scrolling.ps-x {
+    > .ps-scrollbar-x-rail {
+      background-color: transparent;
+
+      > .ps-scrollbar-x {
+        border: 1px solid $white;
+        height: 8px;
+      }
+    }
+  }
+
+  &.ps-in-scrolling.ps-y {
+    > .ps-scrollbar-y-rail {
+      background-color: transparent;
+
+      > .ps-scrollbar-y {
+        border: 1px solid $white;
+        width: 8px;
+      }
+    }
+  }
+
+  &:hover.ps-in-scrolling.ps-x {
+    > .ps-scrollbar-x-rail {
+      background-color: transparent;
+
+      > .ps-scrollbar-x {
+        border: 1px solid $white;
+        height: 8px;
+      }
+    }
+  }
+
+  &:hover.ps-in-scrolling.ps-y {
+    > .ps-scrollbar-y-rail {
+      background-color: transparent;
+
+      > .ps-scrollbar-y {
+        border: 1px solid $white;
+        width: 8px;
+      }
+    }
+  }
 }

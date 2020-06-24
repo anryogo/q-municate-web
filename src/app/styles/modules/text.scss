@@ -1,177 +1,177 @@
 .text {
-    display: block;
-    font-family: $fontRoboto;
-    font-size: 14px;
-    font-weight: normal;
-    text-align: center;
+  display: block;
+  font-family: $fontRoboto;
+  font-size: 14px;
+  font-weight: normal;
+  text-align: center;
 }
 
 .l-sidebar {
-    .text {
-        font-size: 16px;
-        line-height: 22px;
-    }
+  .text {
+    font-size: 16px;
+    line-height: 22px;
+  }
 }
 
 .popup {
-    .text {
-        font-size: 16px;
-        line-height: 22px;
-    }
+  .text {
+    font-size: 16px;
+    line-height: 22px;
+  }
 }
 
 .text_welcome {
-    color: $color_azure_approx;
-    font-size: 2.2vh;
-    text-transform: uppercase;
+  color: $color_azure_approx;
+  font-size: 2.2vh;
+  text-transform: uppercase;
 }
 
 .text_error {
-    font-family: $fontRoboto;
-    font-size: 12px;
-    font-weight: normal;
-    text-align: center;
-    color: $color_mojo_approx;
-    position: absolute;
-    top: 120px;
-    opacity: 0;
+  font-family: $fontRoboto;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: center;
+  color: $color_mojo_approx;
+  position: absolute;
+  top: 120px;
+  opacity: 0;
 }
 
 .text_error.text_error_reset {
-    top: 110px;
+  top: 110px;
 }
 
 .text_signup {
-    margin-bottom: 2.5vh;
-    font-size: 1.4vh;
-    line-height: 2vh;
+  margin-bottom: 2.5vh;
+  font-size: 1.4vh;
+  line-height: 2vh;
 
-    a {
-        color: $color_mountain_mist_approx;
-    }
+  a {
+    color: $color_mountain_mist_approx;
+  }
 }
 
 .text_mid {
-    display: block;
-    margin: 0 auto;
-    width: 11px;
-    height: 14px;
-    font-family: $fontRoboto;
-    font-size: 12px;
-    font-weight: normal;
-    text-align: center;
-    color: $color_mountain_mist_approx;
+  display: block;
+  margin: 0 auto;
+  width: 11px;
+  height: 14px;
+  font-family: $fontRoboto;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: center;
+  color: $color_mountain_mist_approx;
 }
 
 a.firebasePhone {
-    &:focus {
-        text-decoration: underline;
-        opacity: 1;
-    }
+  &:focus {
+    text-decoration: underline;
+    opacity: 1;
+  }
 
-    &:hover {
-        text-decoration: underline;
-        opacity: 1;
-    }
+  &:hover {
+    text-decoration: underline;
+    opacity: 1;
+  }
 }
 
 .text_digits {
-    color: $color_mountain_mist_approx;
-    margin-bottom: 34px;
+  color: $color_mountain_mist_approx;
+  margin-bottom: 34px;
 
-    a.firebasePhone {
-        color: $color_mariner_approx;
-    }
+  a.firebasePhone {
+    color: $color_mariner_approx;
+  }
 }
 
 .firebasePhone.not_allowed {
+  opacity: 0.4;
+  text-transform: initial;
+
+  &:focus {
     opacity: 0.4;
     text-transform: initial;
+  }
 
-    &:focus {
-        opacity: 0.4;
-        text-transform: initial;
-    }
-
-    &:hover {
-        opacity: 0.4;
-        text-transform: initial;
-    }
+  &:hover {
+    opacity: 0.4;
+    text-transform: initial;
+  }
 }
 
 .l-btn_login_fb.not_allowed {
+  opacity: 0.4;
+  text-transform: initial;
+
+  &:focus {
     opacity: 0.4;
     text-transform: initial;
+  }
 
-    &:focus {
-        opacity: 0.4;
-        text-transform: initial;
-    }
-
-    &:hover {
-        opacity: 0.4;
-        text-transform: initial;
-    }
+  &:hover {
+    opacity: 0.4;
+    text-transform: initial;
+  }
 }
 
 .text_login {
-    font-family: $fontRoboto;
-    font-size: 11px;
-    font-weight: normal;
-    color: $color_mountain_mist_approx;
+  font-family: $fontRoboto;
+  font-size: 11px;
+  font-weight: normal;
+  color: $color_mountain_mist_approx;
 
-    &:focus {
-        text-decoration: underline;
-        opacity: 1;
-    }
+  &:focus {
+    text-decoration: underline;
+    opacity: 1;
+  }
 
-    &:hover {
-        text-decoration: underline;
-        opacity: 1;
-    }
+  &:hover {
+    text-decoration: underline;
+    opacity: 1;
+  }
 }
 
 .text_forgot_black {
-    display: inline-block;
-    height: 25px;
-    font-family: $fontRoboto;
-    font-size: 22px;
-    font-weight: normal;
-    color: $color_log_cabin_approx;
-    vertical-align: bottom;
+  display: inline-block;
+  height: 25px;
+  font-family: $fontRoboto;
+  font-size: 22px;
+  font-weight: normal;
+  color: $color_log_cabin_approx;
+  vertical-align: bottom;
 }
 
 .text_forgot {
-    width: 304px;
-    height: 38px;
-    font-family: $fontRoboto;
-    font-size: 13px;
-    font-weight: normal;
-    line-height: 1.46;
-    color: $color_dove_gray_approx;
-    text-align: left;
-    margin-bottom: 18px;
+  width: 304px;
+  height: 38px;
+  font-family: $fontRoboto;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1.46;
+  color: $color_dove_gray_approx;
+  text-align: left;
+  margin-bottom: 18px;
 }
 
 .note {
-    padding-top: 25px;
+  padding-top: 25px;
 }
 
 .text_alert {
-    margin: 20px 0;
-    padding-left: 20px;
-    font-size: 32px !important;
+  margin: 20px 0;
+  padding-left: 20px;
+  font-size: 32px !important;
 }
 
 .text_alert_success {
-    padding-left: 0;
+  padding-left: 0;
 }
 
 .start_search_note {
-    padding-top: 25px;
+  padding-top: 25px;
 }
 
 .text_start_search {
-    margin: 20px 0;
-    font-size: 32px !important;
+  margin: 20px 0;
+  font-size: 32px !important;
 }

@@ -1,311 +1,311 @@
 .userDetails-preview {
-    overflow: hidden;
-    padding: 20px;
-    height: 128px;
+  overflow: hidden;
+  padding: 20px;
+  height: 128px;
 }
 
 .userProfile-preview {
-    overflow: hidden;
-    padding: 20px;
-    padding-right: 0;
+  overflow: hidden;
+  padding: 20px;
+  padding-right: 0;
 }
 
 .userDetails-avatar {
-    width: 88px;
-    height: 88px;
-    float: left;
-    margin-right: 15px;
-    border-radius: 50%;
-    background-image: $urlAvaSingle;
-    background-size: cover;
-    background-position: 50%;
+  width: 88px;
+  height: 88px;
+  float: left;
+  margin-right: 15px;
+  border-radius: 50%;
+  background-image: $urlAvaSingle;
+  background-size: cover;
+  background-position: 50%;
 }
 
 .userDetails-info {
-    position: relative;
-    overflow: hidden;
-    padding-left: 5px;
-    height: 95px;
+  position: relative;
+  overflow: hidden;
+  padding-left: 5px;
+  height: 95px;
 }
 
 .userProfile-info {
-    position: relative;
-    overflow: hidden;
-    padding-left: 5px;
+  position: relative;
+  overflow: hidden;
+  padding-left: 5px;
 }
 
 .userDetails-filename {
-    padding-top: 7px;
-    margin-bottom: 7px;
-    font-size: 20px;
-    color: $color_mine_shaft_approx;
-    font-weight: normal;
-    line-height: 23px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  padding-top: 7px;
+  margin-bottom: 7px;
+  font-size: 20px;
+  color: $color_mine_shaft_approx;
+  font-weight: normal;
+  line-height: 23px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .userProfile-header-pencil {
-    display: none;
-    width: 30px;
-    height: 30px;
-    background: $urlIcnPencil no-repeat center, $color_desert_storm_approx;
-    border: 1px solid $color_wild_sand_approx;
-    border-radius: 4px;
-    vertical-align: top;
+  display: none;
+  width: 30px;
+  height: 30px;
+  background: $urlIcnPencil no-repeat center, $color_desert_storm_approx;
+  border: 1px solid $color_wild_sand_approx;
+  border-radius: 4px;
+  vertical-align: top;
 
-    &:hover {
-        display: none !important;
-    }
+  &:hover {
+    display: none !important;
+  }
 }
 
 .userProfile-filename-wrap {
-    padding-top: 7px;
-    font-size: 20px;
-    color: $color_mine_shaft_approx;
-    font-weight: normal;
-    float: left;
-    margin-bottom: 10px;
-    line-height: 30px;
+  padding-top: 7px;
+  font-size: 20px;
+  color: $color_mine_shaft_approx;
+  font-weight: normal;
+  float: left;
+  margin-bottom: 10px;
+  line-height: 30px;
 
-    &:hover {
-        .userProfile-header-pencil {
-            display: inline-block;
-        }
+  &:hover {
+    .userProfile-header-pencil {
+      display: inline-block;
     }
+  }
 }
 
 .userDetails-status {
-    font-size: 14px;
-    line-height: 20px;
-    color: $color_mountain_mist_approx;
-    display: inline-block;
-    word-break: break-all;
+  font-size: 14px;
+  line-height: 20px;
+  color: $color_mountain_mist_approx;
+  display: inline-block;
+  word-break: break-all;
 }
 
 .userDetails-chatStatus {
-    width: 100%;
-    background: $color_wild_sand_approx;
-    font-size: 16px;
-    height: 30px;
-    color: $color_mountain_mist_approx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  background: $color_wild_sand_approx;
+  font-size: 16px;
+  height: 30px;
+  color: $color_mountain_mist_approx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    .status_online {
-        display: inline-block;
-        margin-left: 0;
-        margin-right: 7px;
-    }
+  .status_online {
+    display: inline-block;
+    margin-left: 0;
+    margin-right: 7px;
+  }
 }
 
 .userProfile-chatStatus {
-    width: 100%;
-    background: $color_wild_sand_approx;
-    font-size: 16px;
-    height: 30px;
-    color: $color_mountain_mist_approx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 0 0 20px;
-    text-align: left;
+  width: 100%;
+  background: $color_wild_sand_approx;
+  font-size: 16px;
+  height: 30px;
+  color: $color_mountain_mist_approx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0 0 20px;
+  text-align: left;
 }
 
 .userDetails-controls {
-    display: flex;
-    flex-direction: column;
-    align-items: baseline;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
 }
 
 .btn_userDetails {
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
-    font-size: 16px;
-    height: 40px;
-    width: 100%;
-    font-family: $fontRoboto;
-    color: $color_mine_shaft_approx;
-    border-bottom: 1px solid $color_wild_sand_approx;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  font-size: 16px;
+  height: 40px;
+  width: 100%;
+  font-family: $fontRoboto;
+  color: $color_mine_shaft_approx;
+  border-bottom: 1px solid $color_wild_sand_approx;
+  cursor: pointer;
 
-    img {
-        vertical-align: text-bottom;
-    }
+  img {
+    vertical-align: text-bottom;
+  }
 }
 
 .ic_userDetails {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
 }
 
 .userDetails-field {
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
-    font-size: 15px;
-    height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  font-size: 15px;
+  height: 40px;
 }
 
 .userProfile-field {
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
-    font-size: 15px;
-    height: 40px;
-    position: relative;
-    border-bottom: 1px solid $color_wild_sand_approx;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  font-size: 15px;
+  height: 40px;
+  position: relative;
+  border-bottom: 1px solid $color_wild_sand_approx;
 }
 
 .userDetails-label {
-    margin-right: 12px;
-    color: $color_mountain_mist_approx;
-    font-weight: bold;
+  margin-right: 12px;
+  color: $color_mountain_mist_approx;
+  font-weight: bold;
 }
 
 input.userProfile-filename.without_M[type=text] {
-    width: 285px;
-    padding: 5px 0;
-    color: $color_mine_shaft_approx;
-    border: 0;
+  width: 285px;
+  padding: 5px 0;
+  color: $color_mine_shaft_approx;
+  border: 0;
 
-    &:focus {
-        &:not([readonly]) {
-            width: 285px;
-            padding: 5px 0;
-            color: $color_mine_shaft_approx;
-            border: 0;
-            border-color: $color_cornflower_blue_approx;
-        }
+  &:focus {
+    &:not([readonly]) {
+      width: 285px;
+      padding: 5px 0;
+      color: $color_mine_shaft_approx;
+      border: 0;
+      border-color: $color_cornflower_blue_approx;
     }
+  }
 }
 
 input.userProfile-phone.without_M[type=text] {
-    width: 330px;
-    padding: 5px 0;
-    border: 0;
+  width: 330px;
+  padding: 5px 0;
+  border: 0;
 
-    &:focus {
-        &:not([readonly]) {
-            width: 330px;
-            padding: 5px 0;
-            border: 0;
-            border-color: $color_cornflower_blue_approx;
-        }
+  &:focus {
+    &:not([readonly]) {
+      width: 330px;
+      padding: 5px 0;
+      border: 0;
+      border-color: $color_cornflower_blue_approx;
     }
+  }
 }
 
 .btn_userProfile {
-    font-size: 14px;
-    line-height: 30px;
-    color: $color_mine_shaft_approx;
-    text-align: center;
-    padding: 0 10px;
-    margin-right: 10px;
-    background: $color_desert_storm_approx;
-    border: 1px solid $color_wild_sand_approx;
-    border-radius: 4px;
+  font-size: 14px;
+  line-height: 30px;
+  color: $color_mine_shaft_approx;
+  text-align: center;
+  padding: 0 10px;
+  margin-right: 10px;
+  background: $color_desert_storm_approx;
+  border: 1px solid $color_wild_sand_approx;
+  border-radius: 4px;
 
-    &:last-child {
-        margin-right: 0;
-    }
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
 .btn_userProfile_file {
-    position: absolute;
-    left: 5px;
-    bottom: 0;
-    width: 127px;
-    height: 32px;
-    opacity: 0;
+  position: absolute;
+  left: 5px;
+  bottom: 0;
+  width: 127px;
+  height: 32px;
+  opacity: 0;
 }
 
 .userProfile-status-field {
-    width: 100%;
-    height: 100px;
-    padding: 20px 40px 20px 20px;
-    font-size: 16px;
-    line-height: 20px;
-    border: 0;
-    border-bottom: 1px solid $color_wild_sand_approx;
-    resize: none;
-    overflow: hidden;
+  width: 100%;
+  height: 100px;
+  padding: 20px 40px 20px 20px;
+  font-size: 16px;
+  line-height: 20px;
+  border: 0;
+  border-bottom: 1px solid $color_wild_sand_approx;
+  resize: none;
+  overflow: hidden;
 
-    &:focus {
-        background: $white !important;
-        border: 0;
-    }
+  &:focus {
+    background: $white !important;
+    border: 0;
+  }
 }
 
 .userProfile-field_email {
-    width: 460px;
-    padding-right: 20px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  width: 460px;
+  padding-right: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .userProfile-edit {
-    &:hover {
-        background: $urlIcnPencil no-repeat 430px center, $color_desert_storm_approx;
-    }
+  &:hover {
+    background: $urlIcnPencil no-repeat 430px center, $color_desert_storm_approx;
+  }
 }
 
 .btn_userProfile_connect {
-    position: absolute;
-    right: 20px;
+  position: absolute;
+  right: 20px;
 }
 
 .changePass-errors {
-    font-size: 16px;
-    line-height: 20px;
-    color: $color_mojo_approx;
-    text-align: center;
-    padding: 15px 20px;
+  font-size: 16px;
+  line-height: 20px;
+  color: $color_mojo_approx;
+  text-align: center;
+  padding: 15px 20px;
 }
 
 .userProfile-errors {
-    padding: 20px;
-    font-size: 16px;
-    line-height: 20px;
-    color: $color_mojo_approx;
-    text-align: center;
+  padding: 20px;
+  font-size: 16px;
+  line-height: 20px;
+  color: $color_mojo_approx;
+  text-align: center;
 }
 
 .userProfile-success {
-    padding: 20px;
-    font-size: 16px;
-    line-height: 20px;
-    text-align: center;
-    position: relative;
-    top: -40px;
-    color: $color_japanese_laurel_approx;
+  padding: 20px;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  position: relative;
+  top: -40px;
+  color: $color_japanese_laurel_approx;
 }
 
 input.form-input-password[type=password] {
-    border-bottom: 2px solid $color_mountain_mist_approx;
+  border-bottom: 2px solid $color_mountain_mist_approx;
 
-    &:focus {
-        &:not([readonly]) {
-            border-bottom: 2px solid $color_malachite_approx;
-            box-shadow: none;
-        }
+  &:focus {
+    &:not([readonly]) {
+      border-bottom: 2px solid $color_malachite_approx;
+      box-shadow: none;
     }
+  }
 }
 
 .editable-profile {
-    &:focus {
-        padding: 5px 3px;
-        background: $white;
-    }
+  &:focus {
+    padding: 5px 3px;
+    background: $white;
+  }
 }
 
 .popup-content_password {
-    padding: 0 20px 30px;
-    height: 140px;
+  padding: 0 20px 30px;
+  height: 140px;
 }

@@ -1,219 +1,219 @@
 .incoming-call-popup {
-    width: 345px;
-    max-height: 538px;
-    overflow-y: auto;
-    background: $white;
-    border: 1px solid $color_gallery_approx;
+  width: 345px;
+  max-height: 538px;
+  overflow-y: auto;
+  background: $white;
+  border: 1px solid $color_gallery_approx;
 }
 
 .incoming-call {
-    width: 100%;
-    border-bottom: 1px solid $color_gallery_approx;
+  width: 100%;
+  border-bottom: 1px solid $color_gallery_approx;
 
-    &:last-child {
-        border-bottom: 0;
-    }
+  &:last-child {
+    border-bottom: 0;
+  }
 }
 
 .incoming-call-info {
-    width: 100%;
+  width: 100%;
 }
 
 .avatar.info-avatar {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    margin: 15px 0;
-    border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  margin: 15px 0;
+  border-radius: 50%;
 }
 
 .info-notice {
-    width: 100%;
-    padding: 0 15px;
-    font-size: 20px;
-    line-height: 25px;
-    color: $color_mine_shaft_approx;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  width: 100%;
+  padding: 0 15px;
+  font-size: 20px;
+  line-height: 25px;
+  color: $color_mine_shaft_approx;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .incoming-call-controls {
-    width: 100%;
-    margin: 20px 0;
+  width: 100%;
+  margin: 20px 0;
 }
 
 .btn_accept {
-    text-transform: uppercase;
-    color: $color_malachite_approx;
+  text-transform: uppercase;
+  color: $color_malachite_approx;
 
-    &:hover {
-        opacity: 1;
-    }
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .btn_decline {
-    text-transform: uppercase;
-    margin-right: 55px;
-    color: $color_bright_red_approx;
+  text-transform: uppercase;
+  margin-right: 55px;
+  color: $color_bright_red_approx;
 
-    &:hover {
-        opacity: 1;
-    }
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .mediacall {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    min-height: 185px;
-    max-height: 50%;
-    background: $color_shark_approx;
-    text-align: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 185px;
+  max-height: 50%;
+  background: $color_shark_approx;
+  text-align: center;
 
-    &:fullscreen {
-        height: 100% !important;
-        max-height: 100% !important;
-    }
+  &:fullscreen {
+    height: 100% !important;
+    max-height: 100% !important;
+  }
 }
 
 .mediacall-remote-stream {
-    width: 100%;
-    height: 100%;
-    max-height: 100%;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
 }
 
 .mediacall-remote-user {
-    width: 80%;
-    height: 100%;
-    max-height: 326px;
-    margin: auto;
+  width: 80%;
+  height: 100%;
+  max-height: 326px;
+  margin: auto;
 }
 
 .mediacall-remote-avatar {
-    height: 50%;
-    max-width: 146px;
-    max-height: 146px;
-    margin: 10px 0;
-    border-radius: 50%;
+  height: 50%;
+  max-width: 146px;
+  max-height: 146px;
+  margin: 10px 0;
+  border-radius: 50%;
 }
 
 .mediacall-remote-duration {
-    font-size: 22px;
-    color: $color_gravel_approx;
+  font-size: 22px;
+  color: $color_gravel_approx;
 }
 
 .mediacall-remote-name {
-    font-size: 22px;
-    color: $color_gravel_approx;
-    width: 100%;
-    line-height: 26px;
-    margin-bottom: 15px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  font-size: 22px;
+  color: $color_gravel_approx;
+  width: 100%;
+  line-height: 26px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .mediacall-controls {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    bottom: 15px;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 15px;
 }
 
 .mediacall.small_screen {
-    .mediacall-remote-avatar {
-        margin: 5px 0;
-    }
+  .mediacall-remote-avatar {
+    margin: 5px 0;
+  }
 
-    .mediacall-remote-name {
-        font-size: 18px;
-        line-height: 18px;
-    }
+  .mediacall-remote-name {
+    font-size: 18px;
+    line-height: 18px;
+  }
 
-    .mediacall-controls {
-        bottom: 0;
-    }
+  .mediacall-controls {
+    bottom: 0;
+  }
 }
 
 .mediacall-local {
-    position: absolute;
-    top: 15px;
-    right: 15px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
 }
 
 .mediacall-local-stream {
-    width: 20%;
+  width: 20%;
 }
 
 .mediacall-local-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
 }
 
 .mediacall-info {
-    position: absolute;
-    top: 15px;
-    left: 15px;
+  position: absolute;
+  top: 15px;
+  left: 15px;
 }
 
 .mediacall-info-logo {
-    margin-bottom: 17px;
+  margin-bottom: 17px;
 }
 
 .mediacall-info-duration {
-    display: block;
-    height: 16px;
-    width: 70px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-    color: $color_gravel_approx;
+  display: block;
+  height: 16px;
+  width: 70px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: $color_gravel_approx;
 }
 
 .btn_mediacall {
+  width: 60px;
+  height: 60px;
+  background: $black;
+
+  &:focus {
     width: 60px;
     height: 60px;
     background: $black;
+  }
 
-    &:focus {
-        width: 60px;
-        height: 60px;
-        background: $black;
-    }
+  &:hover {
+    opacity: 1;
+    background: $color_bright_red_approx;
+  }
 
-    &:hover {
-        opacity: 1;
-        background: $color_bright_red_approx;
-    }
-
-    &:first-child:hover,
-    &:last-child:hover {
-        background: $black;
-    }
+  &:first-child:hover,
+  &:last-child:hover {
+    background: $black;
+  }
 }
 
 .btn_mediacall.off {
-    opacity: 1;
-    background: $color_bright_red_approx;
+  opacity: 1;
+  background: $color_bright_red_approx;
 }
 
 .btn-icon_mediacall {
-    vertical-align: text-bottom;
+  vertical-align: text-bottom;
 }
 
 #fullModeOn {
-    width: 21px;
-    height: 21px;
-    margin: 0 auto;
-    background: $urlIcnFullModeOn no-repeat center;
+  width: 21px;
+  height: 21px;
+  margin: 0 auto;
+  background: $urlIcnFullModeOn no-repeat center;
 }
 
 #fullModeOff {
-    width: 21px;
-    height: 21px;
-    margin: 0 auto;
-    background: $urlIcnFullModeOff no-repeat center;
-    display: none;
+  width: 21px;
+  height: 21px;
+  margin: 0 auto;
+  background: $urlIcnFullModeOff no-repeat center;
+  display: none;
 }

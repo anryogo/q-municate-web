@@ -32,7 +32,6 @@
         "backbone"
     ],
     "rules": {
-        "indent": ["error", 4],
         "func-names": ["error", "never"],
         "space-before-function-paren": ["error", "never"],
         "no-use-before-define": ["error", { "functions": false }],

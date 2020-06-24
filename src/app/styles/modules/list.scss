@@ -1,112 +1,112 @@
 .list-item {
-    height: 60px;
-    background: $white;
-    cursor: pointer;
+  height: 60px;
+  background: $white;
+  cursor: pointer;
 
-    &:hover {
-        background: $color_wild_sand_approx;
-    }
+  &:hover {
+    background: $color_wild_sand_approx;
+  }
 
-    .icon-active {
-        display: none;
-    }
+  .icon-active {
+    display: none;
+  }
 }
 
 .list-actions {
-    z-index: 2;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0);
-    top: 100%;
-    border: 1px solid $color_wild_sand_approx;
-    box-shadow: 0 0 10px 3px $color_gallery_approx;
+  z-index: 2;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  top: 100%;
+  border: 1px solid $color_wild_sand_approx;
+  box-shadow: 0 0 10px 3px $color_gallery_approx;
 
-    .list-item {
-        width: 125px;
-        height: 32px;
+  .list-item {
+    width: 125px;
+    height: 32px;
 
-        &:last-child {
-            border-bottom: 0;
-        }
+    &:last-child {
+      border-bottom: 0;
     }
+  }
 }
 
 #requestsList {
-    .list-item {
-        &:hover {
-            background: $white;
-        }
+  .list-item {
+    &:hover {
+      background: $white;
     }
+  }
 }
 
 .list-actions_contacts {
-    margin: -15px auto 0;
+  margin: -15px auto 0;
 }
 
 .list-actions_contacts.margin-up {
-    top: inherit;
-    bottom: 70%;
+  top: inherit;
+  bottom: 70%;
 }
 
 .list-actions_occupants {
-    position: absolute;
-    margin-top: 32px;
+  position: absolute;
+  margin-top: 32px;
 }
 
 .list-actions_profile {
-    position: absolute;
-    top: 50px;
-    right: -60px;
-    left: initial;
+  position: absolute;
+  top: 50px;
+  right: -60px;
+  left: initial;
 }
 
 .list-actions-action {
-    display: block;
-    padding: 0 10px;
-    font-size: 15px;
-    line-height: 32px;
-    color: $color_gravel_approx;
-    font-family: $fontRoboto;
+  display: block;
+  padding: 0 10px;
+  font-size: 15px;
+  line-height: 32px;
+  color: $color_gravel_approx;
+  font-family: $fontRoboto;
 
-    &:hover {
-        opacity: 1;
-    }
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .list_contacts {
-    height: calc(100% - 60px - 60px - 37px);
+  height: calc(100% - 60px - 60px - 37px);
 }
 
 .popup-content {
-    .list_contacts {
-        height: 100%;
-    }
+  .list_contacts {
+    height: 100%;
+  }
 }
 
 .header-links-item {
+  .icon-active {
+    display: none;
+  }
+
+  &:hover {
+    .icon-normal {
+      display: none;
+    }
+
     .icon-active {
-        display: none;
+      display: inline-block;
     }
-
-    &:hover {
-        .icon-normal {
-            display: none;
-        }
-
-        .icon-active {
-            display: inline-block;
-        }
-    }
+  }
 }
 
 .send-request {
-    &:hover {
-        .icon-normal {
-            display: none;
-        }
-
-        .icon-active {
-            display: inline-block;
-        }
+  &:hover {
+    .icon-normal {
+      display: none;
     }
+
+    .icon-active {
+      display: inline-block;
+    }
+  }
 }
