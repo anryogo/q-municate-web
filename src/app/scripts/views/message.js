@@ -4,6 +4,7 @@ import QB from 'quickblox';
 import QBNotification from 'web-notifications';
 import QMCONFIG from 'config';
 import minEmoji from 'minEmoji';
+import Location from 'views/location';
 import Helpers from '../helpers';
 import QMHtml from '../qmhtml';
 import Entities from '../entities';
